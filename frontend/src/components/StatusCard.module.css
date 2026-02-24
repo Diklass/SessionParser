@@ -1,0 +1,89 @@
+.card {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 20px;
+  border-radius: var(--md-radius-lg);
+  animation: slideIn var(--md-duration-medium) var(--md-motion-emphasized);
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* colour variants */
+.primary { background: var(--md-primary-container); }
+.success { background: var(--md-success-container); }
+.error   { background: var(--md-error-container); }
+.info    { background: var(--md-surface-variant); }
+
+.iconWrap {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.primary .iconWrap .material-symbols-rounded { color: var(--md-primary); }
+.success .iconWrap .material-symbols-rounded { color: var(--md-success); }
+.error   .iconWrap .material-symbols-rounded { color: var(--md-error); }
+.info    .iconWrap .material-symbols-rounded { color: var(--md-on-surface-variant); }
+
+.spin { animation: spin 1.2s linear infinite; }
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* reuse .info as the content column name — no conflict with colour class */
+.info {
+  flex: 1;
+  min-width: 0;
+}
+
+.label {
+  font-family: var(--md-font-display);
+  font-weight: 700;
+  font-size: 0.9375rem;
+  color: var(--md-on-surface);
+}
+
+.filename {
+  font-size: 0.8125rem;
+  color: var(--md-on-surface-variant);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: 2px;
+}
+
+.progressBar {
+  height: 4px;
+  background: rgba(0, 0, 0, 0.12);
+  border-radius: var(--md-radius-full);
+  overflow: hidden;
+  margin-top: 10px;
+}
+
+.progressIndeterminate {
+  height: 100%;
+  background: var(--md-primary);
+  border-radius: var(--md-radius-full);
+  animation: indeterminate 1.5s ease-in-out infinite;
+  transform-origin: left;
+}
+
+@keyframes indeterminate {
+  0%   { transform: scaleX(0)   translateX(0); }
+  50%  { transform: scaleX(0.6) translateX(60%); }
+  100% { transform: scaleX(0)   translateX(300%); }
+}
+
+.errorText {
+  font-size: 0.8125rem;
+  color: var(--md-error);
+  margin-top: 6px;
+}

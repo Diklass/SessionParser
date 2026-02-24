@@ -1,0 +1,6627 @@
+This file is a merged representation of the entire codebase, combined into a single document by Repomix.
+
+<file_summary>
+This section contains a summary of this file.
+
+<purpose>
+This file contains a packed representation of the entire repository's contents.
+It is designed to be easily consumable by AI systems for analysis, code review,
+or other automated processes.
+</purpose>
+
+<file_format>
+The content is organized as follows:
+1. This summary section
+2. Repository information
+3. Directory structure
+4. Repository files (if enabled)
+5. Multiple file entries, each consisting of:
+  - File path as an attribute
+  - Full contents of the file
+</file_format>
+
+<usage_guidelines>
+- This file should be treated as read-only. Any changes should be made to the
+  original repository files, not this packed version.
+- When processing this file, use the file path to distinguish
+  between different files in the repository.
+- Be aware that this file may contain sensitive information. Handle it with
+  the same level of security as you would the original repository.
+</usage_guidelines>
+
+<notes>
+- Some files may have been excluded based on .gitignore rules and Repomix's configuration
+- Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
+- Files matching patterns in .gitignore are excluded
+- Files matching default ignore patterns are excluded
+- Files are sorted by Git change count (files with more changes are at the bottom)
+</notes>
+
+</file_summary>
+
+<directory_structure>
+backend/.env.example
+backend/.gitignore
+backend/package.json
+backend/README.md
+backend/result.json
+backend/result1.json
+backend/session.xlsx
+backend/src/config.ts
+backend/src/domain.ts
+backend/src/index.ts
+backend/src/normalize.ts
+backend/src/parser.ts
+backend/src/router.ts
+backend/src/storage.ts
+backend/src/task-service.ts
+backend/src/types.ts
+backend/tsconfig.json
+frontend/.gitignore
+frontend/eslint.config.js
+frontend/index.html
+frontend/package.json
+frontend/public/vite.svg
+frontend/README.md
+frontend/src/api/client.ts
+frontend/src/App.css
+frontend/src/App.tsx
+frontend/src/assets/react.svg
+frontend/src/components/ResultTable.tsx
+frontend/src/components/StatusCard.tsx
+frontend/src/components/SummaryPanel.tsx
+frontend/src/components/UploadZone.tsx
+frontend/src/index.css
+frontend/src/main.tsx
+frontend/src/types/index.ts
+frontend/tsconfig.app.json
+frontend/tsconfig.json
+frontend/tsconfig.node.json
+frontend/vite.config.ts
+</directory_structure>
+
+<files>
+This section contains the contents of the repository's files.
+
+<file path="backend/.env.example">
+PORT=3000
+STORAGE_DIR=./storage
+MAX_PARALLEL_TASKS=1
+MAX_UPLOAD_MB=30
+</file>
+
+<file path="backend/.gitignore">
+node_modules/
+dist/
+storage/
+*.log
+</file>
+
+<file path="backend/package.json">
+{
+  "name": "session-parser",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Background Excel session schedule parser for Express (TypeScript)",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/index.js",
+    "dev": "tsx watch src/index.ts"
+  },
+  "dependencies": {
+    "express": "^4.21.2",
+    "multer": "^1.4.5-lts.2",
+    "uuid": "^11.1.0",
+    "xlsx": "^0.18.5"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/multer": "^1.4.12",
+    "@types/node": "^22.13.4",
+    "tsx": "^4.19.3",
+    "typescript": "^5.7.3"
+  }
+}
+</file>
+
+<file path="backend/README.md">
+# Session Schedule Parser Service
+
+Сервис асинхронного парсинга Excel-расписаний сессии в нормализованный JSON-формат, предназначенный для последующего использования в личном кабинете студента.
+
+Приложение принимает Excel-файл, создаёт задачу обработки, выполняет парсинг в фоне и предоставляет API для получения статуса и результата.
+
+---
+
+## Основные возможности
+
+- Загрузка Excel файлов (`.xlsx` / `.xls`)
+- Асинхронная обработка (очередь задач)
+- Ограничение параллельных обработчиков
+- Нормализация данных в стабильный JSON-контракт
+- Обработка «грязных» Excel (разные названия колонок)
+- Журнал ошибок парсинга (`issues`)
+- Готово для интеграции с внешним сервером
+
+---
+
+## Архитектура
+
+```
+Client (личный кабинет)
+        │
+        ▼
+   HTTP API (Express)
+        │
+        ▼
+   Task Queue (в памяти)
+        │
+        ▼
+   Excel Parser (xlsx)
+        │
+        ▼
+ Data Normalizer (ScheduleJsonV1)
+        │
+        ▼
+ JSON Result Storage
+```
+
+---
+
+## Технологии
+
+- Node.js
+- TypeScript
+- Express
+- Multer
+- XLSX
+- UUID
+
+---
+
+## Установка
+
+```bash
+git clone <repo>
+cd SessionParser
+npm install
+```
+
+---
+
+## Конфигурация
+
+Настраивается через переменные окружения:
+
+| Переменная | Описание | По умолчанию |
+|---|---|---|
+| `PORT` | Порт сервера | `3000` |
+| `STORAGE_DIR` | Папка хранения | `./storage` |
+| `MAX_PARALLEL_TASKS` | Число параллельных задач | `1` |
+| `MAX_UPLOAD_MB` | Макс. размер файла (МБ) | `30` |
+
+Пример `.env`:
+
+```env
+PORT=3000
+STORAGE_DIR=./storage
+MAX_PARALLEL_TASKS=2
+MAX_UPLOAD_MB=50
+```
+
+---
+
+## Запуск
+
+**Development:**
+
+```bash
+npx ts-node src/index.ts
+```
+
+**Production:**
+
+```bash
+npx tsc
+node dist/index.js
+```
+
+**Проверка:**
+
+```
+GET http://localhost:3000/health
+→ { "status": "ok" }
+```
+
+---
+
+## API
+
+Базовый путь: `/api`
+
+### 1. Создание задачи
+
+**POST** `/api/tasks`
+
+Загружает Excel и создаёт задачу обработки.
+
+**Request:**
+
+```
+Content-Type: multipart/form-data
+file: <excel>
+```
+
+**Пример:**
+
+```bash
+curl -X POST http://localhost:3000/api/tasks \
+  -F "file=@schedule.xlsx"
+```
+
+**Response:**
+
+```json
+{
+  "taskId": "uuid",
+  "status": "queued",
+  "createdAt": "2026-02-18T19:40:21.123Z"
+}
+```
+
+---
+
+### 2. Проверка статуса
+
+**GET** `/api/tasks/{taskId}/status`
+
+**Response:**
+
+```json
+{
+  "taskId": "uuid",
+  "status": "processing",
+  "createdAt": "...",
+  "startedAt": "...",
+  "finishedAt": null,
+  "error": null
+}
+```
+
+**Статусы:**
+
+| Статус | Описание |
+|---|---|
+| `queued` | Задача в очереди |
+| `processing` | Выполняется |
+| `completed` | Завершена успешно |
+| `failed` | Завершена с ошибкой |
+
+---
+
+### 3. Получение результата
+
+**GET** `/api/tasks/{taskId}/result`
+
+- Если готово → скачивается JSON
+- Если не готово → `409`
+- Если ошибка → `422`
+
+---
+
+### 4. Краткая сводка
+
+**GET** `/api/tasks/{taskId}/memory`
+
+Возвращает краткую информацию о распарсенных данных.
+
+---
+
+## Формат результата (ScheduleJsonV1)
+
+```json
+{
+  "meta": {
+    "sourceFileName": "schedule.xlsx",
+    "parsedAt": "2026-02-18T19:40:21.123Z",
+    "version": "1.0"
+  },
+  "summary": {
+    "items": 124,
+    "groups": ["ИСТ-21", "ИСТ-22"],
+    "itemsByGroup": { "ИСТ-21": 60, "ИСТ-22": 64 },
+    "dateRange": { "from": "2026-01-10", "to": "2026-02-05" }
+  },
+  "items": [
+    {
+      "id": "sha1:...",
+      "date": "2026-01-11",
+      "time": { "start": "10:00", "end": null },
+      "timezone": "Europe/Bucharest",
+      "group": "ИСТ-21",
+      "subject": "Операционные системы",
+      "kind": "EXAM",
+      "teacher": "Иванов И.И.",
+      "location": { "room": "304", "building": null },
+      "notes": null,
+      "source": { "sheet": "Лист2", "row": 12 }
+    }
+  ],
+  "issues": []
+}
+```
+
+---
+
+## Как используется в личном кабинете
+
+1. Администратор загружает Excel
+2. Backend кабинета получает JSON
+3. Сохраняет у себя
+4. Студент видит только своё расписание:
+
+```js
+items.filter(i => i.group === student.group)
+```
+
+---
+
+## Коды ошибок
+
+| Код | Причина |
+|---|---|
+| `400` | Файл не передан / слишком большой |
+| `404` | Задача не найдена |
+| `409` | Задача ещё обрабатывается |
+| `422` | Ошибка обработки Excel |
+| `500` | Внутренняя ошибка |
+
+---
+
+## Хранение данных
+
+```
+storage/
+ ├─ uploads/
+ │   ├─ incoming/    (временные файлы)
+ │   └─ <taskId>.xlsx
+ └─ results/
+     └─ <taskId>.json
+```
+
+---
+
+## Особенности реализации
+
+- Обработка выполняется асинхронно
+- Ограничение числа одновременных задач
+- Устойчивость к различным названиям колонок
+- Нормализация даты/времени
+- Стабильный ID событий (sha1)
+
+---
+
+## Возможные улучшения
+
+- Хранение задач в БД
+- Webhook вместо polling
+- Авторизация API
+- Автоудаление старых файлов
+
+---
+
+## Лицензия
+
+[MIT](LICENSE)
+</file>
+
+<file path="backend/result.json">
+{
+  "meta": {
+    "sourceFileName": "session.xlsx",
+    "parsedAt": "2026-02-23T11:46:06.773Z",
+    "version": "1.0"
+  },
+  "summary": {
+    "items": 95,
+    "groups": [
+      "1 Ф",
+      "1ИВТ1",
+      "1ИВТ2",
+      "1ИВТ2, 1УТС",
+      "1ИВТ_АСОИУ",
+      "1ИВТ_ТИИ",
+      "1ПО_магистр",
+      "1УТС, 2Ф",
+      "1Ф, 1УТС",
+      "2ИВТ_АСОИУ",
+      "2ИВТ_ТИИ",
+      "2ПО_магистр",
+      "2Ф",
+      "3 УТС",
+      "3ИВТ1",
+      "3ИВТ2",
+      "3ПО",
+      "3Ф",
+      "4 УТС",
+      "4ИВТ(УзГУМЯ)",
+      "4ИВТ1",
+      "4ИВТ2",
+      "4ПО",
+      "4Ф"
+    ],
+    "itemsByGroup": {
+      "1 Ф": 2,
+      "1ИВТ1": 4,
+      "1ИВТ2": 3,
+      "1ИВТ2, 1УТС": 1,
+      "1ИВТ_АСОИУ": 2,
+      "1ИВТ_ТИИ": 1,
+      "1ПО_магистр": 2,
+      "1УТС, 2Ф": 1,
+      "1Ф, 1УТС": 1,
+      "2ИВТ_АСОИУ": 5,
+      "2ИВТ_ТИИ": 1,
+      "2ПО_магистр": 4,
+      "2Ф": 6,
+      "3 УТС": 4,
+      "3ИВТ1": 4,
+      "3ИВТ2": 9,
+      "3ПО": 1,
+      "3Ф": 4,
+      "4 УТС": 4,
+      "4ИВТ(УзГУМЯ)": 4,
+      "4ИВТ1": 5,
+      "4ИВТ2": 5,
+      "4ПО": 2,
+      "4Ф": 5
+    },
+    "dateRange": {
+      "from": "2020-12-28",
+      "to": "2025-01-27"
+    }
+  },
+  "items": [
+    {
+      "id": "sha1:921a5516687b9ab64e2fff30168cfb13a8627d51",
+      "date": "2024-12-23",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "4Ф",
+      "subject": "Методика обучения физики",
+      "kind": "EXAM",
+      "teacher": "Шамбин А.И.",
+      "location": {
+        "room": "325",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 19
+      }
+    },
+    {
+      "id": "sha1:1c628ced6b50e6cfde30d1bb06845aff21d7e5d0",
+      "date": "2024-12-23",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "4 УТС",
+      "subject": "МиМСУ",
+      "kind": "EXAM",
+      "teacher": "Теплоухов С.",
+      "location": {
+        "room": "404",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 19
+      }
+    },
+    {
+      "id": "sha1:ed1be3df00f23e36994b74df6db6328c77a2b5f6",
+      "date": "2024-12-23",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "4ИВТ1",
+      "subject": "Проектирование АСУ",
+      "kind": "EXAM",
+      "teacher": "Коржаков В.Е.",
+      "location": {
+        "room": "407",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 19
+      }
+    },
+    {
+      "id": "sha1:d02b1fc55575b0eabdc0ec0adda4f0ee7fdce0b8",
+      "date": "2024-12-24",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "4ИВТ2",
+      "subject": "Проектирование АСУ",
+      "kind": "EXAM",
+      "teacher": "Коржаков В.Е.",
+      "location": {
+        "room": "407",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 20
+      }
+    },
+    {
+      "id": "sha1:c1759ad04cf2b3160d9d591ea163f9d11cb90fd5",
+      "date": "2024-12-27",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "4Ф",
+      "subject": "Компьютерные методы физики",
+      "kind": "EXAM",
+      "teacher": "Шамбина С.В.",
+      "location": {
+        "room": "325",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 23
+      }
+    },
+    {
+      "id": "sha1:75ddc840660553d4485075cdb15cd1ccd4ffbc5c",
+      "date": "2024-12-27",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "4 УТС",
+      "subject": "Информационные сети и ТК",
+      "kind": "EXAM",
+      "teacher": "Алиева М.Ф.",
+      "location": {
+        "room": "405",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 23
+      }
+    },
+    {
+      "id": "sha1:c0113390199a2fd09c2ce79e0ec903feaf0838ff",
+      "date": "2024-12-27",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "4ИВТ1",
+      "subject": "ПОАСНИ",
+      "kind": "EXAM",
+      "teacher": "Теплоухов С.",
+      "location": {
+        "room": "404",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 23
+      }
+    },
+    {
+      "id": "sha1:bd5aabd6fd94e89673563e0527ab1390d6609f92",
+      "date": "2024-12-28",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "4ИВТ2",
+      "subject": "ПОАСНИ",
+      "kind": "EXAM",
+      "teacher": "Теплоухов С.",
+      "location": {
+        "room": "404",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 24
+      }
+    },
+    {
+      "id": "sha1:a266eebb840c68dc68c6dda5567743ed841e7989",
+      "date": "2025-01-01",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "3ИВТ2",
+      "subject": "Проектирование АСУ",
+      "kind": "EXAM",
+      "teacher": "Коржаков В.Е.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": "дист.",
+      "source": {
+        "sheet": "Лист1",
+        "row": 28
+      }
+    },
+    {
+      "id": "sha1:3809db067f544c48d76422e568b9d23a6b38ef39",
+      "date": "2025-01-05",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "3ИВТ2",
+      "subject": "Технология программирования",
+      "kind": "EXAM",
+      "teacher": "Овчаров И.Н.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 32
+      }
+    },
+    {
+      "id": "sha1:89d72539f8fd4822678a3513bc7b5da80ad8c34c",
+      "date": "2025-01-09",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "1ПО_магистр",
+      "subject": "Астрономия и физика космоса",
+      "kind": "EXAM",
+      "teacher": "Шамбин А.И.",
+      "location": {
+        "room": "327",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 36
+      }
+    },
+    {
+      "id": "sha1:1bfe2c2337b8e9762f199adea830a60fa1a262b3",
+      "date": "2025-01-09",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "2ПО_магистр",
+      "subject": "Методика обучения информатике в современной школе",
+      "kind": "EXAM",
+      "teacher": "Алиева М.Ф.",
+      "location": {
+        "room": "404",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 36
+      }
+    },
+    {
+      "id": "sha1:a967fae93d8e244c10f7e2ee55d52ce0f44bf691",
+      "date": "2025-01-09",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "1 Ф",
+      "subject": "Элементарная физика",
+      "kind": "EXAM",
+      "teacher": "Тлячев В.Б.",
+      "location": {
+        "room": "324",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 36
+      }
+    },
+    {
+      "id": "sha1:2cdb8ff4336eeecf87eccb7b86643693ee1808b1",
+      "date": "2025-01-09",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "2Ф",
+      "subject": "Программирование",
+      "kind": "EXAM",
+      "teacher": "Шамбина С.В.",
+      "location": {
+        "room": "328",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 36
+      }
+    },
+    {
+      "id": "sha1:d3cf15924e79ec1ce991f686c07b8f5eb36a8728",
+      "date": "2025-01-09",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "3 УТС",
+      "subject": "Методы оптимизации",
+      "kind": "EXAM",
+      "teacher": "Коржакова С.А.",
+      "location": {
+        "room": "407",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 36
+      }
+    },
+    {
+      "id": "sha1:8e80ef101ae973659549ff45c696bf7d40032754",
+      "date": "2025-01-09",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "1ИВТ_АСОИУ",
+      "subject": "Матем.анализ",
+      "kind": "EXAM",
+      "teacher": "Беликова Т.Г.",
+      "location": {
+        "room": "323б",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 36
+      }
+    },
+    {
+      "id": "sha1:4d16c3a596d9e783faa5b1e86582b7e1bc985603",
+      "date": "2025-01-09",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "2ИВТ_АСОИУ",
+      "subject": "Ин. яз",
+      "kind": "EXAM",
+      "teacher": "Симбулетова Р.К., Копылова Ю.В.",
+      "location": {
+        "room": "143/404",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 36
+      }
+    },
+    {
+      "id": "sha1:fa1e5d892ed041a550b0bc01076d6dc0d817718a",
+      "date": "2025-01-09",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "3ИВТ1",
+      "subject": "Электротехн. и электроника",
+      "kind": "EXAM",
+      "teacher": "Мамий А.Р.",
+      "location": {
+        "room": "406",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 36
+      }
+    },
+    {
+      "id": "sha1:ff7276f9714bce8d7f0afc27ecbde466fd770647",
+      "date": "2025-01-09",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "4ИВТ(УзГУМЯ)",
+      "subject": "Проектирование АСУ",
+      "kind": "EXAM",
+      "teacher": "Коржаков В.Е.",
+      "location": {
+        "room": "405",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 36
+      }
+    },
+    {
+      "id": "sha1:a2849919ecb672e2ccd561d34e8c7e443ce4e8ba",
+      "date": "2025-01-09",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "3ИВТ2",
+      "subject": "Системы ИИ",
+      "kind": "EXAM",
+      "teacher": "Коробков В.Н.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": "дист.",
+      "source": {
+        "sheet": "Лист1",
+        "row": 36
+      }
+    },
+    {
+      "id": "sha1:abc1076ba2b46993942fa1a3952d42cde393945b",
+      "date": "2025-01-10",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "3Ф",
+      "subject": "Теор.механика. Механика сплош.сред",
+      "kind": "EXAM",
+      "teacher": "Шекоян Л.А.",
+      "location": {
+        "room": "324",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 37
+      }
+    },
+    {
+      "id": "sha1:3e665093bdc5cb6a9120a424098422e73b1457c5",
+      "date": "2025-01-10",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "4Ф",
+      "subject": "Квантовая теория",
+      "kind": "EXAM",
+      "teacher": "Тлячев В.Б.",
+      "location": {
+        "room": "317",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 37
+      }
+    },
+    {
+      "id": "sha1:53c1a2265ecf9e8bfed5c84701d60cc37087a5f6",
+      "date": "2025-01-10",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "3ИВТ2",
+      "subject": "Электротехн. и электроника",
+      "kind": "EXAM",
+      "teacher": "Мамий А.Р.",
+      "location": {
+        "room": "404",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 37
+      }
+    },
+    {
+      "id": "sha1:1d490e9c3a940b340709922ef81322b6bf0f289f",
+      "date": "2025-01-10",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "4ИВТ1",
+      "subject": "Надежность, эргономика и кач",
+      "kind": "EXAM",
+      "teacher": "Коржаков А.В.",
+      "location": {
+        "room": "406",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 37
+      }
+    },
+    {
+      "id": "sha1:e4fe12b3b9c88aeade33c94f10752fc2247a9a90",
+      "date": "2025-01-11",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "4 УТС",
+      "subject": "ТСАУ",
+      "kind": "EXAM",
+      "teacher": "Джемилев А.С.",
+      "location": {
+        "room": "404",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 38
+      }
+    },
+    {
+      "id": "sha1:b03b561732870ae0a08b5c3c1c7d1d9170846b85",
+      "date": "2025-01-11",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "4ИВТ2",
+      "subject": "Надежность, эргономика и кач",
+      "kind": "EXAM",
+      "teacher": "Коржаков А.В.",
+      "location": {
+        "room": "406",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 38
+      }
+    },
+    {
+      "id": "sha1:9833684a60c926f013353575706d98341b8f57f0",
+      "date": "2025-01-13",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "1ПО_магистр",
+      "subject": "Современные проблемы науки и образования",
+      "kind": "EXAM",
+      "teacher": "Куваева А.А.",
+      "location": {
+        "room": "327",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 40
+      }
+    },
+    {
+      "id": "sha1:ebf7e3e40978f96c74d230eb4f9df00f728ac643",
+      "date": "2025-01-13",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "2ПО_магистр",
+      "subject": "Избранные вопросы современной информатики",
+      "kind": "EXAM",
+      "teacher": "Алиева М.Ф.",
+      "location": {
+        "room": "404",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 40
+      }
+    },
+    {
+      "id": "sha1:8f94f28fa67ebd7ad879592d9f507a556143526e",
+      "date": "2025-01-13",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "1 Ф",
+      "subject": "Элементарная математика",
+      "kind": "EXAM",
+      "teacher": "Ушхо А.Д.",
+      "location": {
+        "room": "324",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 40
+      }
+    },
+    {
+      "id": "sha1:9b369c68d1d72beed897d9bf768e587146d3abba",
+      "date": "2025-01-13",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "2Ф",
+      "subject": "Молекулярная физика",
+      "kind": "EXAM",
+      "teacher": "Жукова И.Н.",
+      "location": {
+        "room": "319",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 40
+      }
+    },
+    {
+      "id": "sha1:43e98c4f09daeffc28c88c0a023fbca6d5c1d0d9",
+      "date": "2025-01-13",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "3 УТС",
+      "subject": "Инженерная и комп. Графика",
+      "kind": "EXAM",
+      "teacher": "Хандожко А.А.",
+      "location": {
+        "room": "328",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 40
+      }
+    },
+    {
+      "id": "sha1:e5f709f90cd4a646400a89f0f7414a7602aa4152",
+      "date": "2025-01-13",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "1ИВТ_АСОИУ",
+      "subject": "Алгебра и геом",
+      "kind": "EXAM",
+      "teacher": "Калашникова С.И.",
+      "location": {
+        "room": "406",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 40
+      }
+    },
+    {
+      "id": "sha1:22704216c45c56705a4010da74ac833d894905a6",
+      "date": "2025-01-13",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "2ИВТ_АСОИУ",
+      "subject": "Физика",
+      "kind": "EXAM",
+      "teacher": "Шамбин А.И.",
+      "location": {
+        "room": "329",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 40
+      }
+    },
+    {
+      "id": "sha1:daf279828230cfa1f6eb4d9dfe47ab196749659f",
+      "date": "2025-01-13",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "3ИВТ1",
+      "subject": "Методы оптимизации",
+      "kind": "EXAM",
+      "teacher": "Коржакова С.А.",
+      "location": {
+        "room": "407",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 40
+      }
+    },
+    {
+      "id": "sha1:922029fd4deaefa77fca3d0bf2e2d3c5dc43c7d1",
+      "date": "2025-01-13",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "4ИВТ(УзГУМЯ)",
+      "subject": "СПО",
+      "kind": "EXAM",
+      "teacher": "Плисенко О.А.",
+      "location": {
+        "room": "405",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 40
+      }
+    },
+    {
+      "id": "sha1:7a9aa22f094907df2d9e50c81d41226791b64b65",
+      "date": "2025-01-14",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "3Ф",
+      "subject": "Радиофизика и электроника",
+      "kind": "EXAM",
+      "teacher": "Шамбин А.И.",
+      "location": {
+        "room": "325",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 41
+      }
+    },
+    {
+      "id": "sha1:c00aef3887e50aa8c40ae8c66126aafd83cc3691",
+      "date": "2025-01-14",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "4Ф",
+      "subject": "Атомная и ядерная физика",
+      "kind": "EXAM",
+      "teacher": "Тлячев В.Б.",
+      "location": {
+        "room": "317",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 41
+      }
+    },
+    {
+      "id": "sha1:041a938e588f420b35d6994f24b148d6436a335c",
+      "date": "2025-01-14",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "1ИВТ_ТИИ",
+      "subject": "Математика Калашникова С.И",
+      "kind": "EXAM",
+      "teacher": "Артисевич А.Е.",
+      "location": {
+        "room": "323б",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 41
+      }
+    },
+    {
+      "id": "sha1:fa1710e7a7fce15d87e7a636d9055112cf498187",
+      "date": "2025-01-14",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "3ИВТ2",
+      "subject": "Методы оптимизации",
+      "kind": "EXAM",
+      "teacher": "Коржакова С.А.",
+      "location": {
+        "room": "407",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 41
+      }
+    },
+    {
+      "id": "sha1:f47622fc0b454e57d94c2604775767f4eef1ca2b",
+      "date": "2025-01-14",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "4ИВТ1",
+      "subject": "СПО",
+      "kind": "EXAM",
+      "teacher": "Плисенко О.А.",
+      "location": {
+        "room": "405",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 41
+      }
+    },
+    {
+      "id": "sha1:0c583f991f001f294449cf9e1dbdd89a37c8824f",
+      "date": "2025-01-15",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "4 УТС",
+      "subject": "Системы искусственного интелекта",
+      "kind": "EXAM",
+      "teacher": "Шопин А.В.",
+      "location": {
+        "room": "511",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 42
+      }
+    },
+    {
+      "id": "sha1:94bc20d85b59b4b017d95f54c91f42054b004761",
+      "date": "2025-01-15",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "4ИВТ2",
+      "subject": "СПО",
+      "kind": "EXAM",
+      "teacher": "Плисенко О.А.",
+      "location": {
+        "room": "405",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 42
+      }
+    },
+    {
+      "id": "sha1:8c8c981fc9234a8717ecdfd535ee6f78469b3d1f",
+      "date": "2025-01-16",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "3ИВТ1",
+      "subject": "Сети и телеком",
+      "kind": "EXAM",
+      "teacher": "Плисенко О.А.",
+      "location": {
+        "room": "405",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 43
+      }
+    },
+    {
+      "id": "sha1:e086ba613ef0c8a5001b92352d5d3db0097e9a63",
+      "date": "2025-01-17",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "2ПО_магистр",
+      "subject": "Современные образовательные технологии",
+      "kind": "EXAM",
+      "teacher": "Джабатырова Б.К.",
+      "location": {
+        "room": "206с",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 44
+      }
+    },
+    {
+      "id": "sha1:3b6935e4ecfffa63e4dafcfc7b373ec2a16e0773",
+      "date": "2025-01-17",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "2Ф",
+      "subject": "Численные методы и мат.моделирование",
+      "kind": "EXAM",
+      "teacher": "Ушхо А.Д.",
+      "location": {
+        "room": "319",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 44
+      }
+    },
+    {
+      "id": "sha1:ca5a4b16bef1a63efe05bba023c50667e78d9591",
+      "date": "2025-01-17",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "3Ф",
+      "subject": "Оптика",
+      "kind": "EXAM",
+      "teacher": "Жукова И.Н.",
+      "location": {
+        "room": "324",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 44
+      }
+    },
+    {
+      "id": "sha1:0cf278e280d66df6d955fa8979e4246975fe070b",
+      "date": "2025-01-17",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "3 УТС",
+      "subject": "Электротехника и электроника",
+      "kind": "EXAM",
+      "teacher": "Мамий А.Р.",
+      "location": {
+        "room": "406",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 44
+      }
+    },
+    {
+      "id": "sha1:6f340e50b012300441b8e79643cd5bb115d253ce",
+      "date": "2025-01-17",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "2ИВТ_АСОИУ",
+      "subject": "ЭВМ и переф.устр",
+      "kind": "EXAM",
+      "teacher": "Коржакова С.А.",
+      "location": {
+        "room": "407",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 44
+      }
+    },
+    {
+      "id": "sha1:56f671bd67d8915175e51bf8e3400c8710a5813c",
+      "date": "2025-01-17",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "3ИВТ2",
+      "subject": "Сети и телеком",
+      "kind": "EXAM",
+      "teacher": "Плисенко О.А.",
+      "location": {
+        "room": "405",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 44
+      }
+    },
+    {
+      "id": "sha1:86df2a5d7656ca6f68ee7626a005c064675adc27",
+      "date": "2025-01-17",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "4ИВТ(УзГУМЯ)",
+      "subject": "Надежность, эргономика, качество",
+      "kind": "EXAM",
+      "teacher": "Коржаков А.В.",
+      "location": {
+        "room": "404",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 44
+      }
+    },
+    {
+      "id": "sha1:3061b4a3ed6771c0b33e8ce83197ec0f11eef40c",
+      "date": "2025-01-18",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "4ИВТ1",
+      "subject": "Защита информации",
+      "kind": "EXAM",
+      "teacher": "Киздермишов А.А.",
+      "location": {
+        "room": "405",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 45
+      }
+    },
+    {
+      "id": "sha1:b3679117bd0d9c30eeef233eda63414af1e5053e",
+      "date": "2025-01-19",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "4ИВТ2",
+      "subject": "Защита информации",
+      "kind": "EXAM",
+      "teacher": "Киздермишов А.А.",
+      "location": {
+        "room": "405",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 46
+      }
+    },
+    {
+      "id": "sha1:f0b9d6c4893fe077e120bd70256733d30fc51bba",
+      "date": "2025-01-20",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "2Ф",
+      "subject": "ТВМС",
+      "kind": "EXAM",
+      "teacher": "Скоркин А.Ю.",
+      "location": {
+        "room": "329",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 47
+      }
+    },
+    {
+      "id": "sha1:017b331b378d98d34d3a40457ea2a49ab9ceadeb",
+      "date": "2025-01-20",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "3ИВТ1",
+      "subject": "Технология программир",
+      "kind": "EXAM",
+      "teacher": "Плисенко О.А.",
+      "location": {
+        "room": "405",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 47
+      }
+    },
+    {
+      "id": "sha1:343cf72582d225010aed3cb12e67107207c00036",
+      "date": "2025-01-21",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "2ПО_магистр",
+      "subject": "Методика преподавания современной физики в профильной школе",
+      "kind": "EXAM",
+      "teacher": "Ушхо А.Д.",
+      "location": {
+        "room": "324",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 48
+      }
+    },
+    {
+      "id": "sha1:780d581584e7d3a879811ab908e30885bdda9010",
+      "date": "2025-01-21",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "3Ф",
+      "subject": "Векторный и тензорный анализ",
+      "kind": "EXAM",
+      "teacher": "Жукова И.Н.",
+      "location": {
+        "room": "328",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 48
+      }
+    },
+    {
+      "id": "sha1:ac294ea69b7a193be7cd786c4fb010a647ef50d2",
+      "date": "2025-01-21",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "3 УТС",
+      "subject": "Теоретическая механика",
+      "kind": "EXAM",
+      "teacher": "Шамбин А.И.",
+      "location": {
+        "room": "325",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 48
+      }
+    },
+    {
+      "id": "sha1:0eba2f44ebbe18744abf47a233a195a1944ebd84",
+      "date": "2025-01-21",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "2ИВТ_АСОИУ",
+      "subject": "ТС и СА",
+      "kind": "EXAM",
+      "teacher": "Коржаков А.В.",
+      "location": {
+        "room": "407",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 48
+      }
+    },
+    {
+      "id": "sha1:747fc2aceebb286239493cfc2c17f60077357e0d",
+      "date": "2025-01-21",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "3ИВТ2",
+      "subject": "Технология программир",
+      "kind": "EXAM",
+      "teacher": "Плисенко О.А.",
+      "location": {
+        "room": "405",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 48
+      }
+    },
+    {
+      "id": "sha1:308e1d971f2e1dbb644ed29f724a2551d6ca40b6",
+      "date": "2025-01-21",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "4ИВТ(УзГУМЯ)",
+      "subject": "Технология программир",
+      "kind": "EXAM",
+      "teacher": "Плисенко О.А.",
+      "location": {
+        "room": "405",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 48
+      }
+    },
+    {
+      "id": "sha1:6657269e0ce96de36b783242cbc104c2cb4b8e9d",
+      "date": "2025-01-23",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "2ИВТ_ТИИ",
+      "subject": "Операционные системы",
+      "kind": "EXAM",
+      "teacher": "Плисенко О.А.",
+      "location": {
+        "room": "405",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 50
+      }
+    },
+    {
+      "id": "sha1:0a4b162cce6d89cf5ce83522631a107252d957fe",
+      "date": "2025-01-23",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "3ИВТ2",
+      "subject": "НЭК АСОИУ",
+      "kind": "EXAM",
+      "teacher": "Коржаков А.В.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": "дист.",
+      "source": {
+        "sheet": "Лист1",
+        "row": 50
+      }
+    },
+    {
+      "id": "sha1:2cdb8c0170e68d8f5ce02058b012f703eb00f4f4",
+      "date": "2025-01-24",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "2Ф",
+      "subject": "Мат.пакеты в проф.деятельности",
+      "kind": "EXAM",
+      "teacher": "Шамбина С.В.",
+      "location": {
+        "room": "324",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 51
+      }
+    },
+    {
+      "id": "sha1:e4a75b41926ba9dae45ca5fdeb7f11813a0b89b1",
+      "date": "2025-01-24",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "2ИВТ_АСОИУ",
+      "subject": "Инженерная и комп. Графика",
+      "kind": "EXAM",
+      "teacher": "Хандожко А.А.",
+      "location": {
+        "room": "406",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 51
+      }
+    },
+    {
+      "id": "sha1:b2a509500b1eeb06fda173bca7dbce654317b487",
+      "date": "2025-01-27",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "3ИВТ2",
+      "subject": "Моделирование систем",
+      "kind": "EXAM",
+      "teacher": "Коржакова С.А.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": "дист.",
+      "source": {
+        "sheet": "Лист1",
+        "row": 54
+      }
+    },
+    {
+      "id": "sha1:a79f1da953375c892bbec38505332ab4ddc8aa91",
+      "date": "2021-01-11",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": null,
+      "subject": null,
+      "kind": "CONSULTATION",
+      "teacher": "Артисевич А.Е.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 2
+      }
+    },
+    {
+      "id": "sha1:882bb25e3b97e95b092ce0389f10dd5cc315bd30",
+      "date": "2021-01-12",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "2Ф",
+      "subject": "ТФКП",
+      "kind": "EXAM",
+      "teacher": "Артисевич А.Е.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 3
+      }
+    },
+    {
+      "id": "sha1:836342c5bf177b19c9ed6e777006269a1bee4023",
+      "date": "2021-01-19",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": null,
+      "subject": null,
+      "kind": "CONSULTATION",
+      "teacher": "Сташ А.Х.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 4
+      }
+    },
+    {
+      "id": "sha1:75a091035a6ef4ecfec7cfca104654f4732a84fc",
+      "date": "2021-01-20",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "1УТС, 2Ф",
+      "subject": "Матан",
+      "kind": "EXAM",
+      "teacher": "Сташ А.Х.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 5
+      }
+    },
+    {
+      "id": "sha1:e7df833ab0c6b9f69f2602e2bf9d7274b6dbee8b",
+      "date": "2021-01-22",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": null,
+      "subject": null,
+      "kind": "CONSULTATION",
+      "teacher": "Сташ А.Х.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 6
+      }
+    },
+    {
+      "id": "sha1:e52ab2b7879087c20325364b7328c1ae2d6a8f62",
+      "date": "2021-01-23",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "1ИВТ2",
+      "subject": "Матан",
+      "kind": "EXAM",
+      "teacher": "Сташ А.Х.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 7
+      }
+    },
+    {
+      "id": "sha1:9ff503afbc84c63b5b2f9d4b40b8af8557b2234c",
+      "date": "2021-01-23",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": null,
+      "subject": null,
+      "kind": "CONSULTATION",
+      "teacher": "Сташ А.Х.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 8
+      }
+    },
+    {
+      "id": "sha1:b5f0ceef2149cf88e3f34be46080221d905e3ebf",
+      "date": "2021-01-24",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "1ИВТ1",
+      "subject": "Матан",
+      "kind": "EXAM",
+      "teacher": "Сташ А.Х.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 9
+      }
+    },
+    {
+      "id": "sha1:9feb96976e9a2dc3a50a15285a6db0650db71f59",
+      "date": "2021-01-09",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": null,
+      "subject": null,
+      "kind": "CONSULTATION",
+      "teacher": "Калашникова С.И.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 10
+      }
+    },
+    {
+      "id": "sha1:0c5e92cff9298849d4e0daac84dab1f02f50afba",
+      "date": "2021-01-10",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "1ИВТ2, 1УТС",
+      "subject": "Алг и геом",
+      "kind": "EXAM",
+      "teacher": "Калашникова С.И.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 11
+      }
+    },
+    {
+      "id": "sha1:fca41f1c8aedf12782e31b766da03a5cf569e49d",
+      "date": "2021-01-10",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": null,
+      "subject": null,
+      "kind": "CONSULTATION",
+      "teacher": "Калашникова С.И.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 12
+      }
+    },
+    {
+      "id": "sha1:19e8eb3d40adbb74d7cad023b0d32c0afe289ebf",
+      "date": "2021-01-11",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "1ИВТ1",
+      "subject": "Алг и геом",
+      "kind": "EXAM",
+      "teacher": "Калашникова С.И.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 13
+      }
+    },
+    {
+      "id": "sha1:adac790f019474d3f7716c322cd824d1197e6aac",
+      "date": "2021-01-24",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": null,
+      "subject": null,
+      "kind": "CONSULTATION",
+      "teacher": "Пономарев М.Г.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 14
+      }
+    },
+    {
+      "id": "sha1:70ef068ab43fb27d3a463f00570a654f20b195dc",
+      "date": "2021-01-25",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "3ПО",
+      "subject": "Оптика",
+      "kind": "EXAM",
+      "teacher": "Пономарев М.Г.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 15
+      }
+    },
+    {
+      "id": "sha1:5fe17a74b6ccbde805d7a6f394387ecab79e4a9d",
+      "date": "2020-12-28",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": null,
+      "subject": null,
+      "kind": "CONSULTATION",
+      "teacher": "Аракелов А.В.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 16
+      }
+    },
+    {
+      "id": "sha1:5751182188967801fed8cb070286457259bdb586",
+      "date": "2020-12-29",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "4Ф",
+      "subject": "Метод.препод",
+      "kind": "EXAM",
+      "teacher": "Аракелов А.В.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 17
+      }
+    },
+    {
+      "id": "sha1:96e2e90d227621b4c4cdcfbf40d557e623635c79",
+      "date": "2021-01-16",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": null,
+      "subject": null,
+      "kind": "CONSULTATION",
+      "teacher": "Аракелов А.В.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 18
+      }
+    },
+    {
+      "id": "sha1:31a97cb569a33f507186ba35aa93966f3f51c027",
+      "date": "2021-01-17",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "4ПО",
+      "subject": "Метод.препод",
+      "kind": "EXAM",
+      "teacher": "Аракелов А.В.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 19
+      }
+    },
+    {
+      "id": "sha1:9b63749c2413ae7f6379d8b9bf1852354da9b89a",
+      "date": "2021-01-21",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": null,
+      "subject": null,
+      "kind": "CONSULTATION",
+      "teacher": "Аракелов А.В.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 20
+      }
+    },
+    {
+      "id": "sha1:63d25370db1f35e83f99cb139b5e588f83c3f7e2",
+      "date": "2021-01-22",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "4ПО",
+      "subject": "Методы реше",
+      "kind": "EXAM",
+      "teacher": "Аракелов А.В.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 21
+      }
+    },
+    {
+      "id": "sha1:81a7eb86eeee70808071b8585d5f9589571dffca",
+      "date": "2021-01-13",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": null,
+      "subject": null,
+      "kind": "CONSULTATION",
+      "teacher": "Нагой А.А.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 22
+      }
+    },
+    {
+      "id": "sha1:d1b9d610e6ebeb6f88563d28ce423821c130d735",
+      "date": "2021-01-14",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "1ИВТ2",
+      "subject": "Культурология",
+      "kind": "EXAM",
+      "teacher": "Нагой А.А.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 23
+      }
+    },
+    {
+      "id": "sha1:13f3cb5571629c035bda34c9b0afa074ee42da96",
+      "date": "2021-01-19",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": null,
+      "subject": null,
+      "kind": "CONSULTATION",
+      "teacher": "Нагой А.А.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 24
+      }
+    },
+    {
+      "id": "sha1:54792b7f03dbe8dfc6f30d23c92f2939b7c20c97",
+      "date": "2021-01-20",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "1ИВТ1",
+      "subject": "Культурология",
+      "kind": "EXAM",
+      "teacher": "Нагой А.А.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 25
+      }
+    },
+    {
+      "id": "sha1:a92042ded2f06b552f2ebac3c06ea78c41139058",
+      "date": "2021-01-13",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": null,
+      "subject": null,
+      "kind": "CONSULTATION",
+      "teacher": "Бурыкина Л.В.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 26
+      }
+    },
+    {
+      "id": "sha1:c05709a1c1c40b968b9e2c2f76517f427c0e41be",
+      "date": "2021-01-14",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "1Ф, 1УТС",
+      "subject": "История",
+      "kind": "EXAM",
+      "teacher": "Бурыкина Л.В.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 27
+      }
+    },
+    {
+      "id": "sha1:1ccff255f2b775cb5babc0e44ca6e445634200fa",
+      "date": "2021-01-15",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": null,
+      "subject": null,
+      "kind": "CONSULTATION",
+      "teacher": "Бурыкина Л.В.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 28
+      }
+    },
+    {
+      "id": "sha1:1494d4ee9f53ddfdc15e88c55dadd213f6ebdd0d",
+      "date": "2021-01-16",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "1ИВТ1",
+      "subject": "История",
+      "kind": "EXAM",
+      "teacher": "Бурыкина Л.В.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 29
+      }
+    },
+    {
+      "id": "sha1:21ec9e19d8beae2c4ab68d20d45f92f8ae7bd428",
+      "date": "2021-01-17",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": null,
+      "subject": null,
+      "kind": "CONSULTATION",
+      "teacher": "Бурыкина Л.В.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 30
+      }
+    },
+    {
+      "id": "sha1:57f77bb1126b06b0b4503e2dc75c98a7aa75f77e",
+      "date": "2021-01-18",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "1ИВТ2",
+      "subject": "История",
+      "kind": "EXAM",
+      "teacher": "Бурыкина Л.В.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 31
+      }
+    }
+  ],
+  "issues": []
+}
+</file>
+
+<file path="backend/result1.json">
+{
+  "meta": {
+    "sourceFileName": "session.xlsx",
+    "parsedAt": "2026-02-23T10:55:38.534Z",
+    "version": "1.0"
+  },
+  "summary": {
+    "items": 95,
+    "groups": [
+      "1 Ф",
+      "1ИВТ1",
+      "1ИВТ2",
+      "1ИВТ2, 1УТС",
+      "1ИВТ_АСОИУ",
+      "1ИВТ_ТИИ",
+      "1ПО_магистр",
+      "1УТС, 2Ф",
+      "1Ф, 1УТС",
+      "2ИВТ_АСОИУ",
+      "2ИВТ_ТИИ",
+      "2ПО_магистр",
+      "2Ф",
+      "3 УТС",
+      "3ИВТ1",
+      "3ИВТ2",
+      "3ПО",
+      "3Ф",
+      "4 УТС",
+      "4ИВТ(УзГУМЯ)",
+      "4ИВТ1",
+      "4ИВТ2",
+      "4ПО",
+      "4Ф"
+    ],
+    "itemsByGroup": {
+      "1 Ф": 2,
+      "1ИВТ1": 4,
+      "1ИВТ2": 3,
+      "1ИВТ2, 1УТС": 1,
+      "1ИВТ_АСОИУ": 2,
+      "1ИВТ_ТИИ": 1,
+      "1ПО_магистр": 2,
+      "1УТС, 2Ф": 1,
+      "1Ф, 1УТС": 1,
+      "2ИВТ_АСОИУ": 5,
+      "2ИВТ_ТИИ": 1,
+      "2ПО_магистр": 4,
+      "2Ф": 6,
+      "3 УТС": 4,
+      "3ИВТ1": 4,
+      "3ИВТ2": 9,
+      "3ПО": 1,
+      "3Ф": 4,
+      "4 УТС": 4,
+      "4ИВТ(УзГУМЯ)": 4,
+      "4ИВТ1": 5,
+      "4ИВТ2": 5,
+      "4ПО": 2,
+      "4Ф": 5
+    },
+    "dateRange": {
+      "from": "1/10/21",
+      "to": "12/29/20"
+    }
+  },
+  "items": [
+    {
+      "id": "sha1:279a0f687eb83678d2a9946e736ce36dfbd29bdd",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "4Ф",
+      "subject": "Методика обучения физики",
+      "kind": "EXAM",
+      "teacher": "Шамбин А.И.",
+      "location": {
+        "room": "325",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 19
+      }
+    },
+    {
+      "id": "sha1:b02477afeb7066d474217c0677698ae4d7ca4cc1",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "4 УТС",
+      "subject": "МиМСУ",
+      "kind": "EXAM",
+      "teacher": "Теплоухов С.",
+      "location": {
+        "room": "404",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 19
+      }
+    },
+    {
+      "id": "sha1:371765a2aee195b147e06ac4d7c986ff3076097b",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "4ИВТ1",
+      "subject": "Проектирование АСУ",
+      "kind": "EXAM",
+      "teacher": "Коржаков В.Е.",
+      "location": {
+        "room": "407",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 19
+      }
+    },
+    {
+      "id": "sha1:12c6d4e33b758197209b3af3720fb5dd066bda78",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "4ИВТ2",
+      "subject": "Проектирование АСУ",
+      "kind": "EXAM",
+      "teacher": "Коржаков В.Е.",
+      "location": {
+        "room": "407",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 20
+      }
+    },
+    {
+      "id": "sha1:9cacd250c1f32d8cea4f95fdbedf30da552fb121",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "4Ф",
+      "subject": "Компьютерные методы физики",
+      "kind": "EXAM",
+      "teacher": "Шамбина С.В.",
+      "location": {
+        "room": "325",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 23
+      }
+    },
+    {
+      "id": "sha1:767cf378aa911ae97b617eca44b9963ab730a7de",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "4 УТС",
+      "subject": "Информационные сети и ТК",
+      "kind": "EXAM",
+      "teacher": "Алиева М.Ф.",
+      "location": {
+        "room": "405",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 23
+      }
+    },
+    {
+      "id": "sha1:c7cdf3f9fa46b3e4a0b148a461c8faaed9db91f4",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "4ИВТ1",
+      "subject": "ПОАСНИ",
+      "kind": "EXAM",
+      "teacher": "Теплоухов С.",
+      "location": {
+        "room": "404",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 23
+      }
+    },
+    {
+      "id": "sha1:f2c7516f4cd5e911ee2f31dbb36a1763aa6cfd04",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "4ИВТ2",
+      "subject": "ПОАСНИ",
+      "kind": "EXAM",
+      "teacher": "Теплоухов С.",
+      "location": {
+        "room": "404",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 24
+      }
+    },
+    {
+      "id": "sha1:d2240733003f70a22f524711a43b36a9ac3bcf86",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "3ИВТ2",
+      "subject": "Проектирование АСУ",
+      "kind": "EXAM",
+      "teacher": "Коржаков В.Е.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": "дист.",
+      "source": {
+        "sheet": "Лист1",
+        "row": 28
+      }
+    },
+    {
+      "id": "sha1:8ccbda2f6e5fe42d3a202a2ba7607c535c82ca87",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "3ИВТ2",
+      "subject": "Технология программирования",
+      "kind": "EXAM",
+      "teacher": "Овчаров И.Н.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 32
+      }
+    },
+    {
+      "id": "sha1:e12d60fa00facb2988d4a3b59b62baa301bb326a",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "1ПО_магистр",
+      "subject": "Астрономия и физика космоса",
+      "kind": "EXAM",
+      "teacher": "Шамбин А.И.",
+      "location": {
+        "room": "327",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 36
+      }
+    },
+    {
+      "id": "sha1:bceaaa480e700f72972dfc9a361ac8cb8ef4b935",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "2ПО_магистр",
+      "subject": "Методика обучения информатике в современной школе",
+      "kind": "EXAM",
+      "teacher": "Алиева М.Ф.",
+      "location": {
+        "room": "404",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 36
+      }
+    },
+    {
+      "id": "sha1:bfc83c64977f7ab8cf180ae7e14a1722f9cad474",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "1 Ф",
+      "subject": "Элементарная физика",
+      "kind": "EXAM",
+      "teacher": "Тлячев В.Б.",
+      "location": {
+        "room": "324",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 36
+      }
+    },
+    {
+      "id": "sha1:289cd258eabdaf325160191888601de549387d23",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "2Ф",
+      "subject": "Программирование",
+      "kind": "EXAM",
+      "teacher": "Шамбина С.В.",
+      "location": {
+        "room": "328",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 36
+      }
+    },
+    {
+      "id": "sha1:4ed29c5a5d7f409837c7a688d6c2be5091c51a08",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "3 УТС",
+      "subject": "Методы оптимизации",
+      "kind": "EXAM",
+      "teacher": "Коржакова С.А.",
+      "location": {
+        "room": "407",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 36
+      }
+    },
+    {
+      "id": "sha1:4e69f5ef7012735d996ecaade0081a0ee73c584e",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "1ИВТ_АСОИУ",
+      "subject": "Матем.анализ",
+      "kind": "EXAM",
+      "teacher": "Беликова Т.Г.",
+      "location": {
+        "room": "323б",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 36
+      }
+    },
+    {
+      "id": "sha1:c8d704d2139cebbfeb084d506c4dddffc42a6d06",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "2ИВТ_АСОИУ",
+      "subject": "Ин. яз",
+      "kind": "EXAM",
+      "teacher": "Симбулетова Р.К., Копылова Ю.В.",
+      "location": {
+        "room": "143/404",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 36
+      }
+    },
+    {
+      "id": "sha1:e8d31ae008ac6ec7bc7c846572eab1629e5b68ce",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "3ИВТ1",
+      "subject": "Электротехн. и электроника",
+      "kind": "EXAM",
+      "teacher": "Мамий А.Р.",
+      "location": {
+        "room": "406",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 36
+      }
+    },
+    {
+      "id": "sha1:fe494b3fbdb2731ae2f1f216fa4fa7b99d6e2cf6",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "4ИВТ(УзГУМЯ)",
+      "subject": "Проектирование АСУ",
+      "kind": "EXAM",
+      "teacher": "Коржаков В.Е.",
+      "location": {
+        "room": "405",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 36
+      }
+    },
+    {
+      "id": "sha1:a7bebff4c680b045e4d7af81475da643d33e5e4a",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "3ИВТ2",
+      "subject": "Системы ИИ",
+      "kind": "EXAM",
+      "teacher": "Коробков В.Н.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": "дист.",
+      "source": {
+        "sheet": "Лист1",
+        "row": 36
+      }
+    },
+    {
+      "id": "sha1:0cc22f30cce6614cb5a8b0885e8e4d728195d4ae",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "3Ф",
+      "subject": "Теор.механика. Механика сплош.сред",
+      "kind": "EXAM",
+      "teacher": "Шекоян Л.А.",
+      "location": {
+        "room": "324",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 37
+      }
+    },
+    {
+      "id": "sha1:90efa90e01fb032bf07686385dfdff05d62f4112",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "4Ф",
+      "subject": "Квантовая теория",
+      "kind": "EXAM",
+      "teacher": "Тлячев В.Б.",
+      "location": {
+        "room": "317",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 37
+      }
+    },
+    {
+      "id": "sha1:a418a84bf06bc02df8840a337f0e7e226651e166",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "3ИВТ2",
+      "subject": "Электротехн. и электроника",
+      "kind": "EXAM",
+      "teacher": "Мамий А.Р.",
+      "location": {
+        "room": "404",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 37
+      }
+    },
+    {
+      "id": "sha1:132454a7b0c1fd90d31d9bf83bbb3ffe3086b5be",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "4ИВТ1",
+      "subject": "Надежность, эргономика и кач",
+      "kind": "EXAM",
+      "teacher": "Коржаков А.В.",
+      "location": {
+        "room": "406",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 37
+      }
+    },
+    {
+      "id": "sha1:03adad0b2f7714408932e2b12bfc844f7e7bb040",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "4 УТС",
+      "subject": "ТСАУ",
+      "kind": "EXAM",
+      "teacher": "Джемилев А.С.",
+      "location": {
+        "room": "404",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 38
+      }
+    },
+    {
+      "id": "sha1:632bc45cfb582aae7c30bb1c62e193c89413acac",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "4ИВТ2",
+      "subject": "Надежность, эргономика и кач",
+      "kind": "EXAM",
+      "teacher": "Коржаков А.В.",
+      "location": {
+        "room": "406",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 38
+      }
+    },
+    {
+      "id": "sha1:2a145ec60b66f3f1ab74ecc76e5788574da6e41b",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "1ПО_магистр",
+      "subject": "Современные проблемы науки и образования",
+      "kind": "EXAM",
+      "teacher": "Куваева А.А.",
+      "location": {
+        "room": "327",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 40
+      }
+    },
+    {
+      "id": "sha1:9bbdf2e93a4d4313a5ee51ea47d11ff19ce82bc9",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "2ПО_магистр",
+      "subject": "Избранные вопросы современной информатики",
+      "kind": "EXAM",
+      "teacher": "Алиева М.Ф.",
+      "location": {
+        "room": "404",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 40
+      }
+    },
+    {
+      "id": "sha1:b07c3e31030b26de808a2943d5cf1b9074c28824",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "1 Ф",
+      "subject": "Элементарная математика",
+      "kind": "EXAM",
+      "teacher": "Ушхо А.Д.",
+      "location": {
+        "room": "324",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 40
+      }
+    },
+    {
+      "id": "sha1:fd740b8ee3bd3546d4cb115a2bb5596ecc55fde7",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "2Ф",
+      "subject": "Молекулярная физика",
+      "kind": "EXAM",
+      "teacher": "Жукова И.Н.",
+      "location": {
+        "room": "319",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 40
+      }
+    },
+    {
+      "id": "sha1:632df05325bc4bdeccc94ca85ee8c4a20eb0fd2f",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "3 УТС",
+      "subject": "Инженерная и комп. Графика",
+      "kind": "EXAM",
+      "teacher": "Хандожко А.А.",
+      "location": {
+        "room": "328",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 40
+      }
+    },
+    {
+      "id": "sha1:e5d0c01a46f393bb1cc2f4e07de0308240d3a1b6",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "1ИВТ_АСОИУ",
+      "subject": "Алгебра и геом",
+      "kind": "EXAM",
+      "teacher": "Калашникова С.И.",
+      "location": {
+        "room": "406",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 40
+      }
+    },
+    {
+      "id": "sha1:1c58a8a7d6ac6cfb4fa4ffcc79c34f74d4bd3540",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "2ИВТ_АСОИУ",
+      "subject": "Физика",
+      "kind": "EXAM",
+      "teacher": "Шамбин А.И.",
+      "location": {
+        "room": "329",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 40
+      }
+    },
+    {
+      "id": "sha1:fc48bf6ac10707aff9975c0ed4c5e6cf0824860d",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "3ИВТ1",
+      "subject": "Методы оптимизации",
+      "kind": "EXAM",
+      "teacher": "Коржакова С.А.",
+      "location": {
+        "room": "407",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 40
+      }
+    },
+    {
+      "id": "sha1:2e483747a6bd7233c57737d3f2471e9b01096c11",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "4ИВТ(УзГУМЯ)",
+      "subject": "СПО",
+      "kind": "EXAM",
+      "teacher": "Плисенко О.А.",
+      "location": {
+        "room": "405",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 40
+      }
+    },
+    {
+      "id": "sha1:738afc5c37791188600a4aa7e8ee38ed1843ac1a",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "3Ф",
+      "subject": "Радиофизика и электроника",
+      "kind": "EXAM",
+      "teacher": "Шамбин А.И.",
+      "location": {
+        "room": "325",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 41
+      }
+    },
+    {
+      "id": "sha1:2a7b5b21692ea7fcee64b2d593a497318c391333",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "4Ф",
+      "subject": "Атомная и ядерная физика",
+      "kind": "EXAM",
+      "teacher": "Тлячев В.Б.",
+      "location": {
+        "room": "317",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 41
+      }
+    },
+    {
+      "id": "sha1:db872e4e528e4952c2ab511e5eb518ae16ed5ac0",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "1ИВТ_ТИИ",
+      "subject": "Математика Калашникова С.И",
+      "kind": "EXAM",
+      "teacher": "Артисевич А.Е.",
+      "location": {
+        "room": "323б",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 41
+      }
+    },
+    {
+      "id": "sha1:b8c9fe4e0cefd35f731d89b091da2cb24864f07a",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "3ИВТ2",
+      "subject": "Методы оптимизации",
+      "kind": "EXAM",
+      "teacher": "Коржакова С.А.",
+      "location": {
+        "room": "407",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 41
+      }
+    },
+    {
+      "id": "sha1:eae32d8f0cb5e9a01f367dc69f55c196c1e85c87",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "4ИВТ1",
+      "subject": "СПО",
+      "kind": "EXAM",
+      "teacher": "Плисенко О.А.",
+      "location": {
+        "room": "405",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 41
+      }
+    },
+    {
+      "id": "sha1:f030dd50a213cbdcc2f4b287a857afa39d2f5c9e",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "4 УТС",
+      "subject": "Системы искусственного интелекта",
+      "kind": "EXAM",
+      "teacher": "Шопин А.В.",
+      "location": {
+        "room": "511",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 42
+      }
+    },
+    {
+      "id": "sha1:389a81ae2fe22e1fac803b2cd14e30c964ba37f4",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "4ИВТ2",
+      "subject": "СПО",
+      "kind": "EXAM",
+      "teacher": "Плисенко О.А.",
+      "location": {
+        "room": "405",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 42
+      }
+    },
+    {
+      "id": "sha1:6ace48431cc53571e211114929c191052a48c80f",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "3ИВТ1",
+      "subject": "Сети и телеком",
+      "kind": "EXAM",
+      "teacher": "Плисенко О.А.",
+      "location": {
+        "room": "405",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 43
+      }
+    },
+    {
+      "id": "sha1:c502e2c032b2fcc966fee1ea6f8cee091e052a64",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "2ПО_магистр",
+      "subject": "Современные образовательные технологии",
+      "kind": "EXAM",
+      "teacher": "Джабатырова Б.К.",
+      "location": {
+        "room": "206с",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 44
+      }
+    },
+    {
+      "id": "sha1:bbd5feee0d0963c808a93fcfb3ff359b01ea1901",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "2Ф",
+      "subject": "Численные методы и мат.моделирование",
+      "kind": "EXAM",
+      "teacher": "Ушхо А.Д.",
+      "location": {
+        "room": "319",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 44
+      }
+    },
+    {
+      "id": "sha1:86cfb9a1e07c2d9515a6b0d79fea2d4666237795",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "3Ф",
+      "subject": "Оптика",
+      "kind": "EXAM",
+      "teacher": "Жукова И.Н.",
+      "location": {
+        "room": "324",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 44
+      }
+    },
+    {
+      "id": "sha1:ba29e126ef7873febd87b8328662b35a4adca204",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "3 УТС",
+      "subject": "Электротехника и электроника",
+      "kind": "EXAM",
+      "teacher": "Мамий А.Р.",
+      "location": {
+        "room": "406",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 44
+      }
+    },
+    {
+      "id": "sha1:1f5c4011fb786b87129e5cfeba96dd34ba17cf6b",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "2ИВТ_АСОИУ",
+      "subject": "ЭВМ и переф.устр",
+      "kind": "EXAM",
+      "teacher": "Коржакова С.А.",
+      "location": {
+        "room": "407",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 44
+      }
+    },
+    {
+      "id": "sha1:a1bc83cf558abfb6bc4944f54fc84f08f2efd549",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "3ИВТ2",
+      "subject": "Сети и телеком",
+      "kind": "EXAM",
+      "teacher": "Плисенко О.А.",
+      "location": {
+        "room": "405",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 44
+      }
+    },
+    {
+      "id": "sha1:12d84a27f6d185774ccbeb7ac8f1cbc2dc9b0169",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "4ИВТ(УзГУМЯ)",
+      "subject": "Надежность, эргономика, качество",
+      "kind": "EXAM",
+      "teacher": "Коржаков А.В.",
+      "location": {
+        "room": "404",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 44
+      }
+    },
+    {
+      "id": "sha1:e08862752a388c843d3e2d4f4ad2263e0ad96b8c",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "4ИВТ1",
+      "subject": "Защита информации",
+      "kind": "EXAM",
+      "teacher": "Киздермишов А.А.",
+      "location": {
+        "room": "405",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 45
+      }
+    },
+    {
+      "id": "sha1:fa09a96464fb4f6ab91a9c0218ada67d506f1d1a",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "4ИВТ2",
+      "subject": "Защита информации",
+      "kind": "EXAM",
+      "teacher": "Киздермишов А.А.",
+      "location": {
+        "room": "405",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 46
+      }
+    },
+    {
+      "id": "sha1:5827c5c9922292eda74e463e55dd3e060f0edfc1",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "2Ф",
+      "subject": "ТВМС",
+      "kind": "EXAM",
+      "teacher": "Скоркин А.Ю.",
+      "location": {
+        "room": "329",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 47
+      }
+    },
+    {
+      "id": "sha1:fbf44cfc0b45e8a6039df92b910abe807ff6afdf",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "3ИВТ1",
+      "subject": "Технология программир",
+      "kind": "EXAM",
+      "teacher": "Плисенко О.А.",
+      "location": {
+        "room": "405",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 47
+      }
+    },
+    {
+      "id": "sha1:d5d0043505879661fcda34e2e43688293c1e6a59",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "2ПО_магистр",
+      "subject": "Методика преподавания современной физики в профильной школе",
+      "kind": "EXAM",
+      "teacher": "Ушхо А.Д.",
+      "location": {
+        "room": "324",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 48
+      }
+    },
+    {
+      "id": "sha1:6585714de2e1b32cea5b2c83caa2b36a2ea8e757",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "3Ф",
+      "subject": "Векторный и тензорный анализ",
+      "kind": "EXAM",
+      "teacher": "Жукова И.Н.",
+      "location": {
+        "room": "328",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 48
+      }
+    },
+    {
+      "id": "sha1:7c095350a53193584b5d941b899f0945831a8c27",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "3 УТС",
+      "subject": "Теоретическая механика",
+      "kind": "EXAM",
+      "teacher": "Шамбин А.И.",
+      "location": {
+        "room": "325",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 48
+      }
+    },
+    {
+      "id": "sha1:ff6742201ff74c1621492767dc2699f911aa2414",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "2ИВТ_АСОИУ",
+      "subject": "ТС и СА",
+      "kind": "EXAM",
+      "teacher": "Коржаков А.В.",
+      "location": {
+        "room": "407",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 48
+      }
+    },
+    {
+      "id": "sha1:a9d0fc908fd02826a320c71c96f96456d352ffc2",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "3ИВТ2",
+      "subject": "Технология программир",
+      "kind": "EXAM",
+      "teacher": "Плисенко О.А.",
+      "location": {
+        "room": "405",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 48
+      }
+    },
+    {
+      "id": "sha1:5a87ebe7c3b5d6b97a5c50a04780ce4e1aa144a2",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "4ИВТ(УзГУМЯ)",
+      "subject": "Технология программир",
+      "kind": "EXAM",
+      "teacher": "Плисенко О.А.",
+      "location": {
+        "room": "405",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 48
+      }
+    },
+    {
+      "id": "sha1:870da4effea2bd4dc329e5e238f2262316274e24",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "2ИВТ_ТИИ",
+      "subject": "Операционные системы",
+      "kind": "EXAM",
+      "teacher": "Плисенко О.А.",
+      "location": {
+        "room": "405",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 50
+      }
+    },
+    {
+      "id": "sha1:ad2a4c79747cf6f838d521c222f03319d163706b",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "3ИВТ2",
+      "subject": "НЭК АСОИУ",
+      "kind": "EXAM",
+      "teacher": "Коржаков А.В.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": "дист.",
+      "source": {
+        "sheet": "Лист1",
+        "row": 50
+      }
+    },
+    {
+      "id": "sha1:21a0518de3e95404c7779952a7d6860a84b13fab",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "2Ф",
+      "subject": "Мат.пакеты в проф.деятельности",
+      "kind": "EXAM",
+      "teacher": "Шамбина С.В.",
+      "location": {
+        "room": "324",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 51
+      }
+    },
+    {
+      "id": "sha1:18f190de862050a0fd493997742e716960f5f3e9",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "2ИВТ_АСОИУ",
+      "subject": "Инженерная и комп. Графика",
+      "kind": "EXAM",
+      "teacher": "Хандожко А.А.",
+      "location": {
+        "room": "406",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 51
+      }
+    },
+    {
+      "id": "sha1:535eef4d8b1d52cc744354766c25c7a52c8bfd6d",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "3ИВТ2",
+      "subject": "Моделирование систем",
+      "kind": "EXAM",
+      "teacher": "Коржакова С.А.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": "дист.",
+      "source": {
+        "sheet": "Лист1",
+        "row": 54
+      }
+    },
+    {
+      "id": "sha1:f2688ce77cb95d03c03b0ba21746b97c41d0cb54",
+      "date": "1/11/21",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": null,
+      "subject": null,
+      "kind": "CONSULTATION",
+      "teacher": "Артисевич А.Е.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 2
+      }
+    },
+    {
+      "id": "sha1:077d23d8749c23ed0fdedacc624ce47b1ee495d8",
+      "date": "1/12/21",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "2Ф",
+      "subject": "ТФКП",
+      "kind": "EXAM",
+      "teacher": "Артисевич А.Е.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 3
+      }
+    },
+    {
+      "id": "sha1:b1a2897d707e6e89aa7ff8f01f705ecbd5a520d0",
+      "date": "1/19/21",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": null,
+      "subject": null,
+      "kind": "CONSULTATION",
+      "teacher": "Сташ А.Х.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 4
+      }
+    },
+    {
+      "id": "sha1:086c3fd57b898c1b3ce2a0f1aad9d95439149fcb",
+      "date": "1/20/21",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "1УТС, 2Ф",
+      "subject": "Матан",
+      "kind": "EXAM",
+      "teacher": "Сташ А.Х.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 5
+      }
+    },
+    {
+      "id": "sha1:21fa369690ea4ecc4584284b0fbebbc462e2d9a3",
+      "date": "1/22/21",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": null,
+      "subject": null,
+      "kind": "CONSULTATION",
+      "teacher": "Сташ А.Х.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 6
+      }
+    },
+    {
+      "id": "sha1:a68602e9bfdd8618612ab9f0847e603780b02c73",
+      "date": "1/23/21",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "1ИВТ2",
+      "subject": "Матан",
+      "kind": "EXAM",
+      "teacher": "Сташ А.Х.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 7
+      }
+    },
+    {
+      "id": "sha1:b06871c3b09a41a60c93e09c562be44d918162ad",
+      "date": "1/23/21",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": null,
+      "subject": null,
+      "kind": "CONSULTATION",
+      "teacher": "Сташ А.Х.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 8
+      }
+    },
+    {
+      "id": "sha1:d576e45d172261173b033bb1a982d825bd1e33c5",
+      "date": "1/24/21",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "1ИВТ1",
+      "subject": "Матан",
+      "kind": "EXAM",
+      "teacher": "Сташ А.Х.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 9
+      }
+    },
+    {
+      "id": "sha1:ecb166cd7c9a9e49e8d04c6b1c240c85074203e3",
+      "date": "1/9/21",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": null,
+      "subject": null,
+      "kind": "CONSULTATION",
+      "teacher": "Калашникова С.И.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 10
+      }
+    },
+    {
+      "id": "sha1:296dfc75b6a3a15f446bc311cf89177ff2e1f804",
+      "date": "1/10/21",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "1ИВТ2, 1УТС",
+      "subject": "Алг и геом",
+      "kind": "EXAM",
+      "teacher": "Калашникова С.И.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 11
+      }
+    },
+    {
+      "id": "sha1:45cfe83d13007440844863edb31c989fdf124434",
+      "date": "1/10/21",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": null,
+      "subject": null,
+      "kind": "CONSULTATION",
+      "teacher": "Калашникова С.И.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 12
+      }
+    },
+    {
+      "id": "sha1:a2eead52f206bab6330425392b608c8f53a35630",
+      "date": "1/11/21",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "1ИВТ1",
+      "subject": "Алг и геом",
+      "kind": "EXAM",
+      "teacher": "Калашникова С.И.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 13
+      }
+    },
+    {
+      "id": "sha1:aea62c3a5cb7396659030adf3075723b8c266611",
+      "date": "1/24/21",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": null,
+      "subject": null,
+      "kind": "CONSULTATION",
+      "teacher": "Пономарев М.Г.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 14
+      }
+    },
+    {
+      "id": "sha1:90e6a470c3f8962a3fa615d9e2acb69615cdcbd8",
+      "date": "1/25/21",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "3ПО",
+      "subject": "Оптика",
+      "kind": "EXAM",
+      "teacher": "Пономарев М.Г.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 15
+      }
+    },
+    {
+      "id": "sha1:b81ea0e113ddb88d42bdf01311472f02d876b71a",
+      "date": "12/28/20",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": null,
+      "subject": null,
+      "kind": "CONSULTATION",
+      "teacher": "Аракелов А.В.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 16
+      }
+    },
+    {
+      "id": "sha1:2fc81c1850ade2d3ebed834cca2075eec094ae0d",
+      "date": "12/29/20",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "4Ф",
+      "subject": "Метод.препод",
+      "kind": "EXAM",
+      "teacher": "Аракелов А.В.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 17
+      }
+    },
+    {
+      "id": "sha1:f1d733dad039d08269b4a41915435c598ee42b6f",
+      "date": "1/16/21",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": null,
+      "subject": null,
+      "kind": "CONSULTATION",
+      "teacher": "Аракелов А.В.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 18
+      }
+    },
+    {
+      "id": "sha1:5d35ffababa1cd9db724cac257cc32e6f683c230",
+      "date": "1/17/21",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "4ПО",
+      "subject": "Метод.препод",
+      "kind": "EXAM",
+      "teacher": "Аракелов А.В.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 19
+      }
+    },
+    {
+      "id": "sha1:8de0c4f5440c691d46337a8cee911b4f34a98725",
+      "date": "1/21/21",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": null,
+      "subject": null,
+      "kind": "CONSULTATION",
+      "teacher": "Аракелов А.В.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 20
+      }
+    },
+    {
+      "id": "sha1:73bfe39944e406674d1fcb19168b702ff849b7b8",
+      "date": "1/22/21",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "4ПО",
+      "subject": "Методы реше",
+      "kind": "EXAM",
+      "teacher": "Аракелов А.В.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 21
+      }
+    },
+    {
+      "id": "sha1:3e6462337b180f228d3dcbae766651dce159220e",
+      "date": "1/13/21",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": null,
+      "subject": null,
+      "kind": "CONSULTATION",
+      "teacher": "Нагой А.А.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 22
+      }
+    },
+    {
+      "id": "sha1:4ae1187507929a0fa346aff676fa3c1ec59685aa",
+      "date": "1/14/21",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "1ИВТ2",
+      "subject": "Культурология",
+      "kind": "EXAM",
+      "teacher": "Нагой А.А.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 23
+      }
+    },
+    {
+      "id": "sha1:fad2aece649efaaa0f92920b9ba7d1e538aaae98",
+      "date": "1/19/21",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": null,
+      "subject": null,
+      "kind": "CONSULTATION",
+      "teacher": "Нагой А.А.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 24
+      }
+    },
+    {
+      "id": "sha1:2e295aafce1c3c8092641c11b813ee3f91b30e0e",
+      "date": "1/20/21",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "1ИВТ1",
+      "subject": "Культурология",
+      "kind": "EXAM",
+      "teacher": "Нагой А.А.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 25
+      }
+    },
+    {
+      "id": "sha1:079fa2220a3b2cbad9f9ddd93d9432eb26ba3e5f",
+      "date": "1/13/21",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": null,
+      "subject": null,
+      "kind": "CONSULTATION",
+      "teacher": "Бурыкина Л.В.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 26
+      }
+    },
+    {
+      "id": "sha1:05c5a1de645466bacfa9f2e8bfb227f0154935c2",
+      "date": "1/14/21",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "1Ф, 1УТС",
+      "subject": "История",
+      "kind": "EXAM",
+      "teacher": "Бурыкина Л.В.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 27
+      }
+    },
+    {
+      "id": "sha1:533127a8afb20c861b5b2b6996b7d87b052ab1ea",
+      "date": "1/15/21",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": null,
+      "subject": null,
+      "kind": "CONSULTATION",
+      "teacher": "Бурыкина Л.В.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 28
+      }
+    },
+    {
+      "id": "sha1:5656d05976f75301dbe16b1f75e2682ba84bd801",
+      "date": "1/16/21",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "1ИВТ1",
+      "subject": "История",
+      "kind": "EXAM",
+      "teacher": "Бурыкина Л.В.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 29
+      }
+    },
+    {
+      "id": "sha1:bb907df7f2cc6441cbd3d16f4093d41b660aa3de",
+      "date": "1/17/21",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": null,
+      "subject": null,
+      "kind": "CONSULTATION",
+      "teacher": "Бурыкина Л.В.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 30
+      }
+    },
+    {
+      "id": "sha1:cbaa0ccb2ed62a6aa556f2d885278f2ea5996016",
+      "date": "1/18/21",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "1ИВТ2",
+      "subject": "История",
+      "kind": "EXAM",
+      "teacher": "Бурыкина Л.В.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 31
+      }
+    }
+  ],
+  "issues": []
+}
+</file>
+
+<file path="backend/src/config.ts">
+import path from "node:path";
+
+export interface AppConfig {
+  port: number;
+  storageDir: string;
+  uploadsDir: string;
+  incomingDir: string;
+  resultsDir: string;
+  maxParallelTasks: number;
+  maxUploadMb: number;
+}
+
+export function resolveConfig(overrides: Partial<AppConfig> = {}): AppConfig {
+  const storageDir = path.resolve(
+    overrides.storageDir ?? process.env.STORAGE_DIR ?? path.join(process.cwd(), "storage")
+  );
+
+  const uploadsDir = path.resolve(overrides.uploadsDir ?? path.join(storageDir, "uploads"));
+  const incomingDir = path.resolve(overrides.incomingDir ?? path.join(uploadsDir, "incoming"));
+  const resultsDir = path.resolve(overrides.resultsDir ?? path.join(storageDir, "results"));
+
+  const portRaw = overrides.port ?? process.env.PORT;
+  const maxParallelRaw = overrides.maxParallelTasks ?? process.env.MAX_PARALLEL_TASKS;
+  const maxUploadMbRaw = overrides.maxUploadMb ?? process.env.MAX_UPLOAD_MB;
+
+  return {
+    port: normalizeNumber(portRaw, 3000),
+    storageDir,
+    uploadsDir,
+    incomingDir,
+    resultsDir,
+    maxParallelTasks: Math.max(1, normalizeNumber(maxParallelRaw, 1)),
+    maxUploadMb: Math.max(1, normalizeNumber(maxUploadMbRaw, 30))
+  };
+}
+
+function normalizeNumber(value: string | number | undefined, fallback: number): number {
+  if (typeof value === "number" && Number.isFinite(value)) {
+    return value;
+  }
+
+  if (typeof value === "string") {
+    const parsed = Number.parseInt(value, 10);
+    if (Number.isFinite(parsed)) {
+      return parsed;
+    }
+  }
+
+  return fallback;
+}
+</file>
+
+<file path="backend/src/domain.ts">
+export type ExamKind =
+  | "EXAM"
+  | "CREDIT"
+  | "DIFF_CREDIT"
+  | "CONSULTATION"
+  | "RETAKE"
+  | "OTHER";
+
+export interface LocationInfo {
+  room: string | null;
+  building: string | null;
+}
+
+export interface TimeRange {
+  start: string | null; // "HH:mm"
+  end: string | null;   // "HH:mm"
+}
+
+export interface ParseIssue {
+  level: "info" | "warning" | "error";
+  message: string;
+  source?: { sheet?: string; row?: number; column?: string };
+}
+
+export interface ScheduleItem {
+  id: string;
+  date: string | null;        // "YYYY-MM-DD"
+  time: TimeRange;
+  group: string | null;
+  subject: string | null;
+  kind: ExamKind;
+  teacher: string | null;
+  location: LocationInfo;
+  notes: string | null;
+  source: { sheet: string; row: number };
+  raw?: Record<string, string | null>;
+}
+
+export interface ScheduleJsonV1 {
+  meta: { sourceFileName: string; parsedAt: string; version: "1.0" };
+  summary: {
+    items: number;
+    groups: string[];
+    itemsByGroup: Record<string, number>;
+    dateRange: { from: string | null; to: string | null };
+  };
+  items: ScheduleItem[];
+  issues: ParseIssue[];
+}
+</file>
+
+<file path="backend/src/index.ts">
+import express from "express";
+import { resolveConfig } from "./config";
+import { createSessionParserRouter } from "./router";
+
+const config = resolveConfig();
+const app = express();
+
+app.use(express.json());
+app.use("/api", createSessionParserRouter({ config }));
+
+app.get("/health", (_req, res) => {
+  res.json({ status: "ok" });
+});
+
+app.listen(config.port, () => {
+  console.log(`Session parser started on port ${config.port}`);
+});
+</file>
+
+<file path="backend/src/normalize.ts">
+import { ParsedResult } from "./types";
+import { ScheduleItem, ScheduleJsonV1 } from "./domain";
+
+export function normalizeToScheduleV1(
+  parsed: ParsedResult & { _parsedItems?: ScheduleItem[] },
+  _keepRaw: boolean = false
+): ScheduleJsonV1 {
+  const items: ScheduleItem[] = parsed._parsedItems ?? [];
+
+  // Summary
+  const groupSet = new Set<string>();
+  for (const it of items) {
+    if (it.group) groupSet.add(it.group);
+  }
+  const groups = Array.from(groupSet).sort();
+
+  const itemsByGroup: Record<string, number> = {};
+  for (const g of groups) itemsByGroup[g] = 0;
+  for (const it of items) {
+    if (it.group && itemsByGroup[it.group] !== undefined) {
+      itemsByGroup[it.group] += 1;
+    }
+  }
+
+  const dates = items.map((x) => x.date).filter(Boolean) as string[];
+  const from = dates.length ? dates.reduce((a, b) => (a < b ? a : b)) : null;
+  const to = dates.length ? dates.reduce((a, b) => (a > b ? a : b)) : null;
+
+  return {
+    meta: {
+      sourceFileName: parsed.sourceFileName,
+      parsedAt: parsed.parsedAt,
+      version: "1.0",
+    },
+    summary: {
+      items: items.length,
+      groups,
+      itemsByGroup,
+      dateRange: { from, to },
+    },
+    items,
+    issues: [],
+  };
+}
+</file>
+
+<file path="backend/src/parser.ts">
+import xlsx from "xlsx";
+import { ParsedResult, SheetData } from "./types";
+import { ScheduleItem, ExamKind } from "./domain";
+import crypto from "node:crypto";
+
+
+// Helpers
+
+
+const ROOM_RE = /^([\d]{2,3}[а-яА-ЯёЁa-zA-Z]?(?:\/[\d]+)?)\s*[\n\s]+/;
+
+const TEACHER_FULL_RE =
+  /([А-ЯЁ][а-яё]+-?[а-яё]*\s+[А-ЯЁ]\.[А-ЯЁ]\.(?:,\s*[А-ЯЁ][а-яё]+-?[а-яё]*\s+[А-ЯЁ]\.[А-ЯЁ]\.)*)\s*(?:дист\.?)?\s*$/;
+
+const TEACHER_SHORT_RE = /([А-ЯЁ][а-яё]+\s+[А-ЯЁ]\.)\s*(?:дист\.?)?\s*$/;
+
+function sha1(input: string): string {
+  return "sha1:" + crypto.createHash("sha1").update(input).digest("hex");
+}
+
+function parseExcelDate(value: string | number | null | undefined): string | null {
+  if (value === null || value === undefined || value === "") return null;
+
+  if (typeof value === "number") {
+    const MS_PER_DAY = 86400000;
+    const EXCEL_EPOCH = Date.UTC(1899, 11, 30); // 1899-12-30 UTC
+    const ts = EXCEL_EPOCH + value * MS_PER_DAY;
+    const d = new Date(ts);
+    const y = d.getUTCFullYear();
+    const m = String(d.getUTCMonth() + 1).padStart(2, "0");
+    const day = String(d.getUTCDate()).padStart(2, "0");
+    return `${y}-${m}-${day}`;
+  }
+
+  if (typeof value === "string") {
+    const trimmed = value.trim();
+
+    if (/^\d{4}-\d{2}-\d{2}$/.test(trimmed)) return trimmed;
+
+    const m = trimmed.match(/^(\d{1,2})\/(\d{1,2})\/(\d{2,4})$/);
+    if (m) {
+      const month = m[1].padStart(2, "0");
+      const day = m[2].padStart(2, "0");
+      const year = m[3].length === 2 ? `20${m[3]}` : m[3];
+      return `${year}-${month}-${day}`;
+    }
+  }
+
+  return null;
+}
+
+const SKIP_VALUES = new Set(["занятия", "зачетная неделя", "каникулы"]);
+
+function isSkipValue(val: string): boolean {
+  const low = val.toLowerCase().trim();
+  if (SKIP_VALUES.has(low)) return true;
+  if (/^консультация/.test(low)) return true;
+  if (low.startsWith("практика")) return true;
+  if (low.startsWith("эксплуатационная")) return true;
+  if (low.startsWith("технологическая")) return true;
+  if (low.startsWith("научно-исследовательская")) return true;
+  if (low.startsWith("педагогическая")) return true;
+  return false;
+}
+
+function parseCellText(raw: string): {
+  room: string | null;
+  subject: string | null;
+  teacher: string | null;
+  notes: string | null;
+} {
+  const text = raw.trim();
+  if (!text) return { room: null, subject: null, teacher: null, notes: null };
+
+  const normalized = text.replace(/[ \t]{2,}/g, "  ");
+
+  const roomMatch = ROOM_RE.exec(normalized);
+  const room = roomMatch ? roomMatch[1] : null;
+  let rest = roomMatch ? normalized.slice(roomMatch[0].length).trim() : normalized;
+
+  const hasDist = /дист\.?/i.test(rest);
+  rest = rest.replace(/\s*дист\.?\s*$/i, "").trim();
+
+  let teacherMatch = TEACHER_FULL_RE.exec(rest);
+  if (!teacherMatch) teacherMatch = TEACHER_SHORT_RE.exec(rest);
+
+  const teacher = teacherMatch ? teacherMatch[1].trim() : null;
+  const subjectRaw = teacherMatch ? rest.slice(0, teacherMatch.index).trim() : rest;
+  const subject = subjectRaw.replace(/\s{2,}/g, " ").replace(/[\s,.-]+$/, "").trim() || null;
+
+  return { room, subject, teacher, notes: hasDist ? "дист." : null };
+}
+
+function parseKind(value: string | null): ExamKind {
+  if (!value) return "OTHER";
+  const v = value.toLowerCase();
+  if (/(экз|exam)/.test(v)) return "EXAM";
+  if (/(диф|diff)/.test(v)) return "DIFF_CREDIT";
+  if (/(зач|credit)/.test(v)) return "CREDIT";
+  if (/(конс|consult)/.test(v)) return "CONSULTATION";
+  if (/(пересда|retake)/.test(v)) return "RETAKE";
+  return "OTHER";
+}
+
+function makeItem(
+  fields: {
+    date: string | null;
+    group: string | null;
+    subject: string | null;
+    kind: ExamKind;
+    teacher: string | null;
+    room: string | null;
+    notes: string | null;
+  },
+  source: { sheet: string; row: number }
+): ScheduleItem {
+  const stableKey = [
+    source.sheet,
+    fields.date ?? "",
+    fields.group ?? "",
+    fields.subject ?? "",
+    fields.kind,
+    fields.teacher ?? "",
+    fields.room ?? "",
+  ].join("|");
+
+  return {
+    id: sha1(stableKey),
+    date: fields.date,
+    time: { start: null, end: null },
+    group: fields.group,
+    subject: fields.subject,
+    kind: fields.kind,
+    teacher: fields.teacher,
+    location: { room: fields.room, building: null },
+    notes: fields.notes,
+    source,
+  };
+}
+
+
+// Парсер Лист1 — матрица «дата × группа»
+
+
+function parseSheet1(ws: xlsx.WorkSheet, sheetName: string): ScheduleItem[] {
+  const items: ScheduleItem[] = [];
+
+  const HEADER_ROW = 10;
+  const DATA_START_ROW = 12;
+  const DATE_COL = 1;
+  const GROUP_COL_START = 3;
+
+  const headerRow =
+    (xlsx.utils.sheet_to_json<(string | null)[]>(ws, {
+      header: 1,
+      range: `A${HEADER_ROW}:T${HEADER_ROW}`,
+      defval: null,
+      raw: false,
+    })[0] as (string | null)[]) ?? [];
+
+  const groupNames: (string | null)[] = headerRow
+    .slice(GROUP_COL_START - 1)
+    .map((v) => (v ? String(v).trim() : null));
+
+
+  const matrix = xlsx.utils.sheet_to_json<(string | number | null)[]>(ws, {
+    header: 1,
+    range: DATA_START_ROW - 1,
+    defval: null,
+    raw: true,
+  }) as Array<Array<string | number | null>>;
+
+  for (let ri = 0; ri < matrix.length; ri++) {
+    const row = matrix[ri];
+
+    const dateRaw = row[DATE_COL - 1];
+    if (!dateRaw) continue;
+
+    const dateStr = parseExcelDate(dateRaw);
+
+    for (let ci = 0; ci < groupNames.length; ci++) {
+      const groupName = groupNames[ci];
+      const cellVal = row[GROUP_COL_START - 1 + ci];
+      if (!cellVal) continue;
+
+      const cellStr = String(cellVal).trim();
+      if (!cellStr || isSkipValue(cellStr)) continue;
+
+      const low = cellStr.toLowerCase();
+      let kind: ExamKind;
+      let room: string | null = null;
+      let subject: string | null = null;
+      let teacher: string | null = null;
+      let notes: string | null = null;
+
+      if (/консульт/i.test(low)) {
+        kind = "CONSULTATION";
+        notes = /дист/i.test(low) ? "дист." : null;
+      } else {
+        kind = "EXAM";
+        if (/зач[её]т/i.test(cellStr)) kind = "CREDIT";
+        if (/диф/i.test(cellStr)) kind = "DIFF_CREDIT";
+
+        const parsed = parseCellText(cellStr);
+        room = parsed.room;
+        subject = parsed.subject;
+        teacher = parsed.teacher;
+        notes = parsed.notes;
+      }
+
+      items.push(
+        makeItem(
+          { date: dateStr, group: groupName, subject, kind, teacher, room, notes },
+          { sheet: sheetName, row: DATA_START_ROW + ri }
+        )
+      );
+    }
+  }
+
+  return items;
+}
+
+
+// Парсер Лист2 — плоская таблица ФИО / Дата / Группа / Предмет / Контроль
+
+
+function parseSheet2(ws: xlsx.WorkSheet, sheetName: string): ScheduleItem[] {
+  const items: ScheduleItem[] = [];
+
+  const rows = xlsx.utils.sheet_to_json<{
+    ФИО?: string | null;
+    Дата?: string | null;
+    Группа?: string | null;
+    Предмет?: string | null;
+    Контроль?: string | null;
+  }>(ws, { defval: null, raw: false });
+
+  let lastTeacher: string | null = null;
+
+  for (let ri = 0; ri < rows.length; ri++) {
+    const row = rows[ri];
+
+    const dateStr = parseExcelDate(row["Дата"]);
+    const fio = row["ФИО"] ? String(row["ФИО"]).trim() : null;
+    const group = row["Группа"] ? String(row["Группа"]).trim() : null;
+    const subject = row["Предмет"] ? String(row["Предмет"]).trim() : null;
+    const kind = parseKind(row["Контроль"] ? String(row["Контроль"]).trim() : null);
+
+    if (fio) lastTeacher = fio;
+
+    items.push(
+      makeItem(
+        { date: dateStr, group, subject, kind, teacher: lastTeacher, room: null, notes: null },
+        { sheet: sheetName, row: ri + 2 }
+      )
+    );
+  }
+
+  return items;
+}
+
+
+// Главная функция
+
+
+export async function parseExcelSchedule(
+  filePath: string,
+  sourceFileName: string
+): Promise<ParsedResult> {
+
+  const workbook = xlsx.readFile(filePath, { raw: false });
+
+  const allItems: ScheduleItem[] = [];
+  const sheetMeta: ParsedResult["memory"]["sheets"] = [];
+
+  for (const sheetName of workbook.SheetNames) {
+    const ws = workbook.Sheets[sheetName];
+
+    const firstRow = (xlsx.utils.sheet_to_json<(string | null)[]>(ws, {
+      header: 1,
+      range: 0,
+      defval: null,
+      raw: false,
+    })[0] as (string | null)[]) ?? [];
+
+    const firstCell = firstRow[0] ? String(firstRow[0]).trim() : "";
+    const isMatrix = /расписание/i.test(firstCell) || sheetName === "Лист1";
+
+    const items = isMatrix ? parseSheet1(ws, sheetName) : parseSheet2(ws, sheetName);
+
+    allItems.push(...items);
+    sheetMeta.push({ sheetName, rowCount: items.length, columns: [] });
+  }
+
+  const result: ParsedResult & { _parsedItems?: ScheduleItem[] } = {
+    sourceFileName,
+    parsedAt: new Date().toISOString(),
+    sheets: [],
+    memory: {
+      sheetCount: workbook.SheetNames.length,
+      totalRows: allItems.length,
+      sheets: sheetMeta,
+    },
+    _parsedItems: allItems,
+  };
+
+  return result;
+}
+</file>
+
+<file path="backend/src/router.ts">
+import express from "express";
+import multer from "multer";
+import { AppConfig, resolveConfig } from "./config";
+import { ensureStorageDirectories } from "./storage";
+import { TaskService } from "./task-service";
+
+export interface RouterOptions {
+  config?: Partial<AppConfig>;
+  taskService?: TaskService;
+}
+
+export function createSessionParserRouter(options: RouterOptions = {}): express.Router {
+  const config = resolveConfig(options.config);
+  ensureStorageDirectories(config);
+
+  const router = express.Router();
+  const upload = multer({
+    dest: config.incomingDir,
+    limits: {
+      fileSize: config.maxUploadMb * 1024 * 1024,
+    },
+  });
+
+  const taskService = options.taskService ?? new TaskService(config);
+
+  // POST /api/tasks — загрузить Excel и создать задачу
+  router.post("/tasks", upload.single("file"), async (req, res) => {
+    if (!req.file) {
+      return res.status(400).json({ error: "Excel file is required in form-data field 'file'" });
+    }
+
+    try {
+      const task = await taskService.createTask(req.file);
+      return res.status(202).json({
+        taskId: task.id,
+        status: task.status,
+        createdAt: task.createdAt,
+      });
+    } catch (error) {
+      return res.status(500).json({
+        error: "Failed to create task",
+        details: error instanceof Error ? error.message : "Unknown error",
+      });
+    }
+  });
+
+  // GET /api/tasks/:taskId/status — статус задачи
+  router.get("/tasks/:taskId/status", (req, res) => {
+    const task = taskService.getTask(req.params.taskId);
+    if (!task) {
+      return res.status(404).json({ error: "Task not found" });
+    }
+
+    return res.json({
+      taskId: task.id,
+      status: task.status,
+      createdAt: task.createdAt,
+      startedAt: task.startedAt ?? null,
+      finishedAt: task.finishedAt ?? null,
+      error: task.error ?? null,
+    });
+  });
+
+  // GET /api/tasks/:taskId/result — скачать JSON с результатом
+  router.get("/tasks/:taskId/result", async (req, res) => {
+    const task = taskService.getTask(req.params.taskId);
+    if (!task) {
+      return res.status(404).json({ error: "Task not found" });
+    }
+
+    if (task.status === "failed") {
+      return res.status(422).json({
+        error: "Task processing failed",
+        details: task.error ?? "Unknown processing error",
+      });
+    }
+
+    if (task.status !== "completed") {
+      return res.status(409).json({
+        error: "Task is not completed yet",
+        status: task.status,
+      });
+    }
+
+    return res.download(task.resultFilePath, `${task.id}.json`);
+  });
+
+  // GET /api/tasks/:taskId/memory — краткая сводка по результату
+  router.get("/tasks/:taskId/memory", async (req, res) => {
+    const task = taskService.getTask(req.params.taskId);
+    if (!task) {
+      return res.status(404).json({ error: "Task not found" });
+    }
+
+    if (task.status === "failed") {
+      return res.status(422).json({
+        error: "Task processing failed",
+        details: task.error ?? "Unknown processing error",
+      });
+    }
+
+    if (task.status !== "completed") {
+      return res.status(409).json({
+        error: "Task is not completed yet",
+        status: task.status,
+      });
+    }
+
+    try {
+      const result = await taskService.getResult(task.id);
+      // Теперь result — это ScheduleJsonV1, берём summary как "memory"
+      return res.json({
+        taskId: task.id,
+        memory: {
+          items: result.summary.items,
+          groups: result.summary.groups,
+          dateRange: result.summary.dateRange,
+        },
+      });
+    } catch (error) {
+      return res.status(500).json({
+        error: "Failed to read task result",
+        details: error instanceof Error ? error.message : "Unknown error",
+      });
+    }
+  });
+
+  // Multer error handler
+  router.use(
+    (
+      error: unknown,
+      _req: express.Request,
+      res: express.Response,
+      next: express.NextFunction
+    ) => {
+      if (error instanceof multer.MulterError) {
+        const details =
+          error.code === "LIMIT_FILE_SIZE"
+            ? `File is too large. Max upload size is ${config.maxUploadMb} MB`
+            : error.message;
+
+        return res.status(400).json({ error: "Upload error", details });
+      }
+
+      return next(error);
+    }
+  );
+
+  return router;
+}
+</file>
+
+<file path="backend/src/storage.ts">
+import fs from "node:fs";
+import { AppConfig } from "./config";
+
+export function ensureStorageDirectories(config: AppConfig): void {
+  const directories = [config.storageDir, config.uploadsDir, config.incomingDir, config.resultsDir];
+
+  for (const dir of directories) {
+    fs.mkdirSync(dir, { recursive: true });
+  }
+}
+</file>
+
+<file path="backend/src/task-service.ts">
+import fs from "node:fs/promises";
+import path from "node:path";
+import { v4 as uuidv4 } from "uuid";
+import { AppConfig } from "./config";
+import { parseExcelSchedule } from "./parser";
+import { TaskRecord } from "./types";
+import { normalizeToScheduleV1 } from "./normalize";
+import { ScheduleJsonV1 } from "./domain";
+
+export class TaskService {
+  private readonly tasks = new Map<string, TaskRecord>();
+  private readonly queue: string[] = [];
+  private workers = 0;
+
+  constructor(private readonly config: AppConfig) {}
+
+  async createTask(file: Express.Multer.File): Promise<TaskRecord> {
+    const id = uuidv4();
+    const extension = path.extname(file.originalname) || ".xlsx";
+    const uploadedFilePath = path.join(this.config.uploadsDir, `${id}${extension}`);
+    const resultFilePath = path.join(this.config.resultsDir, `${id}.json`);
+
+    await fs.rename(file.path, uploadedFilePath);
+
+    const task: TaskRecord = {
+      id,
+      status: "queued",
+      originalFileName: file.originalname,
+      uploadedFilePath,
+      resultFilePath,
+      createdAt: new Date().toISOString(),
+    };
+
+    this.tasks.set(id, task);
+    this.queue.push(id);
+    this.schedule();
+
+    return task;
+  }
+
+  getTask(taskId: string): TaskRecord | undefined {
+    return this.tasks.get(taskId);
+  }
+
+  async getResult(taskId: string): Promise<ScheduleJsonV1> {
+    const task = this.tasks.get(taskId);
+    if (!task) throw new Error("TASK_NOT_FOUND");
+    if (task.status !== "completed") throw new Error("TASK_NOT_COMPLETED");
+
+    const raw = await fs.readFile(task.resultFilePath, "utf-8");
+    return JSON.parse(raw) as ScheduleJsonV1;
+  }
+
+  private schedule(): void {
+    while (this.workers < this.config.maxParallelTasks && this.queue.length > 0) {
+      const nextTaskId = this.queue.shift();
+      if (!nextTaskId) continue;
+
+      this.workers += 1;
+      void this.processTask(nextTaskId).finally(() => {
+        this.workers -= 1;
+        this.schedule();
+      });
+    }
+  }
+
+  private async processTask(taskId: string): Promise<void> {
+    const task = this.tasks.get(taskId);
+    if (!task) return;
+
+    task.status = "processing";
+    task.startedAt = new Date().toISOString();
+
+    try {
+      const parsed = await parseExcelSchedule(task.uploadedFilePath, task.originalFileName);
+      const normalized = normalizeToScheduleV1(parsed, false);
+
+      await fs.writeFile(task.resultFilePath, JSON.stringify(normalized, null, 2), "utf-8");
+
+      task.status = "completed";
+      task.finishedAt = new Date().toISOString();
+    } catch (error) {
+      task.status = "failed";
+      task.finishedAt = new Date().toISOString();
+      task.error = error instanceof Error ? error.message : "Unknown processing error";
+    }
+  }
+}
+</file>
+
+<file path="backend/src/types.ts">
+import { ScheduleItem } from "./domain";
+
+export type TaskStatus = "queued" | "processing" | "completed" | "failed";
+
+export interface SheetData {
+  sheetName: string;
+  headers: string[];
+  rows: Record<string, string | null>[];
+}
+
+export interface ParseMemory {
+  sheetCount: number;
+  totalRows: number;
+  sheets: Array<{
+    sheetName: string;
+    rowCount: number;
+    columns: string[];
+  }>;
+}
+
+export interface ParsedResult {
+  sourceFileName: string;
+  parsedAt: string;
+  sheets: SheetData[];
+  memory: ParseMemory;
+  
+  _parsedItems?: ScheduleItem[];
+}
+
+export interface TaskRecord {
+  id: string;
+  status: TaskStatus;
+  originalFileName: string;
+  uploadedFilePath: string;
+  resultFilePath: string;
+  createdAt: string;
+  startedAt?: string;
+  finishedAt?: string;
+  error?: string;
+}
+</file>
+
+<file path="backend/tsconfig.json">
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "CommonJS",
+    "moduleResolution": "Node",
+    "strict": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
+    "rootDir": "src",
+    "outDir": "dist",
+    "resolveJsonModule": true
+  },
+  "include": ["src/**/*.ts"]
+}
+</file>
+
+<file path="frontend/.gitignore">
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+</file>
+
+<file path="frontend/eslint.config.js">
+import js from '@eslint/js'
+import globals from 'globals'
+import reactHooks from 'eslint-plugin-react-hooks'
+import reactRefresh from 'eslint-plugin-react-refresh'
+import tseslint from 'typescript-eslint'
+import { defineConfig, globalIgnores } from 'eslint/config'
+
+export default defineConfig([
+  globalIgnores(['dist']),
+  {
+    files: ['**/*.{ts,tsx}'],
+    extends: [
+      js.configs.recommended,
+      tseslint.configs.recommended,
+      reactHooks.configs.flat.recommended,
+      reactRefresh.configs.vite,
+    ],
+    languageOptions: {
+      ecmaVersion: 2020,
+      globals: globals.browser,
+    },
+  },
+])
+</file>
+
+<file path="frontend/index.html">
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>frontend</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
+</file>
+
+<file path="frontend/package.json">
+{
+  "name": "session-parser-frontend",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.1",
+    "@types/react-dom": "^18.3.1",
+    "@vitejs/plugin-react": "^4.3.1",
+    "typescript": "^5.7.3",
+    "vite": "^6.0.7"
+  }
+}
+</file>
+
+<file path="frontend/public/vite.svg">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--logos" width="31.88" height="32" preserveAspectRatio="xMidYMid meet" viewBox="0 0 256 257"><defs><linearGradient id="IconifyId1813088fe1fbc01fb466" x1="-.828%" x2="57.636%" y1="7.652%" y2="78.411%"><stop offset="0%" stop-color="#41D1FF"></stop><stop offset="100%" stop-color="#BD34FE"></stop></linearGradient><linearGradient id="IconifyId1813088fe1fbc01fb467" x1="43.376%" x2="50.316%" y1="2.242%" y2="89.03%"><stop offset="0%" stop-color="#FFEA83"></stop><stop offset="8.333%" stop-color="#FFDD35"></stop><stop offset="100%" stop-color="#FFA800"></stop></linearGradient></defs><path fill="url(#IconifyId1813088fe1fbc01fb466)" d="M255.153 37.938L134.897 252.976c-2.483 4.44-8.862 4.466-11.382.048L.875 37.958c-2.746-4.814 1.371-10.646 6.827-9.67l120.385 21.517a6.537 6.537 0 0 0 2.322-.004l117.867-21.483c5.438-.991 9.574 4.796 6.877 9.62Z"></path><path fill="url(#IconifyId1813088fe1fbc01fb467)" d="M185.432.063L96.44 17.501a3.268 3.268 0 0 0-2.634 3.014l-5.474 92.456a3.268 3.268 0 0 0 3.997 3.378l24.777-5.718c2.318-.535 4.413 1.507 3.936 3.838l-7.361 36.047c-.495 2.426 1.782 4.5 4.151 3.78l15.304-4.649c2.372-.72 4.652 1.36 4.15 3.788l-11.698 56.621c-.732 3.542 3.979 5.473 5.943 2.437l1.313-2.028l72.516-144.72c1.215-2.423-.88-5.186-3.54-4.672l-25.505 4.922c-2.396.462-4.435-1.77-3.759-4.114l16.646-57.705c.677-2.35-1.37-4.583-3.769-4.113Z"></path></svg>
+</file>
+
+<file path="frontend/README.md">
+# React + TypeScript + Vite
+
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+
+Currently, two official plugins are available:
+
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+
+## React Compiler
+
+The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+
+## Expanding the ESLint configuration
+
+If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+
+```js
+export default defineConfig([
+  globalIgnores(['dist']),
+  {
+    files: ['**/*.{ts,tsx}'],
+    extends: [
+      // Other configs...
+
+      // Remove tseslint.configs.recommended and replace with this
+      tseslint.configs.recommendedTypeChecked,
+      // Alternatively, use this for stricter rules
+      tseslint.configs.strictTypeChecked,
+      // Optionally, add this for stylistic rules
+      tseslint.configs.stylisticTypeChecked,
+
+      // Other configs...
+    ],
+    languageOptions: {
+      parserOptions: {
+        project: ['./tsconfig.node.json', './tsconfig.app.json'],
+        tsconfigRootDir: import.meta.dirname,
+      },
+      // other options...
+    },
+  },
+])
+```
+
+You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+
+```js
+// eslint.config.js
+import reactX from 'eslint-plugin-react-x'
+import reactDom from 'eslint-plugin-react-dom'
+
+export default defineConfig([
+  globalIgnores(['dist']),
+  {
+    files: ['**/*.{ts,tsx}'],
+    extends: [
+      // Other configs...
+      // Enable lint rules for React
+      reactX.configs['recommended-typescript'],
+      // Enable lint rules for React DOM
+      reactDom.configs.recommended,
+    ],
+    languageOptions: {
+      parserOptions: {
+        project: ['./tsconfig.node.json', './tsconfig.app.json'],
+        tsconfigRootDir: import.meta.dirname,
+      },
+      // other options...
+    },
+  },
+])
+```
+</file>
+
+<file path="frontend/src/api/client.ts">
+import type { TaskResponse, ScheduleJsonV1 } from "../types/index";
+
+const BASE = "/api";
+
+export async function uploadFile(file: File): Promise<TaskResponse> {
+  const form = new FormData();
+  form.append("file", file);
+  const res = await fetch(`${BASE}/tasks`, { method: "POST", body: form });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({})) as { error?: string };
+    throw new Error(err.error ?? `Upload failed: ${res.status}`);
+  }
+  return res.json() as Promise<TaskResponse>;
+}
+
+export async function getTaskStatus(taskId: string): Promise<TaskResponse> {
+  const res = await fetch(`${BASE}/tasks/${taskId}/status`);
+  if (!res.ok) throw new Error(`Status check failed: ${res.status}`);
+  return res.json() as Promise<TaskResponse>;
+}
+
+export async function getResult(taskId: string): Promise<ScheduleJsonV1> {
+  const res = await fetch(`${BASE}/tasks/${taskId}/result`);
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({})) as { error?: string };
+    throw new Error(err.error ?? `Result fetch failed: ${res.status}`);
+  }
+  return res.json() as Promise<ScheduleJsonV1>;
+}
+
+export function downloadResult(taskId: string): void {
+  const a = document.createElement("a");
+  a.href = `${BASE}/tasks/${taskId}/result`;
+  a.download = `${taskId}.json`;
+  a.click();
+}
+
+export async function pollUntilDone(
+  taskId: string,
+  onStatus: (s: TaskResponse) => void,
+  intervalMs = 1000
+): Promise<TaskResponse> {
+  return new Promise((resolve, reject) => {
+    const timer = setInterval(() => {
+      getTaskStatus(taskId)
+        .then((status) => {
+          onStatus(status);
+          if (status.status === "completed" || status.status === "failed") {
+            clearInterval(timer);
+            resolve(status);
+          }
+        })
+        .catch((e: unknown) => {
+          clearInterval(timer);
+          reject(e);
+        });
+    }, intervalMs);
+  });
+}
+</file>
+
+<file path="frontend/src/App.css">
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+.logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em #61dafbaa);
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
+.card {
+  padding: 2em;
+}
+
+.read-the-docs {
+  color: #888;
+}
+
+
+.card {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 20px;
+  border-radius: var(--md-radius-lg);
+  animation: slideIn var(--md-duration-medium) var(--md-motion-emphasized);
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.primary { background: var(--md-primary-container); }
+.success { background: var(--md-success-container); }
+.error   { background: var(--md-error-container); }
+.info    { background: var(--md-surface-variant); }
+
+.iconWrap {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.primary .iconWrap .material-symbols-rounded { color: var(--md-primary); }
+.success .iconWrap .material-symbols-rounded { color: var(--md-success); }
+.error   .iconWrap .material-symbols-rounded { color: var(--md-error); }
+.info    .iconWrap .material-symbols-rounded { color: var(--md-on-surface-variant); }
+
+.spin { animation: spin 1.2s linear infinite; }
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.info {
+  flex: 1;
+  min-width: 0;
+}
+
+.label {
+  font-family: var(--md-font-display);
+  font-weight: 700;
+  font-size: 0.9375rem;
+  color: var(--md-on-surface);
+}
+
+.filename {
+  font-size: 0.8125rem;
+  color: var(--md-on-surface-variant);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: 2px;
+}
+
+.progressBar {
+  height: 4px;
+  background: rgba(0,0,0,.12);
+  border-radius: var(--md-radius-full);
+  overflow: hidden;
+  margin-top: 10px;
+}
+
+.progressIndeterminate {
+  height: 100%;
+  background: var(--md-primary);
+  border-radius: var(--md-radius-full);
+  animation: indeterminate 1.5s ease-in-out infinite;
+  transform-origin: left;
+}
+
+@keyframes indeterminate {
+  0%   { transform: scaleX(0) translateX(0); }
+  50%  { transform: scaleX(0.6) translateX(60%); }
+  100% { transform: scaleX(0) translateX(300%); }
+}
+
+/* renamed from .error to avoid conflict with .error color class */
+.errorText {
+  font-size: 0.8125rem;
+  color: var(--md-error);
+  margin-top: 6px;
+}
+</file>
+
+<file path="frontend/src/App.tsx">
+import { useState, useCallback } from "react";
+import { uploadFile, pollUntilDone, getResult, downloadResult } from "./api/client";
+import type { ScheduleJsonV1, TaskResponse } from "./types/index";
+import UploadZone from "./components/UploadZone";
+import StatusCard from "./components/StatusCard";
+import SummaryPanel from "./components/SummaryPanel";
+import ResultTable from "./components/ResultTable";
+import styles from "./App.module.css";
+
+type Stage = "idle" | "uploading" | "processing" | "done" | "error";
+
+export default function App() {
+  const [stage, setStage]       = useState<Stage>("idle");
+  const [task, setTask]         = useState<TaskResponse | null>(null);
+  const [fileName, setFileName] = useState("");
+  const [result, setResult]     = useState<ScheduleJsonV1 | null>(null);
+  const [errorMsg, setErrorMsg] = useState("");
+  const [activeTab, setActiveTab] = useState<"summary" | "table">("summary");
+
+  const handleFile = useCallback(async (file: File) => {
+    setFileName(file.name);
+    setStage("uploading");
+    setResult(null);
+    setErrorMsg("");
+
+    try {
+      const created = await uploadFile(file);
+      setTask(created);
+      setStage("processing");
+
+      const final = await pollUntilDone(
+        created.taskId,
+        (s: TaskResponse) => setTask(s)
+      );
+
+      if (final.status === "failed") {
+        setErrorMsg(final.error ?? "Ошибка при обработке файла");
+        setStage("error");
+        return;
+      }
+
+      const data = await getResult(created.taskId);
+      setResult(data);
+      setStage("done");
+    } catch (e) {
+      setErrorMsg(e instanceof Error ? e.message : "Неизвестная ошибка");
+      setStage("error");
+    }
+  }, []);
+
+  const reset = () => {
+    setStage("idle");
+    setTask(null);
+    setResult(null);
+    setFileName("");
+    setErrorMsg("");
+    setActiveTab("summary");
+  };
+
+  const isProcessing = stage === "uploading" || stage === "processing";
+
+  return (
+    <div className={styles.app}>
+      {/* Header */}
+      <header className={styles.header}>
+        <div className={styles.headerInner}>
+          <div className={styles.logo}>
+            <div className={styles.logoIcon}>
+              <span className="material-symbols-rounded">table_view</span>
+            </div>
+            <div>
+              <h1 className={styles.appName}>Session Parser</h1>
+              <p className={styles.appDesc}>Парсер расписания сессии</p>
+            </div>
+          </div>
+          {stage !== "idle" && (
+            <button className={styles.newBtn} onClick={reset}>
+              <span className="material-symbols-rounded">add</span>
+              Новый файл
+            </button>
+          )}
+        </div>
+      </header>
+
+      <main className={styles.main}>
+        {(stage === "idle" || stage === "error") && (
+          <div className={styles.uploadSection}>
+            <UploadZone onFile={handleFile} disabled={isProcessing} />
+            {stage === "error" && (
+              <div className={styles.errorBanner}>
+                <span className="material-symbols-rounded">error</span>
+                {errorMsg}
+              </div>
+            )}
+          </div>
+        )}
+
+        {(stage === "uploading" || stage === "processing") && task && (
+          <div className={styles.statusSection}>
+            <StatusCard task={task} fileName={fileName} />
+            <p className={styles.hintText}>
+              <span className="material-symbols-rounded">info</span>
+              Обработка может занять несколько секунд
+            </p>
+          </div>
+        )}
+
+        {stage === "done" && result && (
+          <div className={styles.resultSection}>
+            <div className={styles.resultHeader}>
+              <div className={styles.resultMeta}>
+                <span className="material-symbols-rounded" style={{ color: "var(--md-success)" }}>
+                  check_circle
+                </span>
+                <div>
+                  <p className={styles.resultFileName}>{result.meta.sourceFileName}</p>
+                  <p className={styles.resultParsedAt}>
+                    Обработано {new Date(result.meta.parsedAt).toLocaleString("ru-RU")}
+                  </p>
+                </div>
+              </div>
+              <button
+                className={styles.downloadBtn}
+                onClick={() => { if (task) downloadResult(task.taskId); }}
+              >
+                <span className="material-symbols-rounded">download</span>
+                Скачать JSON
+              </button>
+            </div>
+
+            <div className={styles.tabs}>
+              <button
+                className={`${styles.tab} ${activeTab === "summary" ? styles.tabActive : ""}`}
+                onClick={() => setActiveTab("summary")}
+              >
+                <span className="material-symbols-rounded">insights</span>
+                Сводка
+              </button>
+              <button
+                className={`${styles.tab} ${activeTab === "table" ? styles.tabActive : ""}`}
+                onClick={() => setActiveTab("table")}
+              >
+                <span className="material-symbols-rounded">table_rows</span>
+                Таблица
+                <span className={styles.tabBadge}>{result.summary.items}</span>
+              </button>
+            </div>
+
+            <div className={styles.tabContent}>
+              {activeTab === "summary" && <SummaryPanel result={result} />}
+              {activeTab === "table"   && <ResultTable items={result.items} groups={result.summary.groups} />}
+            </div>
+          </div>
+        )}
+      </main>
+    </div>
+  );
+}
+</file>
+
+<file path="frontend/src/assets/react.svg">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--logos" width="35.93" height="32" preserveAspectRatio="xMidYMid meet" viewBox="0 0 256 228"><path fill="#00D8FF" d="M210.483 73.824a171.49 171.49 0 0 0-8.24-2.597c.465-1.9.893-3.777 1.273-5.621c6.238-30.281 2.16-54.676-11.769-62.708c-13.355-7.7-35.196.329-57.254 19.526a171.23 171.23 0 0 0-6.375 5.848a155.866 155.866 0 0 0-4.241-3.917C100.759 3.829 77.587-4.822 63.673 3.233C50.33 10.957 46.379 33.89 51.995 62.588a170.974 170.974 0 0 0 1.892 8.48c-3.28.932-6.445 1.924-9.474 2.98C17.309 83.498 0 98.307 0 113.668c0 15.865 18.582 31.778 46.812 41.427a145.52 145.52 0 0 0 6.921 2.165a167.467 167.467 0 0 0-2.01 9.138c-5.354 28.2-1.173 50.591 12.134 58.266c13.744 7.926 36.812-.22 59.273-19.855a145.567 145.567 0 0 0 5.342-4.923a168.064 168.064 0 0 0 6.92 6.314c21.758 18.722 43.246 26.282 56.54 18.586c13.731-7.949 18.194-32.003 12.4-61.268a145.016 145.016 0 0 0-1.535-6.842c1.62-.48 3.21-.974 4.76-1.488c29.348-9.723 48.443-25.443 48.443-41.52c0-15.417-17.868-30.326-45.517-39.844Zm-6.365 70.984c-1.4.463-2.836.91-4.3 1.345c-3.24-10.257-7.612-21.163-12.963-32.432c5.106-11 9.31-21.767 12.459-31.957c2.619.758 5.16 1.557 7.61 2.4c23.69 8.156 38.14 20.213 38.14 29.504c0 9.896-15.606 22.743-40.946 31.14Zm-10.514 20.834c2.562 12.94 2.927 24.64 1.23 33.787c-1.524 8.219-4.59 13.698-8.382 15.893c-8.067 4.67-25.32-1.4-43.927-17.412a156.726 156.726 0 0 1-6.437-5.87c7.214-7.889 14.423-17.06 21.459-27.246c12.376-1.098 24.068-2.894 34.671-5.345a134.17 134.17 0 0 1 1.386 6.193ZM87.276 214.515c-7.882 2.783-14.16 2.863-17.955.675c-8.075-4.657-11.432-22.636-6.853-46.752a156.923 156.923 0 0 1 1.869-8.499c10.486 2.32 22.093 3.988 34.498 4.994c7.084 9.967 14.501 19.128 21.976 27.15a134.668 134.668 0 0 1-4.877 4.492c-9.933 8.682-19.886 14.842-28.658 17.94ZM50.35 144.747c-12.483-4.267-22.792-9.812-29.858-15.863c-6.35-5.437-9.555-10.836-9.555-15.216c0-9.322 13.897-21.212 37.076-29.293c2.813-.98 5.757-1.905 8.812-2.773c3.204 10.42 7.406 21.315 12.477 32.332c-5.137 11.18-9.399 22.249-12.634 32.792a134.718 134.718 0 0 1-6.318-1.979Zm12.378-84.26c-4.811-24.587-1.616-43.134 6.425-47.789c8.564-4.958 27.502 2.111 47.463 19.835a144.318 144.318 0 0 1 3.841 3.545c-7.438 7.987-14.787 17.08-21.808 26.988c-12.04 1.116-23.565 2.908-34.161 5.309a160.342 160.342 0 0 1-1.76-7.887Zm110.427 27.268a347.8 347.8 0 0 0-7.785-12.803c8.168 1.033 15.994 2.404 23.343 4.08c-2.206 7.072-4.956 14.465-8.193 22.045a381.151 381.151 0 0 0-7.365-13.322Zm-45.032-43.861c5.044 5.465 10.096 11.566 15.065 18.186a322.04 322.04 0 0 0-30.257-.006c4.974-6.559 10.069-12.652 15.192-18.18ZM82.802 87.83a323.167 323.167 0 0 0-7.227 13.238c-3.184-7.553-5.909-14.98-8.134-22.152c7.304-1.634 15.093-2.97 23.209-3.984a321.524 321.524 0 0 0-7.848 12.897Zm8.081 65.352c-8.385-.936-16.291-2.203-23.593-3.793c2.26-7.3 5.045-14.885 8.298-22.6a321.187 321.187 0 0 0 7.257 13.246c2.594 4.48 5.28 8.868 8.038 13.147Zm37.542 31.03c-5.184-5.592-10.354-11.779-15.403-18.433c4.902.192 9.899.29 14.978.29c5.218 0 10.376-.117 15.453-.343c-4.985 6.774-10.018 12.97-15.028 18.486Zm52.198-57.817c3.422 7.8 6.306 15.345 8.596 22.52c-7.422 1.694-15.436 3.058-23.88 4.071a382.417 382.417 0 0 0 7.859-13.026a347.403 347.403 0 0 0 7.425-13.565Zm-16.898 8.101a358.557 358.557 0 0 1-12.281 19.815a329.4 329.4 0 0 1-23.444.823c-7.967 0-15.716-.248-23.178-.732a310.202 310.202 0 0 1-12.513-19.846h.001a307.41 307.41 0 0 1-10.923-20.627a310.278 310.278 0 0 1 10.89-20.637l-.001.001a307.318 307.318 0 0 1 12.413-19.761c7.613-.576 15.42-.876 23.31-.876H128c7.926 0 15.743.303 23.354.883a329.357 329.357 0 0 1 12.335 19.695a358.489 358.489 0 0 1 11.036 20.54a329.472 329.472 0 0 1-11 20.722Zm22.56-122.124c8.572 4.944 11.906 24.881 6.52 51.026c-.344 1.668-.73 3.367-1.15 5.09c-10.622-2.452-22.155-4.275-34.23-5.408c-7.034-10.017-14.323-19.124-21.64-27.008a160.789 160.789 0 0 1 5.888-5.4c18.9-16.447 36.564-22.941 44.612-18.3ZM128 90.808c12.625 0 22.86 10.235 22.86 22.86s-10.235 22.86-22.86 22.86s-22.86-10.235-22.86-22.86s10.235-22.86 22.86-22.86Z"></path></svg>
+</file>
+
+<file path="frontend/src/components/ResultTable.tsx">
+import { useState, useMemo } from "react";
+import type { ScheduleItem, ExamKind } from "../types/index";
+import styles from "./ResultTable.module.css";
+
+interface Props {
+  items: ScheduleItem[];
+  groups: string[];
+}
+
+const KIND_LABEL: Record<ExamKind, string> = {
+  EXAM:         "Экзамен",
+  CREDIT:       "Зачёт",
+  DIFF_CREDIT:  "Диф. зачёт",
+  CONSULTATION: "Консультация",
+  RETAKE:       "Пересдача",
+  OTHER:        "Другое",
+};
+
+const KIND_COLOR: Record<ExamKind, string> = {
+  EXAM:         "exam",
+  CREDIT:       "credit",
+  DIFF_CREDIT:  "diff",
+  CONSULTATION: "consult",
+  RETAKE:       "retake",
+  OTHER:        "other",
+};
+
+const PAGE_SIZE = 20;
+
+export default function ResultTable({ items, groups }: Props) {
+  const [search, setSearch]       = useState("");
+  const [groupFilter, setGroupFilter] = useState("");
+  const [kindFilter, setKindFilter]   = useState<ExamKind | "">("");
+  const [page, setPage]           = useState(0);
+
+  const filtered = useMemo(() => {
+    const q = search.toLowerCase().trim();
+    return items.filter((item) => {
+      if (groupFilter && item.group !== groupFilter) return false;
+      if (kindFilter && item.kind !== kindFilter) return false;
+      if (q) {
+        const hay = [item.subject, item.teacher, item.group, item.date, item.location?.room]
+          .filter(Boolean)
+          .join(" ")
+          .toLowerCase();
+        if (!hay.includes(q)) return false;
+      }
+      return true;
+    });
+  }, [items, search, groupFilter, kindFilter]);
+
+  const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
+  const pageItems  = filtered.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE);
+  const hasFilters = search || groupFilter || kindFilter;
+
+  const resetFilters = () => {
+    setSearch(""); setGroupFilter(""); setKindFilter(""); setPage(0);
+  };
+
+  return (
+    <div className={styles.wrap}>
+      {/* Filters */}
+      <div className={styles.filters}>
+        <div className={styles.searchWrap}>
+          <span className="material-symbols-rounded">search</span>
+          <input
+            className={styles.searchInput}
+            placeholder="Поиск по предмету, преподавателю..."
+            value={search}
+            onChange={(e) => { setSearch(e.target.value); setPage(0); }}
+          />
+          {search && (
+            <button className={styles.clearBtn} onClick={() => { setSearch(""); setPage(0); }}>
+              <span className="material-symbols-rounded">close</span>
+            </button>
+          )}
+        </div>
+
+        <select
+          className={styles.select}
+          value={groupFilter}
+          onChange={(e) => { setGroupFilter(e.target.value); setPage(0); }}
+        >
+          <option value="">Все группы</option>
+          {groups.map((g) => <option key={g} value={g}>{g}</option>)}
+        </select>
+
+        <select
+          className={styles.select}
+          value={kindFilter}
+          onChange={(e) => { setKindFilter(e.target.value as ExamKind | ""); setPage(0); }}
+        >
+          <option value="">Все типы</option>
+          {(Object.entries(KIND_LABEL) as [ExamKind, string][]).map(([k, v]) => (
+            <option key={k} value={k}>{v}</option>
+          ))}
+        </select>
+
+        {hasFilters && (
+          <button className={styles.resetBtn} onClick={resetFilters}>
+            <span className="material-symbols-rounded">filter_alt_off</span>
+            Сбросить
+          </button>
+        )}
+
+        <span className={styles.count}>{filtered.length} из {items.length}</span>
+      </div>
+
+      {/* Table */}
+      <div className={styles.tableWrap}>
+        <table className={styles.table}>
+          <thead>
+            <tr>
+              <th>Дата</th>
+              <th>Группа</th>
+              <th>Предмет</th>
+              <th>Тип</th>
+              <th>Преподаватель</th>
+              <th>Аудитория</th>
+            </tr>
+          </thead>
+          <tbody>
+            {pageItems.length === 0 ? (
+              <tr>
+                <td colSpan={6} className={styles.empty}>
+                  <span className="material-symbols-rounded">search_off</span>
+                  Ничего не найдено
+                </td>
+              </tr>
+            ) : (
+              pageItems.map((item) => (
+                <tr key={item.id}>
+                  <td className={styles.dateCell}>
+                    {item.date
+                      ? new Date(item.date + "T00:00:00").toLocaleDateString("ru-RU", {
+                          day: "numeric", month: "short", weekday: "short",
+                        })
+                      : <span className={styles.null}>—</span>}
+                  </td>
+                  <td>
+                    {item.group
+                      ? <span className={styles.groupTag}>{item.group}</span>
+                      : <span className={styles.null}>—</span>}
+                  </td>
+                  <td className={styles.subjectCell}>
+                    {item.subject ?? <span className={styles.null}>—</span>}
+                  </td>
+                  <td>
+                    <span className={`${styles.kindBadge} ${styles[KIND_COLOR[item.kind]]}`}>
+                      {KIND_LABEL[item.kind]}
+                    </span>
+                  </td>
+                  <td className={styles.teacherCell}>
+                    {item.teacher ?? <span className={styles.null}>—</span>}
+                  </td>
+                  <td>
+                    {item.location?.room
+                      ? <span className={styles.roomTag}>{item.location.room}</span>
+                      : <span className={styles.null}>—</span>}
+                  </td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
+
+      {/* Pagination */}
+      {totalPages > 1 && (
+        <div className={styles.pagination}>
+          <button
+            className={styles.pageBtn}
+            onClick={() => setPage((p) => Math.max(0, p - 1))}
+            disabled={page === 0}
+          >
+            <span className="material-symbols-rounded">chevron_left</span>
+          </button>
+          {Array.from({ length: totalPages }, (_, i) => (
+            <button
+              key={i}
+              className={`${styles.pageBtn} ${i === page ? styles.pageBtnActive : ""}`}
+              onClick={() => setPage(i)}
+            >
+              {i + 1}
+            </button>
+          ))}
+          <button
+            className={styles.pageBtn}
+            onClick={() => setPage((p) => Math.min(totalPages - 1, p + 1))}
+            disabled={page === totalPages - 1}
+          >
+            <span className="material-symbols-rounded">chevron_right</span>
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
+</file>
+
+<file path="frontend/src/components/StatusCard.tsx">
+import type { TaskResponse, TaskStatus } from "../types/index";
+import styles from "./StatusCard.module.css";
+
+interface Props {
+  task: TaskResponse;
+  fileName: string;
+}
+
+type StatusConfig = {
+  icon: string;
+  label: string;
+  color: "primary" | "success" | "error" | "info";
+};
+
+const STATUS_CONFIG: Record<TaskStatus, StatusConfig> = {
+  queued:     { icon: "schedule",     label: "В очереди",    color: "info" },
+  processing: { icon: "autorenew",    label: "Обработка...", color: "primary" },
+  completed:  { icon: "check_circle", label: "Готово",       color: "success" },
+  failed:     { icon: "error",        label: "Ошибка",       color: "error" },
+};
+
+export default function StatusCard({ task, fileName }: Props) {
+  const cfg = STATUS_CONFIG[task.status];
+
+  return (
+    <div className={`${styles.card} ${styles[cfg.color]}`}>
+      <div className={styles.iconWrap}>
+        <span className={`material-symbols-rounded ${task.status === "processing" ? styles.spin : ""}`}>
+          {cfg.icon}
+        </span>
+      </div>
+      <div className={styles.info}>
+        <p className={styles.label}>{cfg.label}</p>
+        <p className={styles.filename}>{fileName}</p>
+        {task.status === "processing" && (
+          <div className={styles.progressBar}>
+            <div className={styles.progressIndeterminate} />
+          </div>
+        )}
+        {task.error && (
+          <p className={styles.errorText}>{task.error}</p>
+        )}
+      </div>
+    </div>
+  );
+}
+</file>
+
+<file path="frontend/src/components/SummaryPanel.tsx">
+import type { ScheduleJsonV1, ExamKind } from "../types/index";
+import styles from "./SummaryPanel.module.css";
+
+interface Props {
+  result: ScheduleJsonV1;
+}
+
+const KIND_LABEL: Record<ExamKind, string> = {
+  EXAM:         "Экзамен",
+  CREDIT:       "Зачёт",
+  DIFF_CREDIT:  "Диф. зачёт",
+  CONSULTATION: "Консультация",
+  RETAKE:       "Пересдача",
+  OTHER:        "Другое",
+};
+
+const KIND_ICON: Record<ExamKind, string> = {
+  EXAM:         "quiz",
+  CREDIT:       "fact_check",
+  DIFF_CREDIT:  "grading",
+  CONSULTATION: "chat_bubble",
+  RETAKE:       "replay",
+  OTHER:        "more_horiz",
+};
+
+export default function SummaryPanel({ result }: Props) {
+  const { summary, items } = result;
+
+  const byKind = items.reduce<Record<string, number>>((acc, item) => {
+    acc[item.kind] = (acc[item.kind] ?? 0) + 1;
+    return acc;
+  }, {});
+
+  const dateFrom = summary.dateRange.from
+    ? new Date(summary.dateRange.from + "T00:00:00").toLocaleDateString("ru-RU", {
+        day: "numeric", month: "long",
+      })
+    : "—";
+  const dateTo = summary.dateRange.to
+    ? new Date(summary.dateRange.to + "T00:00:00").toLocaleDateString("ru-RU", {
+        day: "numeric", month: "long", year: "numeric",
+      })
+    : "—";
+
+  return (
+    <div className={styles.panel}>
+      <div className={styles.stats}>
+        <StatChip icon="event_note" value={String(summary.items)} label="записей"  color="primary" />
+        <StatChip icon="groups"     value={String(summary.groups.length)} label="групп" color="secondary" />
+        <StatChip icon="calendar_month" value={`${dateFrom} – ${dateTo}`} label="" color="tertiary" />
+      </div>
+
+      <div className={styles.section}>
+        <h3 className={styles.sectionTitle}>
+          <span className="material-symbols-rounded">bar_chart</span>
+          По типу
+        </h3>
+        <div className={styles.kindGrid}>
+          {(Object.entries(byKind) as [ExamKind, number][]).map(([kind, count]) => (
+            <div key={kind} className={styles.kindChip}>
+              <span className="material-symbols-rounded">{KIND_ICON[kind]}</span>
+              <span className={styles.kindCount}>{count}</span>
+              <span className={styles.kindLabel}>{KIND_LABEL[kind]}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className={styles.section}>
+        <h3 className={styles.sectionTitle}>
+          <span className="material-symbols-rounded">school</span>
+          Группы
+        </h3>
+        <div className={styles.groupsWrap}>
+          {summary.groups.map((g) => (
+            <span key={g} className={styles.groupBadge}>
+              {g}
+              <span className={styles.groupCount}>{summary.itemsByGroup[g]}</span>
+            </span>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+interface StatChipProps {
+  icon: string;
+  value: string;
+  label: string;
+  color: "primary" | "secondary" | "tertiary";
+}
+
+function StatChip({ icon, value, label, color }: StatChipProps) {
+  return (
+    <div className={`${styles.statChip} ${styles[color]}`}>
+      <span className="material-symbols-rounded">{icon}</span>
+      <div>
+        <p className={styles.statValue}>{value}</p>
+        {label && <p className={styles.statLabel}>{label}</p>}
+      </div>
+    </div>
+  );
+}
+</file>
+
+<file path="frontend/src/components/UploadZone.tsx">
+import { useRef, useState, useCallback } from "react";
+import styles from "./UploadZone.module.css";
+
+interface Props {
+  onFile: (file: File) => void;
+  disabled?: boolean;
+}
+
+export default function UploadZone({ onFile, disabled }: Props) {
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [dragging, setDragging] = useState(false);
+
+  const handle = useCallback(
+    (file: File | undefined) => {
+      if (!file || disabled) return;
+      if (!file.name.match(/\.(xlsx|xls)$/i)) {
+        alert("Пожалуйста, загрузите файл Excel (.xlsx или .xls)");
+        return;
+      }
+      onFile(file);
+    },
+    [onFile, disabled]
+  );
+
+  const onDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setDragging(false);
+    handle(e.dataTransfer.files[0]);
+  };
+
+  return (
+    <div
+      className={`${styles.zone} ${dragging ? styles.dragging : ""} ${disabled ? styles.disabled : ""}`}
+      onClick={() => !disabled && inputRef.current?.click()}
+      onDragOver={(e) => { e.preventDefault(); setDragging(true); }}
+      onDragLeave={() => setDragging(false)}
+      onDrop={onDrop}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => e.key === "Enter" && inputRef.current?.click()}
+      aria-label="Зона загрузки файла"
+    >
+      <input
+        ref={inputRef}
+        type="file"
+        accept=".xlsx,.xls"
+        hidden
+        onChange={(e) => handle(e.target.files?.[0])}
+      />
+
+      <div className={styles.icon}>
+        <span className="material-symbols-rounded">upload_file</span>
+      </div>
+
+      <p className={styles.title}>
+        {dragging ? "Отпустите файл" : "Загрузить расписание"}
+      </p>
+      <p className={styles.hint}>
+        Перетащите Excel-файл или нажмите для выбора
+        <br />
+        <span>.xlsx · .xls</span>
+      </p>
+    </div>
+  );
+}
+</file>
+
+<file path="frontend/src/index.css">
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  font-weight: 500;
+  color: #646cff;
+  text-decoration: inherit;
+}
+a:hover {
+  color: #535bf2;
+}
+
+body {
+  margin: 0;
+  display: flex;
+  place-items: center;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
+
+button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #1a1a1a;
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
+button:hover {
+  border-color: #646cff;
+}
+button:focus,
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color: #213547;
+    background-color: #ffffff;
+  }
+  a:hover {
+    color: #747bff;
+  }
+  button {
+    background-color: #f9f9f9;
+  }
+}
+</file>
+
+<file path="frontend/src/main.tsx">
+import { StrictMode } from 'react'
+import { createRoot } from 'react-dom/client'
+import './index.css'
+import App from './App.tsx'
+
+createRoot(document.getElementById('root')!).render(
+  <StrictMode>
+    <App />
+  </StrictMode>,
+)
+</file>
+
+<file path="frontend/src/types/index.ts">
+export type ExamKind =
+  | "EXAM"
+  | "CREDIT"
+  | "DIFF_CREDIT"
+  | "CONSULTATION"
+  | "RETAKE"
+  | "OTHER";
+
+export interface ScheduleItem {
+  id: string;
+  date: string | null;
+  time: { start: string | null; end: string | null };
+  group: string | null;
+  subject: string | null;
+  kind: ExamKind;
+  teacher: string | null;
+  location: { room: string | null; building: string | null };
+  notes: string | null;
+  source: { sheet: string; row: number };
+}
+
+export interface ScheduleJsonV1 {
+  meta: { sourceFileName: string; parsedAt: string; version: "1.0" };
+  summary: {
+    items: number;
+    groups: string[];
+    itemsByGroup: Record<string, number>;
+    dateRange: { from: string | null; to: string | null };
+  };
+  items: ScheduleItem[];
+  issues: { level: string; message: string }[];
+}
+
+export type TaskStatus = "queued" | "processing" | "completed" | "failed";
+
+export interface TaskResponse {
+  taskId: string;
+  status: TaskStatus;
+  createdAt: string;
+  startedAt?: string | null;
+  finishedAt?: string | null;
+  error?: string | null;
+}
+</file>
+
+<file path="frontend/tsconfig.app.json">
+{
+  "compilerOptions": {
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
+    "target": "ES2022",
+    "useDefineForClassFields": true,
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "types": ["vite/client"],
+    "skipLibCheck": true,
+
+    /* Bundler mode */
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "verbatimModuleSyntax": true,
+    "moduleDetection": "force",
+    "noEmit": true,
+    "jsx": "react-jsx",
+
+    /* Linting */
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "erasableSyntaxOnly": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedSideEffectImports": true
+  },
+  "include": ["src"]
+}
+</file>
+
+<file path="frontend/tsconfig.json">
+{
+  "files": [],
+  "references": [
+    { "path": "./tsconfig.app.json" },
+    { "path": "./tsconfig.node.json" }
+  ]
+}
+</file>
+
+<file path="frontend/tsconfig.node.json">
+{
+  "compilerOptions": {
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",
+    "target": "ES2023",
+    "lib": ["ES2023"],
+    "module": "ESNext",
+    "types": ["node"],
+    "skipLibCheck": true,
+
+    /* Bundler mode */
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "verbatimModuleSyntax": true,
+    "moduleDetection": "force",
+    "noEmit": true,
+
+    /* Linting */
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "erasableSyntaxOnly": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedSideEffectImports": true
+  },
+  "include": ["vite.config.ts"]
+}
+</file>
+
+<file path="frontend/vite.config.ts">
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+
+export default defineConfig({
+  plugins: [react()],
+  server: {
+    port: 5173,
+    proxy: {
+      "/api": {
+        target: "http://localhost:3000",
+        changeOrigin: true,
+      },
+    },
+  },
+});
+</file>
+
+</files>
