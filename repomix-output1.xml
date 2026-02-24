@@ -1,0 +1,3464 @@
+This file is a merged representation of the entire codebase, combined into a single document by Repomix.
+
+<file_summary>
+This section contains a summary of this file.
+
+<purpose>
+This file contains a packed representation of the entire repository's contents.
+It is designed to be easily consumable by AI systems for analysis, code review,
+or other automated processes.
+</purpose>
+
+<file_format>
+The content is organized as follows:
+1. This summary section
+2. Repository information
+3. Directory structure
+4. Repository files (if enabled)
+5. Multiple file entries, each consisting of:
+  - File path as an attribute
+  - Full contents of the file
+</file_format>
+
+<usage_guidelines>
+- This file should be treated as read-only. Any changes should be made to the
+  original repository files, not this packed version.
+- When processing this file, use the file path to distinguish
+  between different files in the repository.
+- Be aware that this file may contain sensitive information. Handle it with
+  the same level of security as you would the original repository.
+</usage_guidelines>
+
+<notes>
+- Some files may have been excluded based on .gitignore rules and Repomix's configuration
+- Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
+- Files matching patterns in .gitignore are excluded
+- Files matching default ignore patterns are excluded
+- Files are sorted by Git change count (files with more changes are at the bottom)
+</notes>
+
+</file_summary>
+
+<directory_structure>
+.env.example
+.gitignore
+package.json
+README.md
+result.json
+session.xlsx
+src/config.ts
+src/domain.ts
+src/index.ts
+src/normalize.ts
+src/parser.ts
+src/router.ts
+src/storage.ts
+src/task-service.ts
+src/types.ts
+tsconfig.json
+</directory_structure>
+
+<files>
+This section contains the contents of the repository's files.
+
+<file path=".env.example">
+PORT=3000
+STORAGE_DIR=./storage
+MAX_PARALLEL_TASKS=1
+MAX_UPLOAD_MB=30
+</file>
+
+<file path=".gitignore">
+node_modules/
+dist/
+storage/
+*.log
+</file>
+
+<file path="package.json">
+{
+  "name": "session-parser",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Background Excel session schedule parser for Express (TypeScript)",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/index.js",
+    "dev": "tsx watch src/index.ts"
+  },
+  "dependencies": {
+    "express": "^4.21.2",
+    "multer": "^1.4.5-lts.2",
+    "uuid": "^11.1.0",
+    "xlsx": "^0.18.5"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/multer": "^1.4.12",
+    "@types/node": "^22.13.4",
+    "tsx": "^4.19.3",
+    "typescript": "^5.7.3"
+  }
+}
+</file>
+
+<file path="README.md">
+# Session Schedule Parser Service
+
+Сервис асинхронного парсинга Excel-расписаний сессии в нормализованный JSON-формат, предназначенный для последующего использования в личном кабинете студента.
+
+Приложение принимает Excel-файл, создаёт задачу обработки, выполняет парсинг в фоне и предоставляет API для получения статуса и результата.
+
+---
+
+## Основные возможности
+
+- Загрузка Excel файлов (`.xlsx` / `.xls`)
+- Асинхронная обработка (очередь задач)
+- Ограничение параллельных обработчиков
+- Нормализация данных в стабильный JSON-контракт
+- Обработка «грязных» Excel (разные названия колонок)
+- Журнал ошибок парсинга (`issues`)
+- Готово для интеграции с внешним сервером
+
+---
+
+## Архитектура
+
+```
+Client (личный кабинет)
+        │
+        ▼
+   HTTP API (Express)
+        │
+        ▼
+   Task Queue (в памяти)
+        │
+        ▼
+   Excel Parser (xlsx)
+        │
+        ▼
+ Data Normalizer (ScheduleJsonV1)
+        │
+        ▼
+ JSON Result Storage
+```
+
+---
+
+## Технологии
+
+- Node.js
+- TypeScript
+- Express
+- Multer
+- XLSX
+- UUID
+
+---
+
+## Установка
+
+```bash
+git clone <repo>
+cd SessionParser
+npm install
+```
+
+---
+
+## Конфигурация
+
+Настраивается через переменные окружения:
+
+| Переменная | Описание | По умолчанию |
+|---|---|---|
+| `PORT` | Порт сервера | `3000` |
+| `STORAGE_DIR` | Папка хранения | `./storage` |
+| `MAX_PARALLEL_TASKS` | Число параллельных задач | `1` |
+| `MAX_UPLOAD_MB` | Макс. размер файла (МБ) | `30` |
+
+Пример `.env`:
+
+```env
+PORT=3000
+STORAGE_DIR=./storage
+MAX_PARALLEL_TASKS=2
+MAX_UPLOAD_MB=50
+```
+
+---
+
+## Запуск
+
+**Development:**
+
+```bash
+npx ts-node src/index.ts
+```
+
+**Production:**
+
+```bash
+npx tsc
+node dist/index.js
+```
+
+**Проверка:**
+
+```
+GET http://localhost:3000/health
+→ { "status": "ok" }
+```
+
+---
+
+## API
+
+Базовый путь: `/api`
+
+### 1. Создание задачи
+
+**POST** `/api/tasks`
+
+Загружает Excel и создаёт задачу обработки.
+
+**Request:**
+
+```
+Content-Type: multipart/form-data
+file: <excel>
+```
+
+**Пример:**
+
+```bash
+curl -X POST http://localhost:3000/api/tasks \
+  -F "file=@schedule.xlsx"
+```
+
+**Response:**
+
+```json
+{
+  "taskId": "uuid",
+  "status": "queued",
+  "createdAt": "2026-02-18T19:40:21.123Z"
+}
+```
+
+---
+
+### 2. Проверка статуса
+
+**GET** `/api/tasks/{taskId}/status`
+
+**Response:**
+
+```json
+{
+  "taskId": "uuid",
+  "status": "processing",
+  "createdAt": "...",
+  "startedAt": "...",
+  "finishedAt": null,
+  "error": null
+}
+```
+
+**Статусы:**
+
+| Статус | Описание |
+|---|---|
+| `queued` | Задача в очереди |
+| `processing` | Выполняется |
+| `completed` | Завершена успешно |
+| `failed` | Завершена с ошибкой |
+
+---
+
+### 3. Получение результата
+
+**GET** `/api/tasks/{taskId}/result`
+
+- Если готово → скачивается JSON
+- Если не готово → `409`
+- Если ошибка → `422`
+
+---
+
+### 4. Краткая сводка
+
+**GET** `/api/tasks/{taskId}/memory`
+
+Возвращает краткую информацию о распарсенных данных.
+
+---
+
+## Формат результата (ScheduleJsonV1)
+
+```json
+{
+  "meta": {
+    "sourceFileName": "schedule.xlsx",
+    "parsedAt": "2026-02-18T19:40:21.123Z",
+    "version": "1.0"
+  },
+  "summary": {
+    "items": 124,
+    "groups": ["ИСТ-21", "ИСТ-22"],
+    "itemsByGroup": { "ИСТ-21": 60, "ИСТ-22": 64 },
+    "dateRange": { "from": "2026-01-10", "to": "2026-02-05" }
+  },
+  "items": [
+    {
+      "id": "sha1:...",
+      "date": "2026-01-11",
+      "time": { "start": "10:00", "end": null },
+      "timezone": "Europe/Bucharest",
+      "group": "ИСТ-21",
+      "subject": "Операционные системы",
+      "kind": "EXAM",
+      "teacher": "Иванов И.И.",
+      "location": { "room": "304", "building": null },
+      "notes": null,
+      "source": { "sheet": "Лист2", "row": 12 }
+    }
+  ],
+  "issues": []
+}
+```
+
+---
+
+## Как используется в личном кабинете
+
+1. Администратор загружает Excel
+2. Backend кабинета получает JSON
+3. Сохраняет у себя
+4. Студент видит только своё расписание:
+
+```js
+items.filter(i => i.group === student.group)
+```
+
+---
+
+## Коды ошибок
+
+| Код | Причина |
+|---|---|
+| `400` | Файл не передан / слишком большой |
+| `404` | Задача не найдена |
+| `409` | Задача ещё обрабатывается |
+| `422` | Ошибка обработки Excel |
+| `500` | Внутренняя ошибка |
+
+---
+
+## Хранение данных
+
+```
+storage/
+ ├─ uploads/
+ │   ├─ incoming/    (временные файлы)
+ │   └─ <taskId>.xlsx
+ └─ results/
+     └─ <taskId>.json
+```
+
+---
+
+## Особенности реализации
+
+- Обработка выполняется асинхронно
+- Ограничение числа одновременных задач
+- Устойчивость к различным названиям колонок
+- Нормализация даты/времени
+- Стабильный ID событий (sha1)
+
+---
+
+## Возможные улучшения
+
+- Хранение задач в БД
+- Webhook вместо polling
+- Авторизация API
+- Автоудаление старых файлов
+
+---
+
+## Лицензия
+
+[MIT](LICENSE)
+</file>
+
+<file path="result.json">
+{
+  "meta": {
+    "sourceFileName": "session.xlsx",
+    "parsedAt": "2026-02-18T15:43:23.752Z",
+    "version": "1.0"
+  },
+  "summary": {
+    "items": 96,
+    "groups": [
+      "1ИВТ1",
+      "1ИВТ2",
+      "1ИВТ2, 1УТС",
+      "1УТС, 2Ф",
+      "1Ф, 1УТС",
+      "2Ф",
+      "3ПО",
+      "4ПО",
+      "4Ф",
+      "Friday, December 20, 2024",
+      "Friday, December 27, 2024",
+      "Friday, February 07, 2025",
+      "Friday, February 14, 2025",
+      "Friday, January 03, 2025",
+      "Friday, January 10, 2025",
+      "Friday, January 17, 2025",
+      "Friday, January 24, 2025",
+      "Friday, January 31, 2025",
+      "Monday, December 16, 2024",
+      "Monday, December 23, 2024",
+      "Monday, December 30, 2024",
+      "Monday, February 03, 2025",
+      "Monday, February 10, 2025",
+      "Monday, February 17, 2025",
+      "Monday, January 06, 2025",
+      "Monday, January 13, 2025",
+      "Monday, January 20, 2025",
+      "Monday, January 27, 2025",
+      "Saturday, December 21, 2024",
+      "Saturday, December 28, 2024",
+      "Saturday, February 01, 2025",
+      "Saturday, February 08, 2025",
+      "Saturday, February 15, 2025",
+      "Saturday, January 04, 2025",
+      "Saturday, January 11, 2025",
+      "Saturday, January 18, 2025",
+      "Saturday, January 25, 2025",
+      "Sunday, December 22, 2024",
+      "Sunday, December 29, 2024",
+      "Sunday, February 02, 2025",
+      "Sunday, February 09, 2025",
+      "Sunday, February 16, 2025",
+      "Sunday, January 05, 2025",
+      "Sunday, January 12, 2025",
+      "Sunday, January 19, 2025",
+      "Sunday, January 26, 2025",
+      "Thursday, December 19, 2024",
+      "Thursday, December 26, 2024",
+      "Thursday, February 06, 2025",
+      "Thursday, February 13, 2025",
+      "Thursday, January 02, 2025",
+      "Thursday, January 09, 2025",
+      "Thursday, January 16, 2025",
+      "Thursday, January 23, 2025",
+      "Thursday, January 30, 2025",
+      "Tuesday, December 17, 2024",
+      "Tuesday, December 24, 2024",
+      "Tuesday, December 31, 2024",
+      "Tuesday, February 04, 2025",
+      "Tuesday, February 11, 2025",
+      "Tuesday, February 18, 2025",
+      "Tuesday, January 07, 2025",
+      "Tuesday, January 14, 2025",
+      "Tuesday, January 21, 2025",
+      "Tuesday, January 28, 2025",
+      "Wednesday, December 18, 2024",
+      "Wednesday, December 25, 2024",
+      "Wednesday, February 05, 2025",
+      "Wednesday, February 12, 2025",
+      "Wednesday, January 01, 2025",
+      "Wednesday, January 08, 2025",
+      "Wednesday, January 15, 2025",
+      "Wednesday, January 22, 2025",
+      "Wednesday, January 29, 2025",
+      "Даты"
+    ],
+    "itemsByGroup": {
+      "1ИВТ1": 4,
+      "1ИВТ2": 3,
+      "1ИВТ2, 1УТС": 1,
+      "1УТС, 2Ф": 1,
+      "1Ф, 1УТС": 1,
+      "2Ф": 1,
+      "3ПО": 1,
+      "4ПО": 2,
+      "4Ф": 1,
+      "Friday, December 20, 2024": 1,
+      "Friday, December 27, 2024": 1,
+      "Friday, February 07, 2025": 1,
+      "Friday, February 14, 2025": 1,
+      "Friday, January 03, 2025": 1,
+      "Friday, January 10, 2025": 1,
+      "Friday, January 17, 2025": 1,
+      "Friday, January 24, 2025": 1,
+      "Friday, January 31, 2025": 1,
+      "Monday, December 16, 2024": 1,
+      "Monday, December 23, 2024": 1,
+      "Monday, December 30, 2024": 1,
+      "Monday, February 03, 2025": 1,
+      "Monday, February 10, 2025": 1,
+      "Monday, February 17, 2025": 1,
+      "Monday, January 06, 2025": 1,
+      "Monday, January 13, 2025": 1,
+      "Monday, January 20, 2025": 1,
+      "Monday, January 27, 2025": 1,
+      "Saturday, December 21, 2024": 1,
+      "Saturday, December 28, 2024": 1,
+      "Saturday, February 01, 2025": 1,
+      "Saturday, February 08, 2025": 1,
+      "Saturday, February 15, 2025": 1,
+      "Saturday, January 04, 2025": 1,
+      "Saturday, January 11, 2025": 1,
+      "Saturday, January 18, 2025": 1,
+      "Saturday, January 25, 2025": 1,
+      "Sunday, December 22, 2024": 1,
+      "Sunday, December 29, 2024": 1,
+      "Sunday, February 02, 2025": 1,
+      "Sunday, February 09, 2025": 1,
+      "Sunday, February 16, 2025": 1,
+      "Sunday, January 05, 2025": 1,
+      "Sunday, January 12, 2025": 1,
+      "Sunday, January 19, 2025": 1,
+      "Sunday, January 26, 2025": 1,
+      "Thursday, December 19, 2024": 1,
+      "Thursday, December 26, 2024": 1,
+      "Thursday, February 06, 2025": 1,
+      "Thursday, February 13, 2025": 1,
+      "Thursday, January 02, 2025": 1,
+      "Thursday, January 09, 2025": 1,
+      "Thursday, January 16, 2025": 1,
+      "Thursday, January 23, 2025": 1,
+      "Thursday, January 30, 2025": 1,
+      "Tuesday, December 17, 2024": 1,
+      "Tuesday, December 24, 2024": 1,
+      "Tuesday, December 31, 2024": 1,
+      "Tuesday, February 04, 2025": 1,
+      "Tuesday, February 11, 2025": 1,
+      "Tuesday, February 18, 2025": 1,
+      "Tuesday, January 07, 2025": 1,
+      "Tuesday, January 14, 2025": 1,
+      "Tuesday, January 21, 2025": 1,
+      "Tuesday, January 28, 2025": 1,
+      "Wednesday, December 18, 2024": 1,
+      "Wednesday, December 25, 2024": 1,
+      "Wednesday, February 05, 2025": 1,
+      "Wednesday, February 12, 2025": 1,
+      "Wednesday, January 01, 2025": 1,
+      "Wednesday, January 08, 2025": 1,
+      "Wednesday, January 15, 2025": 1,
+      "Wednesday, January 22, 2025": 1,
+      "Wednesday, January 29, 2025": 1,
+      "Даты": 1
+    },
+    "dateRange": {
+      "from": "2020-12-28",
+      "to": "2021-01-25"
+    }
+  },
+  "items": [
+    {
+      "id": "sha1:53c2d85d754ebbac4242877a5642396b54c36c88",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "Даты",
+      "subject": null,
+      "kind": "OTHER",
+      "teacher": null,
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 1
+      }
+    },
+    {
+      "id": "sha1:58591cc23b2e83cbf70f8a06819023661889fd9d",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "Monday, December 16, 2024",
+      "subject": null,
+      "kind": "OTHER",
+      "teacher": null,
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 2
+      }
+    },
+    {
+      "id": "sha1:a572aa0addcfab891e676a28ffab43acb125de03",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "Tuesday, December 17, 2024",
+      "subject": null,
+      "kind": "OTHER",
+      "teacher": null,
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 3
+      }
+    },
+    {
+      "id": "sha1:725e44f8e57a7733c594d4632c4daf25cb97b3d1",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "Wednesday, December 18, 2024",
+      "subject": null,
+      "kind": "OTHER",
+      "teacher": null,
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 4
+      }
+    },
+    {
+      "id": "sha1:00c86ca9db5469fcc4ac7427ca178f0cee70062a",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "Thursday, December 19, 2024",
+      "subject": null,
+      "kind": "OTHER",
+      "teacher": null,
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 5
+      }
+    },
+    {
+      "id": "sha1:159cdeca04a1bddc6f12195680eaa29be8f7badb",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "Friday, December 20, 2024",
+      "subject": null,
+      "kind": "OTHER",
+      "teacher": null,
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 6
+      }
+    },
+    {
+      "id": "sha1:07574887f3965230d6ef429d3da18ea1a5847b83",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "Saturday, December 21, 2024",
+      "subject": null,
+      "kind": "OTHER",
+      "teacher": null,
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 7
+      }
+    },
+    {
+      "id": "sha1:19101165d73dfde009e2ba890d44ef17220f2791",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "Sunday, December 22, 2024",
+      "subject": null,
+      "kind": "OTHER",
+      "teacher": null,
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 8
+      }
+    },
+    {
+      "id": "sha1:2c9eb4927122454072ccf8a03fdb33147c81a2ea",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "Monday, December 23, 2024",
+      "subject": null,
+      "kind": "OTHER",
+      "teacher": null,
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 9
+      }
+    },
+    {
+      "id": "sha1:03586517d879b96c3858c730816c5f1473bb17d9",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "Tuesday, December 24, 2024",
+      "subject": null,
+      "kind": "OTHER",
+      "teacher": null,
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 10
+      }
+    },
+    {
+      "id": "sha1:df858b8beef7ad8d8c20ae8169e27fa2f927ed5b",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "Wednesday, December 25, 2024",
+      "subject": null,
+      "kind": "OTHER",
+      "teacher": null,
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 11
+      }
+    },
+    {
+      "id": "sha1:95a621a83a19f11a6d4623556ddb9f875e5b55dc",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "Thursday, December 26, 2024",
+      "subject": null,
+      "kind": "OTHER",
+      "teacher": null,
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 12
+      }
+    },
+    {
+      "id": "sha1:14781785d7da8cfa3259d90936531c90219bbf04",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "Friday, December 27, 2024",
+      "subject": null,
+      "kind": "OTHER",
+      "teacher": null,
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 13
+      }
+    },
+    {
+      "id": "sha1:a98c1bcad44d5d0f6020168f11fa123e82120add",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "Saturday, December 28, 2024",
+      "subject": null,
+      "kind": "OTHER",
+      "teacher": null,
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 14
+      }
+    },
+    {
+      "id": "sha1:8178a7963c1fd33b76893bc97429db58fad72c69",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "Sunday, December 29, 2024",
+      "subject": null,
+      "kind": "OTHER",
+      "teacher": null,
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 15
+      }
+    },
+    {
+      "id": "sha1:2203bf90e45f4b41c9186fc115c9e440d3c5a642",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "Monday, December 30, 2024",
+      "subject": null,
+      "kind": "OTHER",
+      "teacher": null,
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 16
+      }
+    },
+    {
+      "id": "sha1:d8f2deb3b45e0d8cfd646e5ed63c0c9cd2cda860",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "Tuesday, December 31, 2024",
+      "subject": null,
+      "kind": "OTHER",
+      "teacher": null,
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 17
+      }
+    },
+    {
+      "id": "sha1:793b06d40ef1b2e5aaa1512db6a365936f6caf7d",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "Wednesday, January 01, 2025",
+      "subject": null,
+      "kind": "OTHER",
+      "teacher": null,
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 18
+      }
+    },
+    {
+      "id": "sha1:5e6213091a851e39da55af5377ba6c28f05bf280",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "Thursday, January 02, 2025",
+      "subject": null,
+      "kind": "OTHER",
+      "teacher": null,
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 19
+      }
+    },
+    {
+      "id": "sha1:5d745aa4f54de067504e6bfa67ec9899127ea55c",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "Friday, January 03, 2025",
+      "subject": null,
+      "kind": "OTHER",
+      "teacher": null,
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 20
+      }
+    },
+    {
+      "id": "sha1:77e7b2e3fae0018492edca3c5ef63770c63e2a27",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "Saturday, January 04, 2025",
+      "subject": null,
+      "kind": "OTHER",
+      "teacher": null,
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 21
+      }
+    },
+    {
+      "id": "sha1:b0732b873decfb5e0bec8ba43262bacecced6208",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "Sunday, January 05, 2025",
+      "subject": null,
+      "kind": "OTHER",
+      "teacher": null,
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 22
+      }
+    },
+    {
+      "id": "sha1:f7c3ab1a7055266e12bd2183d747ae1d8157394c",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "Monday, January 06, 2025",
+      "subject": null,
+      "kind": "OTHER",
+      "teacher": null,
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 23
+      }
+    },
+    {
+      "id": "sha1:310de81a471e7b9aaa2bead669de8b24cd192aba",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "Tuesday, January 07, 2025",
+      "subject": null,
+      "kind": "OTHER",
+      "teacher": null,
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 24
+      }
+    },
+    {
+      "id": "sha1:8b5b7189eca0c4a3c75ec2a46030b289f11a6bc5",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "Wednesday, January 08, 2025",
+      "subject": null,
+      "kind": "OTHER",
+      "teacher": null,
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 25
+      }
+    },
+    {
+      "id": "sha1:e41a28edf7a5962397b9a3910a6cecb1cfbe7e74",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "Thursday, January 09, 2025",
+      "subject": null,
+      "kind": "OTHER",
+      "teacher": null,
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 26
+      }
+    },
+    {
+      "id": "sha1:32f2050d1e39c37b382b387d1027ec8fcfaae6b7",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "Friday, January 10, 2025",
+      "subject": null,
+      "kind": "OTHER",
+      "teacher": null,
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 27
+      }
+    },
+    {
+      "id": "sha1:a201586853531df59fba36d433d3d122093e17c5",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "Saturday, January 11, 2025",
+      "subject": null,
+      "kind": "OTHER",
+      "teacher": null,
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 28
+      }
+    },
+    {
+      "id": "sha1:3b8700f21449c1a1183debc18097916859c99434",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "Sunday, January 12, 2025",
+      "subject": null,
+      "kind": "OTHER",
+      "teacher": null,
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 29
+      }
+    },
+    {
+      "id": "sha1:faa16dc20c67c9fab69f77f1fa8c09df335d03ca",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "Monday, January 13, 2025",
+      "subject": null,
+      "kind": "OTHER",
+      "teacher": null,
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 30
+      }
+    },
+    {
+      "id": "sha1:959a0ef57646fde7116577252aac2ef5bd828525",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "Tuesday, January 14, 2025",
+      "subject": null,
+      "kind": "OTHER",
+      "teacher": null,
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 31
+      }
+    },
+    {
+      "id": "sha1:c6398c65e6928ae44f7703222372453f141f3563",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "Wednesday, January 15, 2025",
+      "subject": null,
+      "kind": "OTHER",
+      "teacher": null,
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 32
+      }
+    },
+    {
+      "id": "sha1:78f64eac6db3ecd78cc025330c71f2bca615827d",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "Thursday, January 16, 2025",
+      "subject": null,
+      "kind": "OTHER",
+      "teacher": null,
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 33
+      }
+    },
+    {
+      "id": "sha1:e52cae6faacf185be2dbd95357f4eeac56b47528",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "Friday, January 17, 2025",
+      "subject": null,
+      "kind": "OTHER",
+      "teacher": null,
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 34
+      }
+    },
+    {
+      "id": "sha1:44b5dd429cb2c29d5bccd47b1e184d11ce141659",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "Saturday, January 18, 2025",
+      "subject": null,
+      "kind": "OTHER",
+      "teacher": null,
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 35
+      }
+    },
+    {
+      "id": "sha1:d682b43fcdc0bf0a78c57dd348acb1781883b7fa",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "Sunday, January 19, 2025",
+      "subject": null,
+      "kind": "OTHER",
+      "teacher": null,
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 36
+      }
+    },
+    {
+      "id": "sha1:32af7b46588922c0203cf36c8ab58a110e01aedb",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "Monday, January 20, 2025",
+      "subject": null,
+      "kind": "OTHER",
+      "teacher": null,
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 37
+      }
+    },
+    {
+      "id": "sha1:ec8cc471dfc1cf7ccadf2d98f4cef0f6bdf76e53",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "Tuesday, January 21, 2025",
+      "subject": null,
+      "kind": "OTHER",
+      "teacher": null,
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 38
+      }
+    },
+    {
+      "id": "sha1:f13a1f0585d03ac39ce2f4bab2ad807808f013ae",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "Wednesday, January 22, 2025",
+      "subject": null,
+      "kind": "OTHER",
+      "teacher": null,
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 39
+      }
+    },
+    {
+      "id": "sha1:096c1bc0a8ecbc6ef719f831fb64c6a9733740c5",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "Thursday, January 23, 2025",
+      "subject": null,
+      "kind": "OTHER",
+      "teacher": null,
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 40
+      }
+    },
+    {
+      "id": "sha1:e5fbb17324ecf38b2e2d9a22d8d4fc847f4d86cc",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "Friday, January 24, 2025",
+      "subject": null,
+      "kind": "OTHER",
+      "teacher": null,
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 41
+      }
+    },
+    {
+      "id": "sha1:810afccf0d495ba4436e4a40cc0393b55772deba",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "Saturday, January 25, 2025",
+      "subject": null,
+      "kind": "OTHER",
+      "teacher": null,
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 42
+      }
+    },
+    {
+      "id": "sha1:b8e5f571ada316af84fe4a88cb88a22fdb5d705b",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "Sunday, January 26, 2025",
+      "subject": null,
+      "kind": "OTHER",
+      "teacher": null,
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 43
+      }
+    },
+    {
+      "id": "sha1:928d865b002ac76f966a690a88fbe48675ae49b6",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "Monday, January 27, 2025",
+      "subject": null,
+      "kind": "OTHER",
+      "teacher": null,
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 44
+      }
+    },
+    {
+      "id": "sha1:0400ac811b8ce1a49c022ed9f2cb85cbe0ff77fd",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "Tuesday, January 28, 2025",
+      "subject": null,
+      "kind": "OTHER",
+      "teacher": null,
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 45
+      }
+    },
+    {
+      "id": "sha1:cb2266991020c869229880c2c9320d168d40befe",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "Wednesday, January 29, 2025",
+      "subject": null,
+      "kind": "OTHER",
+      "teacher": null,
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 46
+      }
+    },
+    {
+      "id": "sha1:701148abbb03d36c8d556afb6923033ff6908dee",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "Thursday, January 30, 2025",
+      "subject": null,
+      "kind": "OTHER",
+      "teacher": null,
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 47
+      }
+    },
+    {
+      "id": "sha1:1eb5220f093edab10b46d94d2a5531acf3228884",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "Friday, January 31, 2025",
+      "subject": null,
+      "kind": "OTHER",
+      "teacher": null,
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 48
+      }
+    },
+    {
+      "id": "sha1:ba7ab61ef756b54dbc9fb7ca6d1625cdc8ce6648",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "Saturday, February 01, 2025",
+      "subject": null,
+      "kind": "OTHER",
+      "teacher": null,
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 49
+      }
+    },
+    {
+      "id": "sha1:d525e963f803d975bfd6444ec98b82a498cbecb3",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "Sunday, February 02, 2025",
+      "subject": null,
+      "kind": "OTHER",
+      "teacher": null,
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 50
+      }
+    },
+    {
+      "id": "sha1:53c522fb4d0b54fa7bf7bca6074c52856fe60723",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "Monday, February 03, 2025",
+      "subject": null,
+      "kind": "OTHER",
+      "teacher": null,
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 51
+      }
+    },
+    {
+      "id": "sha1:0566dbf86e539c068a86d536d530b2bb4b95aca4",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "Tuesday, February 04, 2025",
+      "subject": null,
+      "kind": "OTHER",
+      "teacher": null,
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 52
+      }
+    },
+    {
+      "id": "sha1:6e6a2e14d4bbd7691f662be08590adb2efd07ec6",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "Wednesday, February 05, 2025",
+      "subject": null,
+      "kind": "OTHER",
+      "teacher": null,
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 53
+      }
+    },
+    {
+      "id": "sha1:7e9cc6df4f203568050407a932b645ffc55a43e2",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "Thursday, February 06, 2025",
+      "subject": null,
+      "kind": "OTHER",
+      "teacher": null,
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 54
+      }
+    },
+    {
+      "id": "sha1:d97568b498a259b9b146649a9dca7bf7436cc277",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "Friday, February 07, 2025",
+      "subject": null,
+      "kind": "OTHER",
+      "teacher": null,
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 55
+      }
+    },
+    {
+      "id": "sha1:ae910617cc1588ebb60599debd4c57c0dc94af92",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "Saturday, February 08, 2025",
+      "subject": null,
+      "kind": "OTHER",
+      "teacher": null,
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 56
+      }
+    },
+    {
+      "id": "sha1:7a706bedbb11b95ee96f5910bff153afffbd6277",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "Sunday, February 09, 2025",
+      "subject": null,
+      "kind": "OTHER",
+      "teacher": null,
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 57
+      }
+    },
+    {
+      "id": "sha1:814e28db2fccce3c142f7051ef79edffc2d48975",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "Monday, February 10, 2025",
+      "subject": null,
+      "kind": "OTHER",
+      "teacher": null,
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 58
+      }
+    },
+    {
+      "id": "sha1:42282d1cba10c6ab97bb2b7077648a82c8c3ba34",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "Tuesday, February 11, 2025",
+      "subject": null,
+      "kind": "OTHER",
+      "teacher": null,
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 59
+      }
+    },
+    {
+      "id": "sha1:6f2103201631a1bd1d00cab184836d993e8eee6b",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "Wednesday, February 12, 2025",
+      "subject": null,
+      "kind": "OTHER",
+      "teacher": null,
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 60
+      }
+    },
+    {
+      "id": "sha1:c5dfd66815bc4a900ba0e6788ed80d64f084665c",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "Thursday, February 13, 2025",
+      "subject": null,
+      "kind": "OTHER",
+      "teacher": null,
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 61
+      }
+    },
+    {
+      "id": "sha1:0913e8a8ae9ae03ca9e4d24dce949a97ffbb76e2",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "Friday, February 14, 2025",
+      "subject": null,
+      "kind": "OTHER",
+      "teacher": null,
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 62
+      }
+    },
+    {
+      "id": "sha1:aacd5610ebf43c175e1b19db9d1147265bdf2dc5",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "Saturday, February 15, 2025",
+      "subject": null,
+      "kind": "OTHER",
+      "teacher": null,
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 63
+      }
+    },
+    {
+      "id": "sha1:ef80c2ca75e41e00165857856d0191a399e03abf",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "Sunday, February 16, 2025",
+      "subject": null,
+      "kind": "OTHER",
+      "teacher": null,
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 64
+      }
+    },
+    {
+      "id": "sha1:8b5819621644a68d99db0a89d816ba9f2b900fe5",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "Monday, February 17, 2025",
+      "subject": null,
+      "kind": "OTHER",
+      "teacher": null,
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 65
+      }
+    },
+    {
+      "id": "sha1:209237aab729726a51a3b23b417c525d80330a63",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "Tuesday, February 18, 2025",
+      "subject": null,
+      "kind": "OTHER",
+      "teacher": null,
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 66
+      }
+    },
+    {
+      "id": "sha1:31e8a08e7c8288fbe8efd4adeec4da1a94881812",
+      "date": "2021-01-11",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": null,
+      "subject": null,
+      "kind": "CONSULTATION",
+      "teacher": "Артисевич А.Е.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 1
+      }
+    },
+    {
+      "id": "sha1:6f5a03516d3f21ee0986d2e80af8fa41ca4fa1c3",
+      "date": "2021-01-12",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "2Ф",
+      "subject": "ТФКП",
+      "kind": "EXAM",
+      "teacher": null,
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 2
+      }
+    },
+    {
+      "id": "sha1:2d596aeef932b4696acedc60e1e88e9becd25e2f",
+      "date": "2021-01-19",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": null,
+      "subject": null,
+      "kind": "CONSULTATION",
+      "teacher": "Сташ А.Х.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 3
+      }
+    },
+    {
+      "id": "sha1:c49c7e3778d3215f9c8bf052aeeafe1d3c6c2790",
+      "date": "2021-01-20",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "1УТС, 2Ф",
+      "subject": "Матан",
+      "kind": "EXAM",
+      "teacher": null,
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 4
+      }
+    },
+    {
+      "id": "sha1:4e6505711749803f7e69e9931662d96a7f585448",
+      "date": "2021-01-22",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": null,
+      "subject": null,
+      "kind": "CONSULTATION",
+      "teacher": null,
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 5
+      }
+    },
+    {
+      "id": "sha1:229889bb8daa0c4ad1ded8d9d36dd36d571ca97f",
+      "date": "2021-01-23",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "1ИВТ2",
+      "subject": "Матан",
+      "kind": "EXAM",
+      "teacher": null,
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 6
+      }
+    },
+    {
+      "id": "sha1:76480b1fa2dc3b71516c47510a6f4f6a32f5315c",
+      "date": "2021-01-23",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": null,
+      "subject": null,
+      "kind": "CONSULTATION",
+      "teacher": null,
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 7
+      }
+    },
+    {
+      "id": "sha1:57f2bbc0b647aa341e0f372788ef0e90217878e4",
+      "date": "2021-01-24",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "1ИВТ1",
+      "subject": "Матан",
+      "kind": "EXAM",
+      "teacher": null,
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 8
+      }
+    },
+    {
+      "id": "sha1:e35b89ebab004df08c46b1a9ec456d0e238a61a2",
+      "date": "2021-01-09",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": null,
+      "subject": null,
+      "kind": "CONSULTATION",
+      "teacher": "Калашникова С.И.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 9
+      }
+    },
+    {
+      "id": "sha1:3080c6b6a0257090b542345c76e791ad09c819cc",
+      "date": "2021-01-10",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "1ИВТ2, 1УТС",
+      "subject": "Алг и геом",
+      "kind": "EXAM",
+      "teacher": null,
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 10
+      }
+    },
+    {
+      "id": "sha1:a8244ce4cfee6097744b5461b22e7b670bd5e5cb",
+      "date": "2021-01-10",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": null,
+      "subject": null,
+      "kind": "CONSULTATION",
+      "teacher": null,
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 11
+      }
+    },
+    {
+      "id": "sha1:86605960cb0aa62dda5a0b350251fdcaaf3c6084",
+      "date": "2021-01-11",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "1ИВТ1",
+      "subject": "Алг и геом",
+      "kind": "EXAM",
+      "teacher": null,
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 12
+      }
+    },
+    {
+      "id": "sha1:b872dde99d64df47638e9a7be9e441024353af4d",
+      "date": "2021-01-24",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": null,
+      "subject": null,
+      "kind": "CONSULTATION",
+      "teacher": "Пономарев М.Г.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 13
+      }
+    },
+    {
+      "id": "sha1:9de0a1a6fd494508b6f0b67e58a6d41c20df0ca1",
+      "date": "2021-01-25",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "3ПО",
+      "subject": "Оптика",
+      "kind": "EXAM",
+      "teacher": null,
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 14
+      }
+    },
+    {
+      "id": "sha1:f2e062d54ff5e7128c8bae35a5ed4f4bb4f0e017",
+      "date": "2020-12-28",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": null,
+      "subject": null,
+      "kind": "CONSULTATION",
+      "teacher": "Аракелов А.В.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 15
+      }
+    },
+    {
+      "id": "sha1:6d9bb493eb76285333aa70bf8c06743c9954d513",
+      "date": "2020-12-29",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "4Ф",
+      "subject": "Метод.препод",
+      "kind": "EXAM",
+      "teacher": null,
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 16
+      }
+    },
+    {
+      "id": "sha1:43992abcbf4f52f5b9d5c641e2f060a9f4b7bc6a",
+      "date": "2021-01-16",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": null,
+      "subject": null,
+      "kind": "CONSULTATION",
+      "teacher": null,
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 17
+      }
+    },
+    {
+      "id": "sha1:91227ab0aefea6d34d09f8ff146bd087c405859b",
+      "date": "2021-01-17",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "4ПО",
+      "subject": "Метод.препод",
+      "kind": "EXAM",
+      "teacher": null,
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 18
+      }
+    },
+    {
+      "id": "sha1:0e6ea3cf45dc35ed460ddd740b20a38985a601a2",
+      "date": "2021-01-21",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": null,
+      "subject": null,
+      "kind": "CONSULTATION",
+      "teacher": null,
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 19
+      }
+    },
+    {
+      "id": "sha1:82ae526e5acef96595c90686283077d9462594cf",
+      "date": "2021-01-22",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "4ПО",
+      "subject": "Методы реше",
+      "kind": "EXAM",
+      "teacher": null,
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 20
+      }
+    },
+    {
+      "id": "sha1:67a3b12798a5a41e0012007da901dd18f4619cfc",
+      "date": "2021-01-13",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": null,
+      "subject": null,
+      "kind": "CONSULTATION",
+      "teacher": "Нагой А.А.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 21
+      }
+    },
+    {
+      "id": "sha1:beff16519df715218fc887448850b254ea313d25",
+      "date": "2021-01-14",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "1ИВТ2",
+      "subject": "Культурология",
+      "kind": "EXAM",
+      "teacher": null,
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 22
+      }
+    },
+    {
+      "id": "sha1:b834168f0e64a3319545cd7cf11a21489d0a631a",
+      "date": "2021-01-19",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": null,
+      "subject": null,
+      "kind": "CONSULTATION",
+      "teacher": null,
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 23
+      }
+    },
+    {
+      "id": "sha1:c65865c85e5b7771704739aa166e9ac8767f1ffc",
+      "date": "2021-01-20",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "1ИВТ1",
+      "subject": "Культурология",
+      "kind": "EXAM",
+      "teacher": null,
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 24
+      }
+    },
+    {
+      "id": "sha1:0a6ced95835e693a0c6f544e19b89b7f33c77edc",
+      "date": "2021-01-13",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": null,
+      "subject": null,
+      "kind": "CONSULTATION",
+      "teacher": "Бурыкина Л.В.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 25
+      }
+    },
+    {
+      "id": "sha1:007d5010ac7c0de81abcc11ed953ac91ff2e699b",
+      "date": "2021-01-14",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "1Ф, 1УТС",
+      "subject": "История",
+      "kind": "EXAM",
+      "teacher": null,
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 26
+      }
+    },
+    {
+      "id": "sha1:09b22dae31849a4425e85013b3c0625147d4762b",
+      "date": "2021-01-15",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": null,
+      "subject": null,
+      "kind": "CONSULTATION",
+      "teacher": null,
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 27
+      }
+    },
+    {
+      "id": "sha1:deb8687947bb3f3abe8f5a420077fb364da24dbc",
+      "date": "2021-01-16",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "1ИВТ1",
+      "subject": "История",
+      "kind": "EXAM",
+      "teacher": null,
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 28
+      }
+    },
+    {
+      "id": "sha1:09b015bbeacbb08e28b7c0ffffe74142802545c2",
+      "date": "2021-01-17",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": null,
+      "subject": null,
+      "kind": "CONSULTATION",
+      "teacher": null,
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 29
+      }
+    },
+    {
+      "id": "sha1:cacbb1a0e5ca2b84f8c79b7afd6f7e5e03d09d28",
+      "date": "2021-01-18",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "1ИВТ2",
+      "subject": "История",
+      "kind": "EXAM",
+      "teacher": null,
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 30
+      }
+    }
+  ],
+  "issues": []
+}
+</file>
+
+<file path="src/config.ts">
+import path from "node:path";
+
+export interface AppConfig {
+  port: number;
+  storageDir: string;
+  uploadsDir: string;
+  incomingDir: string;
+  resultsDir: string;
+  maxParallelTasks: number;
+  maxUploadMb: number;
+}
+
+export function resolveConfig(overrides: Partial<AppConfig> = {}): AppConfig {
+  const storageDir = path.resolve(
+    overrides.storageDir ?? process.env.STORAGE_DIR ?? path.join(process.cwd(), "storage")
+  );
+
+  const uploadsDir = path.resolve(overrides.uploadsDir ?? path.join(storageDir, "uploads"));
+  const incomingDir = path.resolve(overrides.incomingDir ?? path.join(uploadsDir, "incoming"));
+  const resultsDir = path.resolve(overrides.resultsDir ?? path.join(storageDir, "results"));
+
+  const portRaw = overrides.port ?? process.env.PORT;
+  const maxParallelRaw = overrides.maxParallelTasks ?? process.env.MAX_PARALLEL_TASKS;
+  const maxUploadMbRaw = overrides.maxUploadMb ?? process.env.MAX_UPLOAD_MB;
+
+  return {
+    port: normalizeNumber(portRaw, 3000),
+    storageDir,
+    uploadsDir,
+    incomingDir,
+    resultsDir,
+    maxParallelTasks: Math.max(1, normalizeNumber(maxParallelRaw, 1)),
+    maxUploadMb: Math.max(1, normalizeNumber(maxUploadMbRaw, 30))
+  };
+}
+
+function normalizeNumber(value: string | number | undefined, fallback: number): number {
+  if (typeof value === "number" && Number.isFinite(value)) {
+    return value;
+  }
+
+  if (typeof value === "string") {
+    const parsed = Number.parseInt(value, 10);
+    if (Number.isFinite(parsed)) {
+      return parsed;
+    }
+  }
+
+  return fallback;
+}
+</file>
+
+<file path="src/domain.ts">
+export type ExamKind =
+  | "EXAM"
+  | "CREDIT"
+  | "DIFF_CREDIT"
+  | "CONSULTATION"
+  | "RETAKE"
+  | "OTHER";
+
+export interface LocationInfo {
+  room: string | null;
+  building: string | null;
+}
+
+export interface TimeRange {
+  start: string | null; // "HH:mm"
+  end: string | null;   // "HH:mm"
+}
+
+export interface ParseIssue {
+  level: "info" | "warning" | "error";
+  message: string;
+  source?: { sheet?: string; row?: number; column?: string };
+}
+
+export interface ScheduleItem {
+  id: string; // stable hash
+  date: string | null; // "YYYY-MM-DD"
+  time: TimeRange;
+  timezone: string;
+  group: string | null;
+  subject: string | null;
+  kind: ExamKind;
+  teacher: string | null;
+  location: LocationInfo;
+  notes: string | null;
+  source: { sheet: string; row: number };
+  raw?: Record<string, string | null>;
+}
+
+export interface ScheduleJsonV1 {
+  meta: { sourceFileName: string; parsedAt: string; version: "1.0" };
+  summary: {
+    items: number;
+    groups: string[];
+    itemsByGroup: Record<string, number>;
+    dateRange: { from: string | null; to: string | null };
+  };
+  items: ScheduleItem[];
+  issues: ParseIssue[];
+}
+</file>
+
+<file path="src/index.ts">
+import express from "express";
+import { resolveConfig } from "./config";
+import { createSessionParserRouter } from "./router";
+
+const config = resolveConfig();
+const app = express();
+
+app.use(express.json());
+app.use("/api", createSessionParserRouter({ config }));
+
+app.get("/health", (_req, res) => {
+  res.json({ status: "ok" });
+});
+
+app.listen(config.port, () => {
+  // eslint-disable-next-line no-console
+  console.log(`Session parser started on port ${config.port}`);
+});
+</file>
+
+<file path="src/normalize.ts">
+// src/normalize.ts
+import crypto from "node:crypto";
+import { ParsedResult } from "./types";
+import { ExamKind, ScheduleItem, ScheduleJsonV1, ParseIssue } from "./domain";
+
+const TZ = "Europe/Bucharest";
+
+const COL = {
+  date: ["дата", "date", "day"],
+  time: ["время", "time", "начало", "start"],
+  group: ["группа", "группы", "group"],
+  subject: ["предмет", "дисциплина", "subject"],
+  kind: ["контроль", "вид_контроля", "форма_контроля", "type"],
+  teacher: ["преподаватель", "фио", "teacher"],
+  room: ["аудитория", "кабинет", "room"],
+  notes: ["примечание", "комментарий", "notes"]
+} as const;
+
+function pick(row: Record<string, string | null>, keys: readonly string[]): string | null {
+  for (const k of keys) {
+    const v = row[k];
+    if (typeof v === "string" && v.trim()) return v.trim();
+  }
+  return null;
+}
+
+function sha1(input: string): string {
+  return "sha1:" + crypto.createHash("sha1").update(input).digest("hex");
+}
+
+function parseKind(value: string | null): ExamKind {
+  const v = (value ?? "").toLowerCase();
+
+  if (/(экз|exam)/.test(v)) return "EXAM";
+  if (/(диф|diff)/.test(v)) return "DIFF_CREDIT";
+  if (/(зач|credit)/.test(v)) return "CREDIT";
+  if (/(конс|consult)/.test(v)) return "CONSULTATION";
+  if (/(пересда|retake)/.test(v)) return "RETAKE";
+
+  return "OTHER";
+}
+
+function normalizeTime(value: string | null): { start: string | null; end: string | null } {
+  if (!value) return { start: null, end: null };
+
+  const v = value.replace(/\./g, ":").trim();
+  const parts = v.split(/\s*[-–]\s*/);
+
+  const start = parts[0] ? toHHmm(parts[0]) : null;
+  const end = parts[1] ? toHHmm(parts[1]) : null;
+
+  return { start, end };
+}
+
+function toHHmm(t: string): string | null {
+  const m = t.trim().match(/^(\d{1,2})(?::(\d{1,2}))?$/);
+  if (!m) return null;
+
+  const hh = Number(m[1]);
+  const mm = Number(m[2] ?? "0");
+
+  if (!Number.isFinite(hh) || !Number.isFinite(mm)) return null;
+  if (hh < 0 || hh > 23) return null;
+  if (mm < 0 || mm > 59) return null;
+
+  return `${String(hh).padStart(2, "0")}:${String(mm).padStart(2, "0")}`;
+}
+
+function normalizeDate(value: string | null): string | null {
+  if (!value) return null;
+  const v = value.trim();
+
+  if (/^\d{4}-\d{2}-\d{2}$/.test(v)) return v;
+
+  // dd.mm.yyyy or dd.mm.yy
+  let m = v.match(/^(\d{1,2})\.(\d{1,2})\.(\d{2}|\d{4})$/);
+  if (m) {
+    const dd = Number(m[1]);
+    const mm = Number(m[2]);
+    const yy = Number(m[3].length === 2 ? `20${m[3]}` : m[3]);
+    if (isValidDate(yy, mm, dd)) return `${yy}-${pad2(mm)}-${pad2(dd)}`;
+  }
+
+  // mm/dd/yyyy or mm/dd/yy
+  m = v.match(/^(\d{1,2})\/(\d{1,2})\/(\d{2}|\d{4})$/);
+  if (m) {
+    const mm = Number(m[1]);
+    const dd = Number(m[2]);
+    const yy = Number(m[3].length === 2 ? `20${m[3]}` : m[3]);
+    if (isValidDate(yy, mm, dd)) return `${yy}-${pad2(mm)}-${pad2(dd)}`;
+  }
+
+  return null;
+}
+
+function isValidDate(y: number, m: number, d: number): boolean {
+  if (y < 1900 || y > 2100) return false;
+  if (m < 1 || m > 12) return false;
+  if (d < 1 || d > 31) return false;
+
+  const dt = new Date(Date.UTC(y, m - 1, d));
+  return dt.getUTCFullYear() === y && dt.getUTCMonth() === m - 1 && dt.getUTCDate() === d;
+}
+
+function pad2(n: number): string {
+  return String(n).padStart(2, "0");
+}
+
+export function normalizeToScheduleV1(parsed: ParsedResult, keepRaw: boolean = false): ScheduleJsonV1 {
+  const issues: ParseIssue[] = [];
+  const items: ScheduleItem[] = [];
+
+  for (const sheet of parsed.sheets) {
+    for (let i = 0; i < sheet.rows.length; i += 1) {
+      const row = sheet.rows[i];
+
+      const dateRaw = pick(row, COL.date);
+      const timeRaw = pick(row, COL.time);
+      const group = pick(row, COL.group);
+      const subject = pick(row, COL.subject);
+      const kindRaw = pick(row, COL.kind);
+      const teacher = pick(row, COL.teacher);
+      const room = pick(row, COL.room);
+      const notes = pick(row, COL.notes);
+
+      const hasSomething = Boolean(dateRaw || timeRaw || group || subject || kindRaw || teacher || room || notes);
+      if (!hasSomething) continue;
+
+      const date = normalizeDate(dateRaw);
+      if (dateRaw && !date) {
+        issues.push({
+          level: "warning",
+          message: `Не удалось распознать дату: "${dateRaw}"`,
+          source: { sheet: sheet.sheetName, row: i + 1, column: "date" }
+        });
+      }
+
+      const time = normalizeTime(timeRaw);
+      if (timeRaw && !time.start) {
+        issues.push({
+          level: "warning",
+          message: `Не удалось распознать время: "${timeRaw}"`,
+          source: { sheet: sheet.sheetName, row: i + 1, column: "time" }
+        });
+      }
+
+      const kind = parseKind(kindRaw);
+
+      const stableKey = [
+        sheet.sheetName,
+        date ?? dateRaw ?? "",
+        time.start ?? timeRaw ?? "",
+        group ?? "",
+        subject ?? "",
+        kind,
+        teacher ?? "",
+        room ?? ""
+      ].join("|");
+
+      const item: ScheduleItem = {
+        id: sha1(stableKey),
+        date,
+        time,
+        timezone: TZ,
+        group,
+        subject,
+        kind,
+        teacher,
+        location: { room, building: null },
+        notes,
+        source: { sheet: sheet.sheetName, row: i + 1 }
+      };
+
+      if (keepRaw) item.raw = row;
+
+      items.push(item);
+    }
+  }
+
+  // summary
+  const groups = Array.from(new Set(items.map((x) => x.group).filter(Boolean) as string[])).sort();
+
+  const itemsByGroup: Record<string, number> = {};
+  for (const g of groups) itemsByGroup[g] = 0;
+  for (const it of items) {
+    if (it.group && itemsByGroup[it.group] !== undefined) itemsByGroup[it.group] += 1;
+  }
+
+  const dates = items.map((x) => x.date).filter(Boolean) as string[];
+  const from = dates.length ? dates.reduce((a, b) => (a < b ? a : b)) : null;
+  const to = dates.length ? dates.reduce((a, b) => (a > b ? a : b)) : null;
+
+  return {
+    meta: { sourceFileName: parsed.sourceFileName, parsedAt: parsed.parsedAt, version: "1.0" },
+    summary: { items: items.length, groups, itemsByGroup, dateRange: { from, to } },
+    items,
+    issues
+  };
+}
+</file>
+
+<file path="src/parser.ts">
+import xlsx from "xlsx";
+import { ParsedResult, SheetData } from "./types";
+
+export async function parseExcelSchedule(filePath: string, sourceFileName: string): Promise<ParsedResult> {
+  const workbook = xlsx.readFile(filePath, { cellDates: true, raw: false });
+  const sheets: SheetData[] = [];
+
+  for (const sheetName of workbook.SheetNames) {
+    const worksheet = workbook.Sheets[sheetName];
+    const matrix = xlsx.utils.sheet_to_json<(string | number | boolean | null)[]>(worksheet, {
+      header: 1,
+      defval: null,
+      raw: false
+    });
+
+    const sheet = parseSheet(sheetName, matrix);
+    sheets.push(sheet);
+  }
+
+  const memorySheets = sheets.map((sheet) => ({
+    sheetName: sheet.sheetName,
+    rowCount: sheet.rows.length,
+    columns: sheet.headers
+  }));
+
+  const totalRows = memorySheets.reduce((sum, current) => sum + current.rowCount, 0);
+
+  return {
+    sourceFileName,
+    parsedAt: new Date().toISOString(),
+    sheets,
+    memory: {
+      sheetCount: sheets.length,
+      totalRows,
+      sheets: memorySheets
+    }
+  };
+}
+
+function parseSheet(
+  sheetName: string,
+  matrix: Array<Array<string | number | boolean | null>>
+): SheetData {
+  if (matrix.length === 0) {
+    return {
+      sheetName,
+      headers: [],
+      rows: []
+    };
+  }
+
+  const headerIndex = findHeaderRowIndex(matrix);
+  const headerRow = matrix[headerIndex] ?? [];
+  const headers = normalizeHeaders(headerRow);
+
+  const rows: Record<string, string | null>[] = [];
+
+  for (let i = headerIndex + 1; i < matrix.length; i += 1) {
+    const row = matrix[i] ?? [];
+    if (!rowHasData(row)) {
+      continue;
+    }
+
+    const mapped: Record<string, string | null> = {};
+    for (let col = 0; col < headers.length; col += 1) {
+      mapped[headers[col]] = formatCell(row[col]);
+    }
+
+    rows.push(mapped);
+  }
+
+  return {
+    sheetName,
+    headers,
+    rows
+  };
+}
+
+function findHeaderRowIndex(matrix: Array<Array<string | number | boolean | null>>): number {
+  for (let i = 0; i < matrix.length; i += 1) {
+    const row = matrix[i] ?? [];
+    const filled = row.filter((cell) => cellHasData(cell));
+    if (filled.length >= 2) {
+      return i;
+    }
+  }
+
+  return 0;
+}
+
+function normalizeHeaders(row: Array<string | number | boolean | null>): string[] {
+  const used = new Set<string>();
+
+  return row.map((cell, index) => {
+    const base = sanitizeHeader(formatCell(cell) ?? `column_${index + 1}`) || `column_${index + 1}`;
+
+    let candidate = base;
+    let suffix = 2;
+    while (used.has(candidate)) {
+      candidate = `${base}_${suffix}`;
+      suffix += 1;
+    }
+
+    used.add(candidate);
+    return candidate;
+  });
+}
+
+function sanitizeHeader(value: string): string {
+  return value
+    .trim()
+    .replace(/\s+/g, "_")
+    .replace(/[^\p{L}\p{N}_]/gu, "")
+    .toLowerCase();
+}
+
+function formatCell(value: string | number | boolean | null | undefined): string | null {
+  if (!cellHasData(value)) {
+    return null;
+  }
+
+  return String(value).trim();
+}
+
+function cellHasData(value: string | number | boolean | null | undefined): boolean {
+  if (value === null || value === undefined) {
+    return false;
+  }
+
+  if (typeof value === "string" && value.trim() === "") {
+    return false;
+  }
+
+  return true;
+}
+
+function rowHasData(row: Array<string | number | boolean | null>): boolean {
+  return row.some((cell) => cellHasData(cell));
+}
+</file>
+
+<file path="src/router.ts">
+import express from "express";
+import multer from "multer";
+import { AppConfig, resolveConfig } from "./config";
+import { ensureStorageDirectories } from "./storage";
+import { TaskService } from "./task-service";
+
+export interface RouterOptions {
+  config?: Partial<AppConfig>;
+  taskService?: TaskService;
+}
+
+export function createSessionParserRouter(options: RouterOptions = {}): express.Router {
+  const config = resolveConfig(options.config);
+  ensureStorageDirectories(config);
+
+  const router = express.Router();
+  const upload = multer({
+    dest: config.incomingDir,
+    limits: {
+      fileSize: config.maxUploadMb * 1024 * 1024
+    }
+  });
+
+  const taskService = options.taskService ?? new TaskService(config);
+
+  router.post("/tasks", upload.single("file"), async (req, res) => {
+    if (!req.file) {
+      return res.status(400).json({ error: "Excel file is required in form-data field 'file'" });
+    }
+
+    try {
+      const task = await taskService.createTask(req.file);
+      return res.status(202).json({
+        taskId: task.id,
+        status: task.status,
+        createdAt: task.createdAt
+      });
+    } catch (error) {
+      return res.status(500).json({
+        error: "Failed to create task",
+        details: error instanceof Error ? error.message : "Unknown error"
+      });
+    }
+  });
+
+  router.get("/tasks/:taskId/status", (req, res) => {
+    const task = taskService.getTask(req.params.taskId);
+    if (!task) {
+      return res.status(404).json({ error: "Task not found" });
+    }
+
+    return res.json({
+      taskId: task.id,
+      status: task.status,
+      createdAt: task.createdAt,
+      startedAt: task.startedAt ?? null,
+      finishedAt: task.finishedAt ?? null,
+      error: task.error ?? null
+    });
+  });
+
+  router.get("/tasks/:taskId/result", async (req, res) => {
+    const task = taskService.getTask(req.params.taskId);
+    if (!task) {
+      return res.status(404).json({ error: "Task not found" });
+    }
+
+    if (task.status === "failed") {
+      return res.status(422).json({
+        error: "Task processing failed",
+        details: task.error ?? "Unknown processing error"
+      });
+    }
+
+    if (task.status !== "completed") {
+      return res.status(409).json({
+        error: "Task is not completed yet",
+        status: task.status
+      });
+    }
+
+    return res.download(task.resultFilePath, `${task.id}.json`);
+  });
+
+  router.get("/tasks/:taskId/memory", async (req, res) => {
+    const task = taskService.getTask(req.params.taskId);
+    if (!task) {
+      return res.status(404).json({ error: "Task not found" });
+    }
+
+    if (task.status === "failed") {
+      return res.status(422).json({
+        error: "Task processing failed",
+        details: task.error ?? "Unknown processing error"
+      });
+    }
+
+    if (task.status !== "completed") {
+      return res.status(409).json({
+        error: "Task is not completed yet",
+        status: task.status
+      });
+    }
+
+    try {
+      const result = await taskService.getResult(task.id);
+      return res.json({
+        taskId: task.id,
+        memory: result.memory
+      });
+    } catch (error) {
+      return res.status(500).json({
+        error: "Failed to read task memory",
+        details: error instanceof Error ? error.message : "Unknown error"
+      });
+    }
+  });
+
+  router.use((error: unknown, _req: express.Request, res: express.Response, next: express.NextFunction) => {
+    if (error instanceof multer.MulterError) {
+      const details =
+        error.code === "LIMIT_FILE_SIZE"
+          ? `File is too large. Max upload size is ${config.maxUploadMb} MB`
+          : error.message;
+
+      return res.status(400).json({
+        error: "Upload error",
+        details
+      });
+    }
+
+    return next(error);
+  });
+
+  return router;
+}
+</file>
+
+<file path="src/storage.ts">
+import fs from "node:fs";
+import { AppConfig } from "./config";
+
+export function ensureStorageDirectories(config: AppConfig): void {
+  const directories = [config.storageDir, config.uploadsDir, config.incomingDir, config.resultsDir];
+
+  for (const dir of directories) {
+    fs.mkdirSync(dir, { recursive: true });
+  }
+}
+</file>
+
+<file path="src/task-service.ts">
+import fs from "node:fs/promises";
+import path from "node:path";
+import { v4 as uuidv4 } from "uuid";
+import { AppConfig } from "./config";
+import { parseExcelSchedule } from "./parser";
+import { ParsedResult, TaskRecord } from "./types";
+import { normalizeToScheduleV1 } from "./normalize";
+
+export class TaskService {
+  private readonly tasks = new Map<string, TaskRecord>();
+  private readonly queue: string[] = [];
+  private workers = 0;
+
+  constructor(private readonly config: AppConfig) {}
+
+  async createTask(file: Express.Multer.File): Promise<TaskRecord> {
+    const id = uuidv4();
+    const extension = path.extname(file.originalname) || ".xlsx";
+    const uploadedFilePath = path.join(this.config.uploadsDir, `${id}${extension}`);
+    const resultFilePath = path.join(this.config.resultsDir, `${id}.json`);
+
+    await fs.rename(file.path, uploadedFilePath);
+
+    
+    const task: TaskRecord = {
+      id,
+      status: "queued",
+      originalFileName: file.originalname,
+      uploadedFilePath,
+      resultFilePath,
+      createdAt: new Date().toISOString()
+    };
+
+    this.tasks.set(id, task);
+    this.queue.push(id);
+    this.schedule();
+
+    return task;
+  }
+
+  getTask(taskId: string): TaskRecord | undefined {
+    return this.tasks.get(taskId);
+  }
+
+  async getResult(taskId: string): Promise<ParsedResult> {
+    const task = this.tasks.get(taskId);
+    if (!task) {
+      throw new Error("TASK_NOT_FOUND");
+    }
+
+    if (task.status !== "completed") {
+      throw new Error("TASK_NOT_COMPLETED");
+    }
+
+    const raw = await fs.readFile(task.resultFilePath, "utf-8");
+    return JSON.parse(raw) as ParsedResult;
+  }
+
+  private schedule(): void {
+    while (this.workers < this.config.maxParallelTasks && this.queue.length > 0) {
+      const nextTaskId = this.queue.shift();
+      if (!nextTaskId) {
+        continue;
+      }
+
+      this.workers += 1;
+      void this.processTask(nextTaskId).finally(() => {
+        this.workers -= 1;
+        this.schedule();
+      });
+    }
+  }
+
+// task-service.ts (внутри класса)
+private async processTask(taskId: string): Promise<void> {
+  const task = this.tasks.get(taskId);
+  if (!task) return;
+
+  task.status = "processing";
+  task.startedAt = new Date().toISOString();
+
+  try {
+    const parsed = await parseExcelSchedule(task.uploadedFilePath, task.originalFileName);
+
+    // NEW: нормализуем
+    const normalized = normalizeToScheduleV1(parsed, false);
+
+    await fs.writeFile(task.resultFilePath, JSON.stringify(normalized, null, 2), "utf-8");
+
+    task.status = "completed";
+    task.finishedAt = new Date().toISOString();
+  } catch (error) {
+    task.status = "failed";
+    task.finishedAt = new Date().toISOString();
+    task.error = error instanceof Error ? error.message : "Unknown processing error";
+  }
+}
+}
+</file>
+
+<file path="src/types.ts">
+export type TaskStatus = "queued" | "processing" | "completed" | "failed";
+
+export interface SheetData {
+  sheetName: string;
+  headers: string[];
+  rows: Record<string, string | null>[];
+}
+
+export interface ParseMemory {
+  sheetCount: number;
+  totalRows: number;
+  sheets: Array<{
+    sheetName: string;
+    rowCount: number;
+    columns: string[];
+  }>;
+}
+
+export interface ParsedResult {
+  sourceFileName: string;
+  parsedAt: string;
+  sheets: SheetData[];
+  memory: ParseMemory;
+}
+
+export interface TaskRecord {
+  id: string;
+  status: TaskStatus;
+  originalFileName: string;
+  uploadedFilePath: string;
+  resultFilePath: string;
+  createdAt: string;
+  startedAt?: string;
+  finishedAt?: string;
+  error?: string;
+}
+</file>
+
+<file path="tsconfig.json">
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "CommonJS",
+    "moduleResolution": "Node",
+    "strict": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
+    "rootDir": "src",
+    "outDir": "dist",
+    "resolveJsonModule": true
+  },
+  "include": ["src/**/*.ts"]
+}
+</file>
+
+</files>

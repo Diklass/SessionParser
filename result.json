@@ -1,0 +1,2064 @@
+{
+  "meta": {
+    "sourceFileName": "session.xlsx",
+    "parsedAt": "2026-02-23T11:46:06.773Z",
+    "version": "1.0"
+  },
+  "summary": {
+    "items": 95,
+    "groups": [
+      "1 Ф",
+      "1ИВТ1",
+      "1ИВТ2",
+      "1ИВТ2, 1УТС",
+      "1ИВТ_АСОИУ",
+      "1ИВТ_ТИИ",
+      "1ПО_магистр",
+      "1УТС, 2Ф",
+      "1Ф, 1УТС",
+      "2ИВТ_АСОИУ",
+      "2ИВТ_ТИИ",
+      "2ПО_магистр",
+      "2Ф",
+      "3 УТС",
+      "3ИВТ1",
+      "3ИВТ2",
+      "3ПО",
+      "3Ф",
+      "4 УТС",
+      "4ИВТ(УзГУМЯ)",
+      "4ИВТ1",
+      "4ИВТ2",
+      "4ПО",
+      "4Ф"
+    ],
+    "itemsByGroup": {
+      "1 Ф": 2,
+      "1ИВТ1": 4,
+      "1ИВТ2": 3,
+      "1ИВТ2, 1УТС": 1,
+      "1ИВТ_АСОИУ": 2,
+      "1ИВТ_ТИИ": 1,
+      "1ПО_магистр": 2,
+      "1УТС, 2Ф": 1,
+      "1Ф, 1УТС": 1,
+      "2ИВТ_АСОИУ": 5,
+      "2ИВТ_ТИИ": 1,
+      "2ПО_магистр": 4,
+      "2Ф": 6,
+      "3 УТС": 4,
+      "3ИВТ1": 4,
+      "3ИВТ2": 9,
+      "3ПО": 1,
+      "3Ф": 4,
+      "4 УТС": 4,
+      "4ИВТ(УзГУМЯ)": 4,
+      "4ИВТ1": 5,
+      "4ИВТ2": 5,
+      "4ПО": 2,
+      "4Ф": 5
+    },
+    "dateRange": {
+      "from": "2020-12-28",
+      "to": "2025-01-27"
+    }
+  },
+  "items": [
+    {
+      "id": "sha1:921a5516687b9ab64e2fff30168cfb13a8627d51",
+      "date": "2024-12-23",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "4Ф",
+      "subject": "Методика обучения физики",
+      "kind": "EXAM",
+      "teacher": "Шамбин А.И.",
+      "location": {
+        "room": "325",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 19
+      }
+    },
+    {
+      "id": "sha1:1c628ced6b50e6cfde30d1bb06845aff21d7e5d0",
+      "date": "2024-12-23",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "4 УТС",
+      "subject": "МиМСУ",
+      "kind": "EXAM",
+      "teacher": "Теплоухов С.",
+      "location": {
+        "room": "404",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 19
+      }
+    },
+    {
+      "id": "sha1:ed1be3df00f23e36994b74df6db6328c77a2b5f6",
+      "date": "2024-12-23",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "4ИВТ1",
+      "subject": "Проектирование АСУ",
+      "kind": "EXAM",
+      "teacher": "Коржаков В.Е.",
+      "location": {
+        "room": "407",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 19
+      }
+    },
+    {
+      "id": "sha1:d02b1fc55575b0eabdc0ec0adda4f0ee7fdce0b8",
+      "date": "2024-12-24",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "4ИВТ2",
+      "subject": "Проектирование АСУ",
+      "kind": "EXAM",
+      "teacher": "Коржаков В.Е.",
+      "location": {
+        "room": "407",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 20
+      }
+    },
+    {
+      "id": "sha1:c1759ad04cf2b3160d9d591ea163f9d11cb90fd5",
+      "date": "2024-12-27",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "4Ф",
+      "subject": "Компьютерные методы физики",
+      "kind": "EXAM",
+      "teacher": "Шамбина С.В.",
+      "location": {
+        "room": "325",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 23
+      }
+    },
+    {
+      "id": "sha1:75ddc840660553d4485075cdb15cd1ccd4ffbc5c",
+      "date": "2024-12-27",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "4 УТС",
+      "subject": "Информационные сети и ТК",
+      "kind": "EXAM",
+      "teacher": "Алиева М.Ф.",
+      "location": {
+        "room": "405",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 23
+      }
+    },
+    {
+      "id": "sha1:c0113390199a2fd09c2ce79e0ec903feaf0838ff",
+      "date": "2024-12-27",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "4ИВТ1",
+      "subject": "ПОАСНИ",
+      "kind": "EXAM",
+      "teacher": "Теплоухов С.",
+      "location": {
+        "room": "404",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 23
+      }
+    },
+    {
+      "id": "sha1:bd5aabd6fd94e89673563e0527ab1390d6609f92",
+      "date": "2024-12-28",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "4ИВТ2",
+      "subject": "ПОАСНИ",
+      "kind": "EXAM",
+      "teacher": "Теплоухов С.",
+      "location": {
+        "room": "404",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 24
+      }
+    },
+    {
+      "id": "sha1:a266eebb840c68dc68c6dda5567743ed841e7989",
+      "date": "2025-01-01",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "3ИВТ2",
+      "subject": "Проектирование АСУ",
+      "kind": "EXAM",
+      "teacher": "Коржаков В.Е.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": "дист.",
+      "source": {
+        "sheet": "Лист1",
+        "row": 28
+      }
+    },
+    {
+      "id": "sha1:3809db067f544c48d76422e568b9d23a6b38ef39",
+      "date": "2025-01-05",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "3ИВТ2",
+      "subject": "Технология программирования",
+      "kind": "EXAM",
+      "teacher": "Овчаров И.Н.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 32
+      }
+    },
+    {
+      "id": "sha1:89d72539f8fd4822678a3513bc7b5da80ad8c34c",
+      "date": "2025-01-09",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "1ПО_магистр",
+      "subject": "Астрономия и физика космоса",
+      "kind": "EXAM",
+      "teacher": "Шамбин А.И.",
+      "location": {
+        "room": "327",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 36
+      }
+    },
+    {
+      "id": "sha1:1bfe2c2337b8e9762f199adea830a60fa1a262b3",
+      "date": "2025-01-09",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "2ПО_магистр",
+      "subject": "Методика обучения информатике в современной школе",
+      "kind": "EXAM",
+      "teacher": "Алиева М.Ф.",
+      "location": {
+        "room": "404",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 36
+      }
+    },
+    {
+      "id": "sha1:a967fae93d8e244c10f7e2ee55d52ce0f44bf691",
+      "date": "2025-01-09",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "1 Ф",
+      "subject": "Элементарная физика",
+      "kind": "EXAM",
+      "teacher": "Тлячев В.Б.",
+      "location": {
+        "room": "324",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 36
+      }
+    },
+    {
+      "id": "sha1:2cdb8ff4336eeecf87eccb7b86643693ee1808b1",
+      "date": "2025-01-09",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "2Ф",
+      "subject": "Программирование",
+      "kind": "EXAM",
+      "teacher": "Шамбина С.В.",
+      "location": {
+        "room": "328",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 36
+      }
+    },
+    {
+      "id": "sha1:d3cf15924e79ec1ce991f686c07b8f5eb36a8728",
+      "date": "2025-01-09",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "3 УТС",
+      "subject": "Методы оптимизации",
+      "kind": "EXAM",
+      "teacher": "Коржакова С.А.",
+      "location": {
+        "room": "407",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 36
+      }
+    },
+    {
+      "id": "sha1:8e80ef101ae973659549ff45c696bf7d40032754",
+      "date": "2025-01-09",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "1ИВТ_АСОИУ",
+      "subject": "Матем.анализ",
+      "kind": "EXAM",
+      "teacher": "Беликова Т.Г.",
+      "location": {
+        "room": "323б",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 36
+      }
+    },
+    {
+      "id": "sha1:4d16c3a596d9e783faa5b1e86582b7e1bc985603",
+      "date": "2025-01-09",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "2ИВТ_АСОИУ",
+      "subject": "Ин. яз",
+      "kind": "EXAM",
+      "teacher": "Симбулетова Р.К., Копылова Ю.В.",
+      "location": {
+        "room": "143/404",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 36
+      }
+    },
+    {
+      "id": "sha1:fa1e5d892ed041a550b0bc01076d6dc0d817718a",
+      "date": "2025-01-09",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "3ИВТ1",
+      "subject": "Электротехн. и электроника",
+      "kind": "EXAM",
+      "teacher": "Мамий А.Р.",
+      "location": {
+        "room": "406",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 36
+      }
+    },
+    {
+      "id": "sha1:ff7276f9714bce8d7f0afc27ecbde466fd770647",
+      "date": "2025-01-09",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "4ИВТ(УзГУМЯ)",
+      "subject": "Проектирование АСУ",
+      "kind": "EXAM",
+      "teacher": "Коржаков В.Е.",
+      "location": {
+        "room": "405",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 36
+      }
+    },
+    {
+      "id": "sha1:a2849919ecb672e2ccd561d34e8c7e443ce4e8ba",
+      "date": "2025-01-09",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "3ИВТ2",
+      "subject": "Системы ИИ",
+      "kind": "EXAM",
+      "teacher": "Коробков В.Н.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": "дист.",
+      "source": {
+        "sheet": "Лист1",
+        "row": 36
+      }
+    },
+    {
+      "id": "sha1:abc1076ba2b46993942fa1a3952d42cde393945b",
+      "date": "2025-01-10",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "3Ф",
+      "subject": "Теор.механика. Механика сплош.сред",
+      "kind": "EXAM",
+      "teacher": "Шекоян Л.А.",
+      "location": {
+        "room": "324",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 37
+      }
+    },
+    {
+      "id": "sha1:3e665093bdc5cb6a9120a424098422e73b1457c5",
+      "date": "2025-01-10",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "4Ф",
+      "subject": "Квантовая теория",
+      "kind": "EXAM",
+      "teacher": "Тлячев В.Б.",
+      "location": {
+        "room": "317",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 37
+      }
+    },
+    {
+      "id": "sha1:53c1a2265ecf9e8bfed5c84701d60cc37087a5f6",
+      "date": "2025-01-10",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "3ИВТ2",
+      "subject": "Электротехн. и электроника",
+      "kind": "EXAM",
+      "teacher": "Мамий А.Р.",
+      "location": {
+        "room": "404",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 37
+      }
+    },
+    {
+      "id": "sha1:1d490e9c3a940b340709922ef81322b6bf0f289f",
+      "date": "2025-01-10",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "4ИВТ1",
+      "subject": "Надежность, эргономика и кач",
+      "kind": "EXAM",
+      "teacher": "Коржаков А.В.",
+      "location": {
+        "room": "406",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 37
+      }
+    },
+    {
+      "id": "sha1:e4fe12b3b9c88aeade33c94f10752fc2247a9a90",
+      "date": "2025-01-11",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "4 УТС",
+      "subject": "ТСАУ",
+      "kind": "EXAM",
+      "teacher": "Джемилев А.С.",
+      "location": {
+        "room": "404",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 38
+      }
+    },
+    {
+      "id": "sha1:b03b561732870ae0a08b5c3c1c7d1d9170846b85",
+      "date": "2025-01-11",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "4ИВТ2",
+      "subject": "Надежность, эргономика и кач",
+      "kind": "EXAM",
+      "teacher": "Коржаков А.В.",
+      "location": {
+        "room": "406",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 38
+      }
+    },
+    {
+      "id": "sha1:9833684a60c926f013353575706d98341b8f57f0",
+      "date": "2025-01-13",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "1ПО_магистр",
+      "subject": "Современные проблемы науки и образования",
+      "kind": "EXAM",
+      "teacher": "Куваева А.А.",
+      "location": {
+        "room": "327",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 40
+      }
+    },
+    {
+      "id": "sha1:ebf7e3e40978f96c74d230eb4f9df00f728ac643",
+      "date": "2025-01-13",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "2ПО_магистр",
+      "subject": "Избранные вопросы современной информатики",
+      "kind": "EXAM",
+      "teacher": "Алиева М.Ф.",
+      "location": {
+        "room": "404",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 40
+      }
+    },
+    {
+      "id": "sha1:8f94f28fa67ebd7ad879592d9f507a556143526e",
+      "date": "2025-01-13",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "1 Ф",
+      "subject": "Элементарная математика",
+      "kind": "EXAM",
+      "teacher": "Ушхо А.Д.",
+      "location": {
+        "room": "324",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 40
+      }
+    },
+    {
+      "id": "sha1:9b369c68d1d72beed897d9bf768e587146d3abba",
+      "date": "2025-01-13",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "2Ф",
+      "subject": "Молекулярная физика",
+      "kind": "EXAM",
+      "teacher": "Жукова И.Н.",
+      "location": {
+        "room": "319",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 40
+      }
+    },
+    {
+      "id": "sha1:43e98c4f09daeffc28c88c0a023fbca6d5c1d0d9",
+      "date": "2025-01-13",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "3 УТС",
+      "subject": "Инженерная и комп. Графика",
+      "kind": "EXAM",
+      "teacher": "Хандожко А.А.",
+      "location": {
+        "room": "328",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 40
+      }
+    },
+    {
+      "id": "sha1:e5f709f90cd4a646400a89f0f7414a7602aa4152",
+      "date": "2025-01-13",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "1ИВТ_АСОИУ",
+      "subject": "Алгебра и геом",
+      "kind": "EXAM",
+      "teacher": "Калашникова С.И.",
+      "location": {
+        "room": "406",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 40
+      }
+    },
+    {
+      "id": "sha1:22704216c45c56705a4010da74ac833d894905a6",
+      "date": "2025-01-13",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "2ИВТ_АСОИУ",
+      "subject": "Физика",
+      "kind": "EXAM",
+      "teacher": "Шамбин А.И.",
+      "location": {
+        "room": "329",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 40
+      }
+    },
+    {
+      "id": "sha1:daf279828230cfa1f6eb4d9dfe47ab196749659f",
+      "date": "2025-01-13",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "3ИВТ1",
+      "subject": "Методы оптимизации",
+      "kind": "EXAM",
+      "teacher": "Коржакова С.А.",
+      "location": {
+        "room": "407",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 40
+      }
+    },
+    {
+      "id": "sha1:922029fd4deaefa77fca3d0bf2e2d3c5dc43c7d1",
+      "date": "2025-01-13",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "4ИВТ(УзГУМЯ)",
+      "subject": "СПО",
+      "kind": "EXAM",
+      "teacher": "Плисенко О.А.",
+      "location": {
+        "room": "405",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 40
+      }
+    },
+    {
+      "id": "sha1:7a9aa22f094907df2d9e50c81d41226791b64b65",
+      "date": "2025-01-14",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "3Ф",
+      "subject": "Радиофизика и электроника",
+      "kind": "EXAM",
+      "teacher": "Шамбин А.И.",
+      "location": {
+        "room": "325",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 41
+      }
+    },
+    {
+      "id": "sha1:c00aef3887e50aa8c40ae8c66126aafd83cc3691",
+      "date": "2025-01-14",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "4Ф",
+      "subject": "Атомная и ядерная физика",
+      "kind": "EXAM",
+      "teacher": "Тлячев В.Б.",
+      "location": {
+        "room": "317",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 41
+      }
+    },
+    {
+      "id": "sha1:041a938e588f420b35d6994f24b148d6436a335c",
+      "date": "2025-01-14",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "1ИВТ_ТИИ",
+      "subject": "Математика Калашникова С.И",
+      "kind": "EXAM",
+      "teacher": "Артисевич А.Е.",
+      "location": {
+        "room": "323б",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 41
+      }
+    },
+    {
+      "id": "sha1:fa1710e7a7fce15d87e7a636d9055112cf498187",
+      "date": "2025-01-14",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "3ИВТ2",
+      "subject": "Методы оптимизации",
+      "kind": "EXAM",
+      "teacher": "Коржакова С.А.",
+      "location": {
+        "room": "407",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 41
+      }
+    },
+    {
+      "id": "sha1:f47622fc0b454e57d94c2604775767f4eef1ca2b",
+      "date": "2025-01-14",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "4ИВТ1",
+      "subject": "СПО",
+      "kind": "EXAM",
+      "teacher": "Плисенко О.А.",
+      "location": {
+        "room": "405",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 41
+      }
+    },
+    {
+      "id": "sha1:0c583f991f001f294449cf9e1dbdd89a37c8824f",
+      "date": "2025-01-15",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "4 УТС",
+      "subject": "Системы искусственного интелекта",
+      "kind": "EXAM",
+      "teacher": "Шопин А.В.",
+      "location": {
+        "room": "511",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 42
+      }
+    },
+    {
+      "id": "sha1:94bc20d85b59b4b017d95f54c91f42054b004761",
+      "date": "2025-01-15",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "4ИВТ2",
+      "subject": "СПО",
+      "kind": "EXAM",
+      "teacher": "Плисенко О.А.",
+      "location": {
+        "room": "405",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 42
+      }
+    },
+    {
+      "id": "sha1:8c8c981fc9234a8717ecdfd535ee6f78469b3d1f",
+      "date": "2025-01-16",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "3ИВТ1",
+      "subject": "Сети и телеком",
+      "kind": "EXAM",
+      "teacher": "Плисенко О.А.",
+      "location": {
+        "room": "405",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 43
+      }
+    },
+    {
+      "id": "sha1:e086ba613ef0c8a5001b92352d5d3db0097e9a63",
+      "date": "2025-01-17",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "2ПО_магистр",
+      "subject": "Современные образовательные технологии",
+      "kind": "EXAM",
+      "teacher": "Джабатырова Б.К.",
+      "location": {
+        "room": "206с",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 44
+      }
+    },
+    {
+      "id": "sha1:3b6935e4ecfffa63e4dafcfc7b373ec2a16e0773",
+      "date": "2025-01-17",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "2Ф",
+      "subject": "Численные методы и мат.моделирование",
+      "kind": "EXAM",
+      "teacher": "Ушхо А.Д.",
+      "location": {
+        "room": "319",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 44
+      }
+    },
+    {
+      "id": "sha1:ca5a4b16bef1a63efe05bba023c50667e78d9591",
+      "date": "2025-01-17",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "3Ф",
+      "subject": "Оптика",
+      "kind": "EXAM",
+      "teacher": "Жукова И.Н.",
+      "location": {
+        "room": "324",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 44
+      }
+    },
+    {
+      "id": "sha1:0cf278e280d66df6d955fa8979e4246975fe070b",
+      "date": "2025-01-17",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "3 УТС",
+      "subject": "Электротехника и электроника",
+      "kind": "EXAM",
+      "teacher": "Мамий А.Р.",
+      "location": {
+        "room": "406",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 44
+      }
+    },
+    {
+      "id": "sha1:6f340e50b012300441b8e79643cd5bb115d253ce",
+      "date": "2025-01-17",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "2ИВТ_АСОИУ",
+      "subject": "ЭВМ и переф.устр",
+      "kind": "EXAM",
+      "teacher": "Коржакова С.А.",
+      "location": {
+        "room": "407",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 44
+      }
+    },
+    {
+      "id": "sha1:56f671bd67d8915175e51bf8e3400c8710a5813c",
+      "date": "2025-01-17",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "3ИВТ2",
+      "subject": "Сети и телеком",
+      "kind": "EXAM",
+      "teacher": "Плисенко О.А.",
+      "location": {
+        "room": "405",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 44
+      }
+    },
+    {
+      "id": "sha1:86df2a5d7656ca6f68ee7626a005c064675adc27",
+      "date": "2025-01-17",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "4ИВТ(УзГУМЯ)",
+      "subject": "Надежность, эргономика, качество",
+      "kind": "EXAM",
+      "teacher": "Коржаков А.В.",
+      "location": {
+        "room": "404",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 44
+      }
+    },
+    {
+      "id": "sha1:3061b4a3ed6771c0b33e8ce83197ec0f11eef40c",
+      "date": "2025-01-18",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "4ИВТ1",
+      "subject": "Защита информации",
+      "kind": "EXAM",
+      "teacher": "Киздермишов А.А.",
+      "location": {
+        "room": "405",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 45
+      }
+    },
+    {
+      "id": "sha1:b3679117bd0d9c30eeef233eda63414af1e5053e",
+      "date": "2025-01-19",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "4ИВТ2",
+      "subject": "Защита информации",
+      "kind": "EXAM",
+      "teacher": "Киздермишов А.А.",
+      "location": {
+        "room": "405",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 46
+      }
+    },
+    {
+      "id": "sha1:f0b9d6c4893fe077e120bd70256733d30fc51bba",
+      "date": "2025-01-20",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "2Ф",
+      "subject": "ТВМС",
+      "kind": "EXAM",
+      "teacher": "Скоркин А.Ю.",
+      "location": {
+        "room": "329",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 47
+      }
+    },
+    {
+      "id": "sha1:017b331b378d98d34d3a40457ea2a49ab9ceadeb",
+      "date": "2025-01-20",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "3ИВТ1",
+      "subject": "Технология программир",
+      "kind": "EXAM",
+      "teacher": "Плисенко О.А.",
+      "location": {
+        "room": "405",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 47
+      }
+    },
+    {
+      "id": "sha1:343cf72582d225010aed3cb12e67107207c00036",
+      "date": "2025-01-21",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "2ПО_магистр",
+      "subject": "Методика преподавания современной физики в профильной школе",
+      "kind": "EXAM",
+      "teacher": "Ушхо А.Д.",
+      "location": {
+        "room": "324",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 48
+      }
+    },
+    {
+      "id": "sha1:780d581584e7d3a879811ab908e30885bdda9010",
+      "date": "2025-01-21",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "3Ф",
+      "subject": "Векторный и тензорный анализ",
+      "kind": "EXAM",
+      "teacher": "Жукова И.Н.",
+      "location": {
+        "room": "328",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 48
+      }
+    },
+    {
+      "id": "sha1:ac294ea69b7a193be7cd786c4fb010a647ef50d2",
+      "date": "2025-01-21",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "3 УТС",
+      "subject": "Теоретическая механика",
+      "kind": "EXAM",
+      "teacher": "Шамбин А.И.",
+      "location": {
+        "room": "325",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 48
+      }
+    },
+    {
+      "id": "sha1:0eba2f44ebbe18744abf47a233a195a1944ebd84",
+      "date": "2025-01-21",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "2ИВТ_АСОИУ",
+      "subject": "ТС и СА",
+      "kind": "EXAM",
+      "teacher": "Коржаков А.В.",
+      "location": {
+        "room": "407",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 48
+      }
+    },
+    {
+      "id": "sha1:747fc2aceebb286239493cfc2c17f60077357e0d",
+      "date": "2025-01-21",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "3ИВТ2",
+      "subject": "Технология программир",
+      "kind": "EXAM",
+      "teacher": "Плисенко О.А.",
+      "location": {
+        "room": "405",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 48
+      }
+    },
+    {
+      "id": "sha1:308e1d971f2e1dbb644ed29f724a2551d6ca40b6",
+      "date": "2025-01-21",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "4ИВТ(УзГУМЯ)",
+      "subject": "Технология программир",
+      "kind": "EXAM",
+      "teacher": "Плисенко О.А.",
+      "location": {
+        "room": "405",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 48
+      }
+    },
+    {
+      "id": "sha1:6657269e0ce96de36b783242cbc104c2cb4b8e9d",
+      "date": "2025-01-23",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "2ИВТ_ТИИ",
+      "subject": "Операционные системы",
+      "kind": "EXAM",
+      "teacher": "Плисенко О.А.",
+      "location": {
+        "room": "405",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 50
+      }
+    },
+    {
+      "id": "sha1:0a4b162cce6d89cf5ce83522631a107252d957fe",
+      "date": "2025-01-23",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "3ИВТ2",
+      "subject": "НЭК АСОИУ",
+      "kind": "EXAM",
+      "teacher": "Коржаков А.В.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": "дист.",
+      "source": {
+        "sheet": "Лист1",
+        "row": 50
+      }
+    },
+    {
+      "id": "sha1:2cdb8c0170e68d8f5ce02058b012f703eb00f4f4",
+      "date": "2025-01-24",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "2Ф",
+      "subject": "Мат.пакеты в проф.деятельности",
+      "kind": "EXAM",
+      "teacher": "Шамбина С.В.",
+      "location": {
+        "room": "324",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 51
+      }
+    },
+    {
+      "id": "sha1:e4a75b41926ba9dae45ca5fdeb7f11813a0b89b1",
+      "date": "2025-01-24",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "2ИВТ_АСОИУ",
+      "subject": "Инженерная и комп. Графика",
+      "kind": "EXAM",
+      "teacher": "Хандожко А.А.",
+      "location": {
+        "room": "406",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 51
+      }
+    },
+    {
+      "id": "sha1:b2a509500b1eeb06fda173bca7dbce654317b487",
+      "date": "2025-01-27",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "3ИВТ2",
+      "subject": "Моделирование систем",
+      "kind": "EXAM",
+      "teacher": "Коржакова С.А.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": "дист.",
+      "source": {
+        "sheet": "Лист1",
+        "row": 54
+      }
+    },
+    {
+      "id": "sha1:a79f1da953375c892bbec38505332ab4ddc8aa91",
+      "date": "2021-01-11",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": null,
+      "subject": null,
+      "kind": "CONSULTATION",
+      "teacher": "Артисевич А.Е.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 2
+      }
+    },
+    {
+      "id": "sha1:882bb25e3b97e95b092ce0389f10dd5cc315bd30",
+      "date": "2021-01-12",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "2Ф",
+      "subject": "ТФКП",
+      "kind": "EXAM",
+      "teacher": "Артисевич А.Е.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 3
+      }
+    },
+    {
+      "id": "sha1:836342c5bf177b19c9ed6e777006269a1bee4023",
+      "date": "2021-01-19",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": null,
+      "subject": null,
+      "kind": "CONSULTATION",
+      "teacher": "Сташ А.Х.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 4
+      }
+    },
+    {
+      "id": "sha1:75a091035a6ef4ecfec7cfca104654f4732a84fc",
+      "date": "2021-01-20",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "1УТС, 2Ф",
+      "subject": "Матан",
+      "kind": "EXAM",
+      "teacher": "Сташ А.Х.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 5
+      }
+    },
+    {
+      "id": "sha1:e7df833ab0c6b9f69f2602e2bf9d7274b6dbee8b",
+      "date": "2021-01-22",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": null,
+      "subject": null,
+      "kind": "CONSULTATION",
+      "teacher": "Сташ А.Х.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 6
+      }
+    },
+    {
+      "id": "sha1:e52ab2b7879087c20325364b7328c1ae2d6a8f62",
+      "date": "2021-01-23",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "1ИВТ2",
+      "subject": "Матан",
+      "kind": "EXAM",
+      "teacher": "Сташ А.Х.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 7
+      }
+    },
+    {
+      "id": "sha1:9ff503afbc84c63b5b2f9d4b40b8af8557b2234c",
+      "date": "2021-01-23",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": null,
+      "subject": null,
+      "kind": "CONSULTATION",
+      "teacher": "Сташ А.Х.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 8
+      }
+    },
+    {
+      "id": "sha1:b5f0ceef2149cf88e3f34be46080221d905e3ebf",
+      "date": "2021-01-24",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "1ИВТ1",
+      "subject": "Матан",
+      "kind": "EXAM",
+      "teacher": "Сташ А.Х.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 9
+      }
+    },
+    {
+      "id": "sha1:9feb96976e9a2dc3a50a15285a6db0650db71f59",
+      "date": "2021-01-09",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": null,
+      "subject": null,
+      "kind": "CONSULTATION",
+      "teacher": "Калашникова С.И.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 10
+      }
+    },
+    {
+      "id": "sha1:0c5e92cff9298849d4e0daac84dab1f02f50afba",
+      "date": "2021-01-10",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "1ИВТ2, 1УТС",
+      "subject": "Алг и геом",
+      "kind": "EXAM",
+      "teacher": "Калашникова С.И.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 11
+      }
+    },
+    {
+      "id": "sha1:fca41f1c8aedf12782e31b766da03a5cf569e49d",
+      "date": "2021-01-10",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": null,
+      "subject": null,
+      "kind": "CONSULTATION",
+      "teacher": "Калашникова С.И.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 12
+      }
+    },
+    {
+      "id": "sha1:19e8eb3d40adbb74d7cad023b0d32c0afe289ebf",
+      "date": "2021-01-11",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "1ИВТ1",
+      "subject": "Алг и геом",
+      "kind": "EXAM",
+      "teacher": "Калашникова С.И.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 13
+      }
+    },
+    {
+      "id": "sha1:adac790f019474d3f7716c322cd824d1197e6aac",
+      "date": "2021-01-24",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": null,
+      "subject": null,
+      "kind": "CONSULTATION",
+      "teacher": "Пономарев М.Г.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 14
+      }
+    },
+    {
+      "id": "sha1:70ef068ab43fb27d3a463f00570a654f20b195dc",
+      "date": "2021-01-25",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "3ПО",
+      "subject": "Оптика",
+      "kind": "EXAM",
+      "teacher": "Пономарев М.Г.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 15
+      }
+    },
+    {
+      "id": "sha1:5fe17a74b6ccbde805d7a6f394387ecab79e4a9d",
+      "date": "2020-12-28",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": null,
+      "subject": null,
+      "kind": "CONSULTATION",
+      "teacher": "Аракелов А.В.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 16
+      }
+    },
+    {
+      "id": "sha1:5751182188967801fed8cb070286457259bdb586",
+      "date": "2020-12-29",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "4Ф",
+      "subject": "Метод.препод",
+      "kind": "EXAM",
+      "teacher": "Аракелов А.В.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 17
+      }
+    },
+    {
+      "id": "sha1:96e2e90d227621b4c4cdcfbf40d557e623635c79",
+      "date": "2021-01-16",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": null,
+      "subject": null,
+      "kind": "CONSULTATION",
+      "teacher": "Аракелов А.В.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 18
+      }
+    },
+    {
+      "id": "sha1:31a97cb569a33f507186ba35aa93966f3f51c027",
+      "date": "2021-01-17",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "4ПО",
+      "subject": "Метод.препод",
+      "kind": "EXAM",
+      "teacher": "Аракелов А.В.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 19
+      }
+    },
+    {
+      "id": "sha1:9b63749c2413ae7f6379d8b9bf1852354da9b89a",
+      "date": "2021-01-21",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": null,
+      "subject": null,
+      "kind": "CONSULTATION",
+      "teacher": "Аракелов А.В.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 20
+      }
+    },
+    {
+      "id": "sha1:63d25370db1f35e83f99cb139b5e588f83c3f7e2",
+      "date": "2021-01-22",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "4ПО",
+      "subject": "Методы реше",
+      "kind": "EXAM",
+      "teacher": "Аракелов А.В.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 21
+      }
+    },
+    {
+      "id": "sha1:81a7eb86eeee70808071b8585d5f9589571dffca",
+      "date": "2021-01-13",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": null,
+      "subject": null,
+      "kind": "CONSULTATION",
+      "teacher": "Нагой А.А.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 22
+      }
+    },
+    {
+      "id": "sha1:d1b9d610e6ebeb6f88563d28ce423821c130d735",
+      "date": "2021-01-14",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "1ИВТ2",
+      "subject": "Культурология",
+      "kind": "EXAM",
+      "teacher": "Нагой А.А.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 23
+      }
+    },
+    {
+      "id": "sha1:13f3cb5571629c035bda34c9b0afa074ee42da96",
+      "date": "2021-01-19",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": null,
+      "subject": null,
+      "kind": "CONSULTATION",
+      "teacher": "Нагой А.А.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 24
+      }
+    },
+    {
+      "id": "sha1:54792b7f03dbe8dfc6f30d23c92f2939b7c20c97",
+      "date": "2021-01-20",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "1ИВТ1",
+      "subject": "Культурология",
+      "kind": "EXAM",
+      "teacher": "Нагой А.А.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 25
+      }
+    },
+    {
+      "id": "sha1:a92042ded2f06b552f2ebac3c06ea78c41139058",
+      "date": "2021-01-13",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": null,
+      "subject": null,
+      "kind": "CONSULTATION",
+      "teacher": "Бурыкина Л.В.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 26
+      }
+    },
+    {
+      "id": "sha1:c05709a1c1c40b968b9e2c2f76517f427c0e41be",
+      "date": "2021-01-14",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "1Ф, 1УТС",
+      "subject": "История",
+      "kind": "EXAM",
+      "teacher": "Бурыкина Л.В.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 27
+      }
+    },
+    {
+      "id": "sha1:1ccff255f2b775cb5babc0e44ca6e445634200fa",
+      "date": "2021-01-15",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": null,
+      "subject": null,
+      "kind": "CONSULTATION",
+      "teacher": "Бурыкина Л.В.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 28
+      }
+    },
+    {
+      "id": "sha1:1494d4ee9f53ddfdc15e88c55dadd213f6ebdd0d",
+      "date": "2021-01-16",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "1ИВТ1",
+      "subject": "История",
+      "kind": "EXAM",
+      "teacher": "Бурыкина Л.В.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 29
+      }
+    },
+    {
+      "id": "sha1:21ec9e19d8beae2c4ab68d20d45f92f8ae7bd428",
+      "date": "2021-01-17",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": null,
+      "subject": null,
+      "kind": "CONSULTATION",
+      "teacher": "Бурыкина Л.В.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 30
+      }
+    },
+    {
+      "id": "sha1:57f77bb1126b06b0b4503e2dc75c98a7aa75f77e",
+      "date": "2021-01-18",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "group": "1ИВТ2",
+      "subject": "История",
+      "kind": "EXAM",
+      "teacher": "Бурыкина Л.В.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 31
+      }
+    }
+  ],
+  "issues": []
+}

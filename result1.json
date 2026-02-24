@@ -1,0 +1,2159 @@
+{
+  "meta": {
+    "sourceFileName": "session.xlsx",
+    "parsedAt": "2026-02-23T10:55:38.534Z",
+    "version": "1.0"
+  },
+  "summary": {
+    "items": 95,
+    "groups": [
+      "1 Ф",
+      "1ИВТ1",
+      "1ИВТ2",
+      "1ИВТ2, 1УТС",
+      "1ИВТ_АСОИУ",
+      "1ИВТ_ТИИ",
+      "1ПО_магистр",
+      "1УТС, 2Ф",
+      "1Ф, 1УТС",
+      "2ИВТ_АСОИУ",
+      "2ИВТ_ТИИ",
+      "2ПО_магистр",
+      "2Ф",
+      "3 УТС",
+      "3ИВТ1",
+      "3ИВТ2",
+      "3ПО",
+      "3Ф",
+      "4 УТС",
+      "4ИВТ(УзГУМЯ)",
+      "4ИВТ1",
+      "4ИВТ2",
+      "4ПО",
+      "4Ф"
+    ],
+    "itemsByGroup": {
+      "1 Ф": 2,
+      "1ИВТ1": 4,
+      "1ИВТ2": 3,
+      "1ИВТ2, 1УТС": 1,
+      "1ИВТ_АСОИУ": 2,
+      "1ИВТ_ТИИ": 1,
+      "1ПО_магистр": 2,
+      "1УТС, 2Ф": 1,
+      "1Ф, 1УТС": 1,
+      "2ИВТ_АСОИУ": 5,
+      "2ИВТ_ТИИ": 1,
+      "2ПО_магистр": 4,
+      "2Ф": 6,
+      "3 УТС": 4,
+      "3ИВТ1": 4,
+      "3ИВТ2": 9,
+      "3ПО": 1,
+      "3Ф": 4,
+      "4 УТС": 4,
+      "4ИВТ(УзГУМЯ)": 4,
+      "4ИВТ1": 5,
+      "4ИВТ2": 5,
+      "4ПО": 2,
+      "4Ф": 5
+    },
+    "dateRange": {
+      "from": "1/10/21",
+      "to": "12/29/20"
+    }
+  },
+  "items": [
+    {
+      "id": "sha1:279a0f687eb83678d2a9946e736ce36dfbd29bdd",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "4Ф",
+      "subject": "Методика обучения физики",
+      "kind": "EXAM",
+      "teacher": "Шамбин А.И.",
+      "location": {
+        "room": "325",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 19
+      }
+    },
+    {
+      "id": "sha1:b02477afeb7066d474217c0677698ae4d7ca4cc1",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "4 УТС",
+      "subject": "МиМСУ",
+      "kind": "EXAM",
+      "teacher": "Теплоухов С.",
+      "location": {
+        "room": "404",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 19
+      }
+    },
+    {
+      "id": "sha1:371765a2aee195b147e06ac4d7c986ff3076097b",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "4ИВТ1",
+      "subject": "Проектирование АСУ",
+      "kind": "EXAM",
+      "teacher": "Коржаков В.Е.",
+      "location": {
+        "room": "407",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 19
+      }
+    },
+    {
+      "id": "sha1:12c6d4e33b758197209b3af3720fb5dd066bda78",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "4ИВТ2",
+      "subject": "Проектирование АСУ",
+      "kind": "EXAM",
+      "teacher": "Коржаков В.Е.",
+      "location": {
+        "room": "407",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 20
+      }
+    },
+    {
+      "id": "sha1:9cacd250c1f32d8cea4f95fdbedf30da552fb121",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "4Ф",
+      "subject": "Компьютерные методы физики",
+      "kind": "EXAM",
+      "teacher": "Шамбина С.В.",
+      "location": {
+        "room": "325",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 23
+      }
+    },
+    {
+      "id": "sha1:767cf378aa911ae97b617eca44b9963ab730a7de",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "4 УТС",
+      "subject": "Информационные сети и ТК",
+      "kind": "EXAM",
+      "teacher": "Алиева М.Ф.",
+      "location": {
+        "room": "405",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 23
+      }
+    },
+    {
+      "id": "sha1:c7cdf3f9fa46b3e4a0b148a461c8faaed9db91f4",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "4ИВТ1",
+      "subject": "ПОАСНИ",
+      "kind": "EXAM",
+      "teacher": "Теплоухов С.",
+      "location": {
+        "room": "404",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 23
+      }
+    },
+    {
+      "id": "sha1:f2c7516f4cd5e911ee2f31dbb36a1763aa6cfd04",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "4ИВТ2",
+      "subject": "ПОАСНИ",
+      "kind": "EXAM",
+      "teacher": "Теплоухов С.",
+      "location": {
+        "room": "404",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 24
+      }
+    },
+    {
+      "id": "sha1:d2240733003f70a22f524711a43b36a9ac3bcf86",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "3ИВТ2",
+      "subject": "Проектирование АСУ",
+      "kind": "EXAM",
+      "teacher": "Коржаков В.Е.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": "дист.",
+      "source": {
+        "sheet": "Лист1",
+        "row": 28
+      }
+    },
+    {
+      "id": "sha1:8ccbda2f6e5fe42d3a202a2ba7607c535c82ca87",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "3ИВТ2",
+      "subject": "Технология программирования",
+      "kind": "EXAM",
+      "teacher": "Овчаров И.Н.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 32
+      }
+    },
+    {
+      "id": "sha1:e12d60fa00facb2988d4a3b59b62baa301bb326a",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "1ПО_магистр",
+      "subject": "Астрономия и физика космоса",
+      "kind": "EXAM",
+      "teacher": "Шамбин А.И.",
+      "location": {
+        "room": "327",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 36
+      }
+    },
+    {
+      "id": "sha1:bceaaa480e700f72972dfc9a361ac8cb8ef4b935",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "2ПО_магистр",
+      "subject": "Методика обучения информатике в современной школе",
+      "kind": "EXAM",
+      "teacher": "Алиева М.Ф.",
+      "location": {
+        "room": "404",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 36
+      }
+    },
+    {
+      "id": "sha1:bfc83c64977f7ab8cf180ae7e14a1722f9cad474",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "1 Ф",
+      "subject": "Элементарная физика",
+      "kind": "EXAM",
+      "teacher": "Тлячев В.Б.",
+      "location": {
+        "room": "324",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 36
+      }
+    },
+    {
+      "id": "sha1:289cd258eabdaf325160191888601de549387d23",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "2Ф",
+      "subject": "Программирование",
+      "kind": "EXAM",
+      "teacher": "Шамбина С.В.",
+      "location": {
+        "room": "328",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 36
+      }
+    },
+    {
+      "id": "sha1:4ed29c5a5d7f409837c7a688d6c2be5091c51a08",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "3 УТС",
+      "subject": "Методы оптимизации",
+      "kind": "EXAM",
+      "teacher": "Коржакова С.А.",
+      "location": {
+        "room": "407",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 36
+      }
+    },
+    {
+      "id": "sha1:4e69f5ef7012735d996ecaade0081a0ee73c584e",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "1ИВТ_АСОИУ",
+      "subject": "Матем.анализ",
+      "kind": "EXAM",
+      "teacher": "Беликова Т.Г.",
+      "location": {
+        "room": "323б",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 36
+      }
+    },
+    {
+      "id": "sha1:c8d704d2139cebbfeb084d506c4dddffc42a6d06",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "2ИВТ_АСОИУ",
+      "subject": "Ин. яз",
+      "kind": "EXAM",
+      "teacher": "Симбулетова Р.К., Копылова Ю.В.",
+      "location": {
+        "room": "143/404",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 36
+      }
+    },
+    {
+      "id": "sha1:e8d31ae008ac6ec7bc7c846572eab1629e5b68ce",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "3ИВТ1",
+      "subject": "Электротехн. и электроника",
+      "kind": "EXAM",
+      "teacher": "Мамий А.Р.",
+      "location": {
+        "room": "406",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 36
+      }
+    },
+    {
+      "id": "sha1:fe494b3fbdb2731ae2f1f216fa4fa7b99d6e2cf6",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "4ИВТ(УзГУМЯ)",
+      "subject": "Проектирование АСУ",
+      "kind": "EXAM",
+      "teacher": "Коржаков В.Е.",
+      "location": {
+        "room": "405",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 36
+      }
+    },
+    {
+      "id": "sha1:a7bebff4c680b045e4d7af81475da643d33e5e4a",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "3ИВТ2",
+      "subject": "Системы ИИ",
+      "kind": "EXAM",
+      "teacher": "Коробков В.Н.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": "дист.",
+      "source": {
+        "sheet": "Лист1",
+        "row": 36
+      }
+    },
+    {
+      "id": "sha1:0cc22f30cce6614cb5a8b0885e8e4d728195d4ae",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "3Ф",
+      "subject": "Теор.механика. Механика сплош.сред",
+      "kind": "EXAM",
+      "teacher": "Шекоян Л.А.",
+      "location": {
+        "room": "324",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 37
+      }
+    },
+    {
+      "id": "sha1:90efa90e01fb032bf07686385dfdff05d62f4112",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "4Ф",
+      "subject": "Квантовая теория",
+      "kind": "EXAM",
+      "teacher": "Тлячев В.Б.",
+      "location": {
+        "room": "317",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 37
+      }
+    },
+    {
+      "id": "sha1:a418a84bf06bc02df8840a337f0e7e226651e166",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "3ИВТ2",
+      "subject": "Электротехн. и электроника",
+      "kind": "EXAM",
+      "teacher": "Мамий А.Р.",
+      "location": {
+        "room": "404",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 37
+      }
+    },
+    {
+      "id": "sha1:132454a7b0c1fd90d31d9bf83bbb3ffe3086b5be",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "4ИВТ1",
+      "subject": "Надежность, эргономика и кач",
+      "kind": "EXAM",
+      "teacher": "Коржаков А.В.",
+      "location": {
+        "room": "406",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 37
+      }
+    },
+    {
+      "id": "sha1:03adad0b2f7714408932e2b12bfc844f7e7bb040",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "4 УТС",
+      "subject": "ТСАУ",
+      "kind": "EXAM",
+      "teacher": "Джемилев А.С.",
+      "location": {
+        "room": "404",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 38
+      }
+    },
+    {
+      "id": "sha1:632bc45cfb582aae7c30bb1c62e193c89413acac",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "4ИВТ2",
+      "subject": "Надежность, эргономика и кач",
+      "kind": "EXAM",
+      "teacher": "Коржаков А.В.",
+      "location": {
+        "room": "406",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 38
+      }
+    },
+    {
+      "id": "sha1:2a145ec60b66f3f1ab74ecc76e5788574da6e41b",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "1ПО_магистр",
+      "subject": "Современные проблемы науки и образования",
+      "kind": "EXAM",
+      "teacher": "Куваева А.А.",
+      "location": {
+        "room": "327",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 40
+      }
+    },
+    {
+      "id": "sha1:9bbdf2e93a4d4313a5ee51ea47d11ff19ce82bc9",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "2ПО_магистр",
+      "subject": "Избранные вопросы современной информатики",
+      "kind": "EXAM",
+      "teacher": "Алиева М.Ф.",
+      "location": {
+        "room": "404",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 40
+      }
+    },
+    {
+      "id": "sha1:b07c3e31030b26de808a2943d5cf1b9074c28824",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "1 Ф",
+      "subject": "Элементарная математика",
+      "kind": "EXAM",
+      "teacher": "Ушхо А.Д.",
+      "location": {
+        "room": "324",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 40
+      }
+    },
+    {
+      "id": "sha1:fd740b8ee3bd3546d4cb115a2bb5596ecc55fde7",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "2Ф",
+      "subject": "Молекулярная физика",
+      "kind": "EXAM",
+      "teacher": "Жукова И.Н.",
+      "location": {
+        "room": "319",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 40
+      }
+    },
+    {
+      "id": "sha1:632df05325bc4bdeccc94ca85ee8c4a20eb0fd2f",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "3 УТС",
+      "subject": "Инженерная и комп. Графика",
+      "kind": "EXAM",
+      "teacher": "Хандожко А.А.",
+      "location": {
+        "room": "328",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 40
+      }
+    },
+    {
+      "id": "sha1:e5d0c01a46f393bb1cc2f4e07de0308240d3a1b6",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "1ИВТ_АСОИУ",
+      "subject": "Алгебра и геом",
+      "kind": "EXAM",
+      "teacher": "Калашникова С.И.",
+      "location": {
+        "room": "406",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 40
+      }
+    },
+    {
+      "id": "sha1:1c58a8a7d6ac6cfb4fa4ffcc79c34f74d4bd3540",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "2ИВТ_АСОИУ",
+      "subject": "Физика",
+      "kind": "EXAM",
+      "teacher": "Шамбин А.И.",
+      "location": {
+        "room": "329",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 40
+      }
+    },
+    {
+      "id": "sha1:fc48bf6ac10707aff9975c0ed4c5e6cf0824860d",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "3ИВТ1",
+      "subject": "Методы оптимизации",
+      "kind": "EXAM",
+      "teacher": "Коржакова С.А.",
+      "location": {
+        "room": "407",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 40
+      }
+    },
+    {
+      "id": "sha1:2e483747a6bd7233c57737d3f2471e9b01096c11",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "4ИВТ(УзГУМЯ)",
+      "subject": "СПО",
+      "kind": "EXAM",
+      "teacher": "Плисенко О.А.",
+      "location": {
+        "room": "405",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 40
+      }
+    },
+    {
+      "id": "sha1:738afc5c37791188600a4aa7e8ee38ed1843ac1a",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "3Ф",
+      "subject": "Радиофизика и электроника",
+      "kind": "EXAM",
+      "teacher": "Шамбин А.И.",
+      "location": {
+        "room": "325",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 41
+      }
+    },
+    {
+      "id": "sha1:2a7b5b21692ea7fcee64b2d593a497318c391333",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "4Ф",
+      "subject": "Атомная и ядерная физика",
+      "kind": "EXAM",
+      "teacher": "Тлячев В.Б.",
+      "location": {
+        "room": "317",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 41
+      }
+    },
+    {
+      "id": "sha1:db872e4e528e4952c2ab511e5eb518ae16ed5ac0",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "1ИВТ_ТИИ",
+      "subject": "Математика Калашникова С.И",
+      "kind": "EXAM",
+      "teacher": "Артисевич А.Е.",
+      "location": {
+        "room": "323б",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 41
+      }
+    },
+    {
+      "id": "sha1:b8c9fe4e0cefd35f731d89b091da2cb24864f07a",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "3ИВТ2",
+      "subject": "Методы оптимизации",
+      "kind": "EXAM",
+      "teacher": "Коржакова С.А.",
+      "location": {
+        "room": "407",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 41
+      }
+    },
+    {
+      "id": "sha1:eae32d8f0cb5e9a01f367dc69f55c196c1e85c87",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "4ИВТ1",
+      "subject": "СПО",
+      "kind": "EXAM",
+      "teacher": "Плисенко О.А.",
+      "location": {
+        "room": "405",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 41
+      }
+    },
+    {
+      "id": "sha1:f030dd50a213cbdcc2f4b287a857afa39d2f5c9e",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "4 УТС",
+      "subject": "Системы искусственного интелекта",
+      "kind": "EXAM",
+      "teacher": "Шопин А.В.",
+      "location": {
+        "room": "511",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 42
+      }
+    },
+    {
+      "id": "sha1:389a81ae2fe22e1fac803b2cd14e30c964ba37f4",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "4ИВТ2",
+      "subject": "СПО",
+      "kind": "EXAM",
+      "teacher": "Плисенко О.А.",
+      "location": {
+        "room": "405",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 42
+      }
+    },
+    {
+      "id": "sha1:6ace48431cc53571e211114929c191052a48c80f",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "3ИВТ1",
+      "subject": "Сети и телеком",
+      "kind": "EXAM",
+      "teacher": "Плисенко О.А.",
+      "location": {
+        "room": "405",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 43
+      }
+    },
+    {
+      "id": "sha1:c502e2c032b2fcc966fee1ea6f8cee091e052a64",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "2ПО_магистр",
+      "subject": "Современные образовательные технологии",
+      "kind": "EXAM",
+      "teacher": "Джабатырова Б.К.",
+      "location": {
+        "room": "206с",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 44
+      }
+    },
+    {
+      "id": "sha1:bbd5feee0d0963c808a93fcfb3ff359b01ea1901",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "2Ф",
+      "subject": "Численные методы и мат.моделирование",
+      "kind": "EXAM",
+      "teacher": "Ушхо А.Д.",
+      "location": {
+        "room": "319",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 44
+      }
+    },
+    {
+      "id": "sha1:86cfb9a1e07c2d9515a6b0d79fea2d4666237795",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "3Ф",
+      "subject": "Оптика",
+      "kind": "EXAM",
+      "teacher": "Жукова И.Н.",
+      "location": {
+        "room": "324",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 44
+      }
+    },
+    {
+      "id": "sha1:ba29e126ef7873febd87b8328662b35a4adca204",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "3 УТС",
+      "subject": "Электротехника и электроника",
+      "kind": "EXAM",
+      "teacher": "Мамий А.Р.",
+      "location": {
+        "room": "406",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 44
+      }
+    },
+    {
+      "id": "sha1:1f5c4011fb786b87129e5cfeba96dd34ba17cf6b",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "2ИВТ_АСОИУ",
+      "subject": "ЭВМ и переф.устр",
+      "kind": "EXAM",
+      "teacher": "Коржакова С.А.",
+      "location": {
+        "room": "407",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 44
+      }
+    },
+    {
+      "id": "sha1:a1bc83cf558abfb6bc4944f54fc84f08f2efd549",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "3ИВТ2",
+      "subject": "Сети и телеком",
+      "kind": "EXAM",
+      "teacher": "Плисенко О.А.",
+      "location": {
+        "room": "405",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 44
+      }
+    },
+    {
+      "id": "sha1:12d84a27f6d185774ccbeb7ac8f1cbc2dc9b0169",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "4ИВТ(УзГУМЯ)",
+      "subject": "Надежность, эргономика, качество",
+      "kind": "EXAM",
+      "teacher": "Коржаков А.В.",
+      "location": {
+        "room": "404",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 44
+      }
+    },
+    {
+      "id": "sha1:e08862752a388c843d3e2d4f4ad2263e0ad96b8c",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "4ИВТ1",
+      "subject": "Защита информации",
+      "kind": "EXAM",
+      "teacher": "Киздермишов А.А.",
+      "location": {
+        "room": "405",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 45
+      }
+    },
+    {
+      "id": "sha1:fa09a96464fb4f6ab91a9c0218ada67d506f1d1a",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "4ИВТ2",
+      "subject": "Защита информации",
+      "kind": "EXAM",
+      "teacher": "Киздермишов А.А.",
+      "location": {
+        "room": "405",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 46
+      }
+    },
+    {
+      "id": "sha1:5827c5c9922292eda74e463e55dd3e060f0edfc1",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "2Ф",
+      "subject": "ТВМС",
+      "kind": "EXAM",
+      "teacher": "Скоркин А.Ю.",
+      "location": {
+        "room": "329",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 47
+      }
+    },
+    {
+      "id": "sha1:fbf44cfc0b45e8a6039df92b910abe807ff6afdf",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "3ИВТ1",
+      "subject": "Технология программир",
+      "kind": "EXAM",
+      "teacher": "Плисенко О.А.",
+      "location": {
+        "room": "405",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 47
+      }
+    },
+    {
+      "id": "sha1:d5d0043505879661fcda34e2e43688293c1e6a59",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "2ПО_магистр",
+      "subject": "Методика преподавания современной физики в профильной школе",
+      "kind": "EXAM",
+      "teacher": "Ушхо А.Д.",
+      "location": {
+        "room": "324",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 48
+      }
+    },
+    {
+      "id": "sha1:6585714de2e1b32cea5b2c83caa2b36a2ea8e757",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "3Ф",
+      "subject": "Векторный и тензорный анализ",
+      "kind": "EXAM",
+      "teacher": "Жукова И.Н.",
+      "location": {
+        "room": "328",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 48
+      }
+    },
+    {
+      "id": "sha1:7c095350a53193584b5d941b899f0945831a8c27",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "3 УТС",
+      "subject": "Теоретическая механика",
+      "kind": "EXAM",
+      "teacher": "Шамбин А.И.",
+      "location": {
+        "room": "325",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 48
+      }
+    },
+    {
+      "id": "sha1:ff6742201ff74c1621492767dc2699f911aa2414",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "2ИВТ_АСОИУ",
+      "subject": "ТС и СА",
+      "kind": "EXAM",
+      "teacher": "Коржаков А.В.",
+      "location": {
+        "room": "407",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 48
+      }
+    },
+    {
+      "id": "sha1:a9d0fc908fd02826a320c71c96f96456d352ffc2",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "3ИВТ2",
+      "subject": "Технология программир",
+      "kind": "EXAM",
+      "teacher": "Плисенко О.А.",
+      "location": {
+        "room": "405",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 48
+      }
+    },
+    {
+      "id": "sha1:5a87ebe7c3b5d6b97a5c50a04780ce4e1aa144a2",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "4ИВТ(УзГУМЯ)",
+      "subject": "Технология программир",
+      "kind": "EXAM",
+      "teacher": "Плисенко О.А.",
+      "location": {
+        "room": "405",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 48
+      }
+    },
+    {
+      "id": "sha1:870da4effea2bd4dc329e5e238f2262316274e24",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "2ИВТ_ТИИ",
+      "subject": "Операционные системы",
+      "kind": "EXAM",
+      "teacher": "Плисенко О.А.",
+      "location": {
+        "room": "405",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 50
+      }
+    },
+    {
+      "id": "sha1:ad2a4c79747cf6f838d521c222f03319d163706b",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "3ИВТ2",
+      "subject": "НЭК АСОИУ",
+      "kind": "EXAM",
+      "teacher": "Коржаков А.В.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": "дист.",
+      "source": {
+        "sheet": "Лист1",
+        "row": 50
+      }
+    },
+    {
+      "id": "sha1:21a0518de3e95404c7779952a7d6860a84b13fab",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "2Ф",
+      "subject": "Мат.пакеты в проф.деятельности",
+      "kind": "EXAM",
+      "teacher": "Шамбина С.В.",
+      "location": {
+        "room": "324",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 51
+      }
+    },
+    {
+      "id": "sha1:18f190de862050a0fd493997742e716960f5f3e9",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "2ИВТ_АСОИУ",
+      "subject": "Инженерная и комп. Графика",
+      "kind": "EXAM",
+      "teacher": "Хандожко А.А.",
+      "location": {
+        "room": "406",
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист1",
+        "row": 51
+      }
+    },
+    {
+      "id": "sha1:535eef4d8b1d52cc744354766c25c7a52c8bfd6d",
+      "date": null,
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "3ИВТ2",
+      "subject": "Моделирование систем",
+      "kind": "EXAM",
+      "teacher": "Коржакова С.А.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": "дист.",
+      "source": {
+        "sheet": "Лист1",
+        "row": 54
+      }
+    },
+    {
+      "id": "sha1:f2688ce77cb95d03c03b0ba21746b97c41d0cb54",
+      "date": "1/11/21",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": null,
+      "subject": null,
+      "kind": "CONSULTATION",
+      "teacher": "Артисевич А.Е.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 2
+      }
+    },
+    {
+      "id": "sha1:077d23d8749c23ed0fdedacc624ce47b1ee495d8",
+      "date": "1/12/21",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "2Ф",
+      "subject": "ТФКП",
+      "kind": "EXAM",
+      "teacher": "Артисевич А.Е.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 3
+      }
+    },
+    {
+      "id": "sha1:b1a2897d707e6e89aa7ff8f01f705ecbd5a520d0",
+      "date": "1/19/21",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": null,
+      "subject": null,
+      "kind": "CONSULTATION",
+      "teacher": "Сташ А.Х.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 4
+      }
+    },
+    {
+      "id": "sha1:086c3fd57b898c1b3ce2a0f1aad9d95439149fcb",
+      "date": "1/20/21",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "1УТС, 2Ф",
+      "subject": "Матан",
+      "kind": "EXAM",
+      "teacher": "Сташ А.Х.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 5
+      }
+    },
+    {
+      "id": "sha1:21fa369690ea4ecc4584284b0fbebbc462e2d9a3",
+      "date": "1/22/21",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": null,
+      "subject": null,
+      "kind": "CONSULTATION",
+      "teacher": "Сташ А.Х.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 6
+      }
+    },
+    {
+      "id": "sha1:a68602e9bfdd8618612ab9f0847e603780b02c73",
+      "date": "1/23/21",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "1ИВТ2",
+      "subject": "Матан",
+      "kind": "EXAM",
+      "teacher": "Сташ А.Х.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 7
+      }
+    },
+    {
+      "id": "sha1:b06871c3b09a41a60c93e09c562be44d918162ad",
+      "date": "1/23/21",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": null,
+      "subject": null,
+      "kind": "CONSULTATION",
+      "teacher": "Сташ А.Х.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 8
+      }
+    },
+    {
+      "id": "sha1:d576e45d172261173b033bb1a982d825bd1e33c5",
+      "date": "1/24/21",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "1ИВТ1",
+      "subject": "Матан",
+      "kind": "EXAM",
+      "teacher": "Сташ А.Х.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 9
+      }
+    },
+    {
+      "id": "sha1:ecb166cd7c9a9e49e8d04c6b1c240c85074203e3",
+      "date": "1/9/21",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": null,
+      "subject": null,
+      "kind": "CONSULTATION",
+      "teacher": "Калашникова С.И.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 10
+      }
+    },
+    {
+      "id": "sha1:296dfc75b6a3a15f446bc311cf89177ff2e1f804",
+      "date": "1/10/21",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "1ИВТ2, 1УТС",
+      "subject": "Алг и геом",
+      "kind": "EXAM",
+      "teacher": "Калашникова С.И.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 11
+      }
+    },
+    {
+      "id": "sha1:45cfe83d13007440844863edb31c989fdf124434",
+      "date": "1/10/21",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": null,
+      "subject": null,
+      "kind": "CONSULTATION",
+      "teacher": "Калашникова С.И.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 12
+      }
+    },
+    {
+      "id": "sha1:a2eead52f206bab6330425392b608c8f53a35630",
+      "date": "1/11/21",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "1ИВТ1",
+      "subject": "Алг и геом",
+      "kind": "EXAM",
+      "teacher": "Калашникова С.И.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 13
+      }
+    },
+    {
+      "id": "sha1:aea62c3a5cb7396659030adf3075723b8c266611",
+      "date": "1/24/21",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": null,
+      "subject": null,
+      "kind": "CONSULTATION",
+      "teacher": "Пономарев М.Г.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 14
+      }
+    },
+    {
+      "id": "sha1:90e6a470c3f8962a3fa615d9e2acb69615cdcbd8",
+      "date": "1/25/21",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "3ПО",
+      "subject": "Оптика",
+      "kind": "EXAM",
+      "teacher": "Пономарев М.Г.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 15
+      }
+    },
+    {
+      "id": "sha1:b81ea0e113ddb88d42bdf01311472f02d876b71a",
+      "date": "12/28/20",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": null,
+      "subject": null,
+      "kind": "CONSULTATION",
+      "teacher": "Аракелов А.В.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 16
+      }
+    },
+    {
+      "id": "sha1:2fc81c1850ade2d3ebed834cca2075eec094ae0d",
+      "date": "12/29/20",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "4Ф",
+      "subject": "Метод.препод",
+      "kind": "EXAM",
+      "teacher": "Аракелов А.В.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 17
+      }
+    },
+    {
+      "id": "sha1:f1d733dad039d08269b4a41915435c598ee42b6f",
+      "date": "1/16/21",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": null,
+      "subject": null,
+      "kind": "CONSULTATION",
+      "teacher": "Аракелов А.В.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 18
+      }
+    },
+    {
+      "id": "sha1:5d35ffababa1cd9db724cac257cc32e6f683c230",
+      "date": "1/17/21",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "4ПО",
+      "subject": "Метод.препод",
+      "kind": "EXAM",
+      "teacher": "Аракелов А.В.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 19
+      }
+    },
+    {
+      "id": "sha1:8de0c4f5440c691d46337a8cee911b4f34a98725",
+      "date": "1/21/21",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": null,
+      "subject": null,
+      "kind": "CONSULTATION",
+      "teacher": "Аракелов А.В.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 20
+      }
+    },
+    {
+      "id": "sha1:73bfe39944e406674d1fcb19168b702ff849b7b8",
+      "date": "1/22/21",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "4ПО",
+      "subject": "Методы реше",
+      "kind": "EXAM",
+      "teacher": "Аракелов А.В.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 21
+      }
+    },
+    {
+      "id": "sha1:3e6462337b180f228d3dcbae766651dce159220e",
+      "date": "1/13/21",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": null,
+      "subject": null,
+      "kind": "CONSULTATION",
+      "teacher": "Нагой А.А.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 22
+      }
+    },
+    {
+      "id": "sha1:4ae1187507929a0fa346aff676fa3c1ec59685aa",
+      "date": "1/14/21",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "1ИВТ2",
+      "subject": "Культурология",
+      "kind": "EXAM",
+      "teacher": "Нагой А.А.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 23
+      }
+    },
+    {
+      "id": "sha1:fad2aece649efaaa0f92920b9ba7d1e538aaae98",
+      "date": "1/19/21",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": null,
+      "subject": null,
+      "kind": "CONSULTATION",
+      "teacher": "Нагой А.А.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 24
+      }
+    },
+    {
+      "id": "sha1:2e295aafce1c3c8092641c11b813ee3f91b30e0e",
+      "date": "1/20/21",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "1ИВТ1",
+      "subject": "Культурология",
+      "kind": "EXAM",
+      "teacher": "Нагой А.А.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 25
+      }
+    },
+    {
+      "id": "sha1:079fa2220a3b2cbad9f9ddd93d9432eb26ba3e5f",
+      "date": "1/13/21",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": null,
+      "subject": null,
+      "kind": "CONSULTATION",
+      "teacher": "Бурыкина Л.В.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 26
+      }
+    },
+    {
+      "id": "sha1:05c5a1de645466bacfa9f2e8bfb227f0154935c2",
+      "date": "1/14/21",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "1Ф, 1УТС",
+      "subject": "История",
+      "kind": "EXAM",
+      "teacher": "Бурыкина Л.В.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 27
+      }
+    },
+    {
+      "id": "sha1:533127a8afb20c861b5b2b6996b7d87b052ab1ea",
+      "date": "1/15/21",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": null,
+      "subject": null,
+      "kind": "CONSULTATION",
+      "teacher": "Бурыкина Л.В.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 28
+      }
+    },
+    {
+      "id": "sha1:5656d05976f75301dbe16b1f75e2682ba84bd801",
+      "date": "1/16/21",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "1ИВТ1",
+      "subject": "История",
+      "kind": "EXAM",
+      "teacher": "Бурыкина Л.В.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 29
+      }
+    },
+    {
+      "id": "sha1:bb907df7f2cc6441cbd3d16f4093d41b660aa3de",
+      "date": "1/17/21",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": null,
+      "subject": null,
+      "kind": "CONSULTATION",
+      "teacher": "Бурыкина Л.В.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 30
+      }
+    },
+    {
+      "id": "sha1:cbaa0ccb2ed62a6aa556f2d885278f2ea5996016",
+      "date": "1/18/21",
+      "time": {
+        "start": null,
+        "end": null
+      },
+      "timezone": "Europe/Bucharest",
+      "group": "1ИВТ2",
+      "subject": "История",
+      "kind": "EXAM",
+      "teacher": "Бурыкина Л.В.",
+      "location": {
+        "room": null,
+        "building": null
+      },
+      "notes": null,
+      "source": {
+        "sheet": "Лист2",
+        "row": 31
+      }
+    }
+  ],
+  "issues": []
+}
