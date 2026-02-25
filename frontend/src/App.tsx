@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { uploadFile, pollUntilDone, getResult, downloadResult } from "./api/client";
 import type { ScheduleJsonV1, TaskResponse } from "./types/index";
 import UploadZone from "./components/UploadZone";
@@ -10,13 +10,26 @@ import styles from "./App.module.css";
 type Stage = "idle" | "uploading" | "processing" | "done" | "error";
 
 export default function App() {
-  const [stage, setStage]       = useState<Stage>("idle");
-  const [task, setTask]         = useState<TaskResponse | null>(null);
-  const [fileName, setFileName] = useState("");
-  const [result, setResult]     = useState<ScheduleJsonV1 | null>(null);
-  const [errorMsg, setErrorMsg] = useState("");
+  const [stage, setStage]         = useState<Stage>("idle");
+  const [task, setTask]           = useState<TaskResponse | null>(null);
+  const [fileName, setFileName]   = useState("");
+  const [result, setResult]       = useState<ScheduleJsonV1 | null>(null);
+  const [errorMsg, setErrorMsg]   = useState("");
   const [activeTab, setActiveTab] = useState<"summary" | "table">("summary");
 
+  // ── Dark mode ──
+  const [dark, setDark] = useState<boolean>(() => {
+    const saved = localStorage.getItem("theme");
+    if (saved) return saved === "dark";
+    return window.matchMedia("(prefers-color-scheme: dark)").matches;
+  });
+
+  useEffect(() => {
+    document.documentElement.setAttribute("data-theme", dark ? "dark" : "light");
+    localStorage.setItem("theme", dark ? "dark" : "light");
+  }, [dark]);
+
+  // ── File upload flow ──
   const handleFile = useCallback(async (file: File) => {
     setFileName(file.name);
     setStage("uploading");
@@ -61,7 +74,8 @@ export default function App() {
 
   return (
     <div className={styles.app}>
-      {/* Header */}
+
+      {/* ── Header ── */}
       <header className={styles.header}>
         <div className={styles.headerInner}>
           <div className={styles.logo}>
@@ -73,16 +87,33 @@ export default function App() {
               <p className={styles.appDesc}>Парсер расписания сессии</p>
             </div>
           </div>
-          {stage !== "idle" && (
-            <button className={styles.newBtn} onClick={reset}>
-              <span className="material-symbols-rounded">add</span>
-              Новый файл
+
+          <div className={styles.headerActions}>
+            {stage !== "idle" && (
+              <button className={styles.newBtn} onClick={reset}>
+                <span className="material-symbols-rounded">add</span>
+                Новый файл
+              </button>
+            )}
+
+            {/* Dark mode toggle */}
+            <button
+              className={styles.themeToggle}
+              onClick={() => setDark((d) => !d)}
+              aria-label={dark ? "Включить светлую тему" : "Включить тёмную тему"}
+              title={dark ? "Светлая тема" : "Тёмная тема"}
+            >
+              <span className={`material-symbols-rounded ${styles.themeIcon}`}>
+                {dark ? "light_mode" : "dark_mode"}
+              </span>
             </button>
-          )}
+          </div>
         </div>
       </header>
 
+      {/* ── Main ── */}
       <main className={styles.main}>
+
         {(stage === "idle" || stage === "error") && (
           <div className={styles.uploadSection}>
             <UploadZone onFile={handleFile} disabled={isProcessing} />
@@ -152,6 +183,7 @@ export default function App() {
             </div>
           </div>
         )}
+
       </main>
     </div>
   );

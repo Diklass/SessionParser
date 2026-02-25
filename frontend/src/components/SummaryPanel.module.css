@@ -1,16 +1,10 @@
 .panel {
   display: flex;
   flex-direction: column;
-  gap: 24px;
-  animation: fadeUp var(--md-duration-long) var(--md-motion-emphasized);
+  gap: 20px;
 }
 
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(16px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-/* ── Stat chips ── */
+/* ── Stat chips — staggered spring entrance ── */
 .stats {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -20,17 +14,38 @@
 .statChip {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 16px 20px;
+  gap: 14px;
+  padding: 18px 20px;
   border-radius: var(--md-radius-lg);
   box-shadow: var(--md-elev-1);
+  cursor: default;
+  transition: transform var(--md-duration-medium) var(--spring-bounce),
+              box-shadow  var(--md-duration-short) var(--md-motion-standard);
+  animation: springIn var(--md-duration-long) var(--spring-bounce) both;
+}
+
+/* Stagger each chip */
+.statChip:nth-child(1) { animation-delay: 0ms;   }
+.statChip:nth-child(2) { animation-delay: 60ms;  }
+.statChip:nth-child(3) { animation-delay: 120ms; }
+
+.statChip:hover {
+  transform: translateY(-4px) scale(1.03);
+  box-shadow: var(--md-elev-3);
 }
 
 .primary   { background: var(--md-primary-container);   color: var(--md-on-primary-container); }
 .secondary { background: var(--md-secondary-container); color: var(--md-on-secondary-container); }
 .tertiary  { background: var(--md-tertiary-container);  color: var(--md-on-tertiary-container); }
 
-.statChip .material-symbols-rounded { font-size: 28px; }
+.statChip .material-symbols-rounded {
+  font-size: 30px;
+  flex-shrink: 0;
+  transition: transform var(--md-duration-medium) var(--spring-bounce);
+}
+.statChip:hover .material-symbols-rounded {
+  transform: scale(1.2) rotate(-8deg);
+}
 
 .statValue {
   font-family: var(--md-font-display);
@@ -41,33 +56,40 @@
 
 .statLabel {
   font-size: 0.75rem;
-  opacity: 0.8;
+  opacity: 0.75;
   margin-top: 2px;
 }
 
-/* ── Section ── */
+/* ── Sections ── */
 .section {
   background: var(--md-surface-variant);
   border-radius: var(--md-radius-lg);
   padding: 20px;
+  transition: background var(--md-duration-medium) var(--md-motion-standard);
+  animation: springFadeUp var(--md-duration-long) var(--spring-soft) both;
+  animation-delay: 80ms;
+}
+
+.section:last-child {
+  animation-delay: 150ms;
 }
 
 .sectionTitle {
   font-family: var(--md-font-display);
-  font-size: 0.875rem;
+  font-size: 0.8125rem;
   font-weight: 700;
   color: var(--md-on-surface-variant);
   text-transform: uppercase;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.07em;
   display: flex;
   align-items: center;
   gap: 6px;
   margin-bottom: 14px;
+  transition: color var(--md-duration-medium) var(--md-motion-standard);
 }
+.sectionTitle .material-symbols-rounded { font-size: 17px; }
 
-.sectionTitle .material-symbols-rounded { font-size: 18px; }
-
-/* ── Kind grid ── */
+/* ── Kind chips ── */
 .kindGrid {
   display: flex;
   flex-wrap: wrap;
@@ -78,27 +100,40 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 6px 14px 6px 10px;
+  padding: 7px 14px 7px 10px;
   background: var(--md-surface);
   border-radius: var(--md-radius-full);
   box-shadow: var(--md-elev-1);
   font-size: 0.875rem;
+  cursor: default;
+  transition: transform var(--md-duration-medium) var(--spring-bounce),
+              box-shadow  var(--md-duration-short) var(--md-motion-standard),
+              background  var(--md-duration-short) var(--md-motion-standard);
+}
+.kindChip:hover {
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: var(--md-elev-2);
+  background: color-mix(in srgb, var(--md-primary) 8%, var(--md-surface));
 }
 
 .kindChip .material-symbols-rounded {
-  font-size: 16px;
+  font-size: 17px;
   color: var(--md-primary);
+  transition: transform var(--md-duration-medium) var(--spring-bounce);
+}
+.kindChip:hover .material-symbols-rounded {
+  transform: scale(1.25) rotate(-10deg);
 }
 
 .kindCount {
   font-family: var(--md-font-display);
-  font-weight: 700;
+  font-weight: 800;
   color: var(--md-primary);
 }
 
 .kindLabel { color: var(--md-on-surface-variant); }
 
-/* ── Groups ── */
+/* ── Group badges ── */
 .groupsWrap {
   display: flex;
   flex-wrap: wrap;
@@ -109,7 +144,7 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 4px 10px 4px 12px;
+  padding: 5px 10px 5px 12px;
   background: var(--md-surface);
   border: 1.5px solid var(--md-outline-variant);
   border-radius: var(--md-radius-full);
@@ -117,16 +152,30 @@
   font-family: var(--md-font-display);
   font-weight: 600;
   color: var(--md-on-surface);
-  transition: border-color var(--md-duration-short) var(--md-motion-standard);
+  cursor: default;
+  transition: border-color var(--md-duration-short) var(--md-motion-standard),
+              transform    var(--md-duration-medium) var(--spring-bounce),
+              background   var(--md-duration-short) var(--md-motion-standard),
+              box-shadow   var(--md-duration-short) var(--md-motion-standard);
 }
-
-.groupBadge:hover { border-color: var(--md-primary); }
+.groupBadge:hover {
+  border-color: var(--md-primary);
+  transform: translateY(-2px) scale(1.06);
+  background: color-mix(in srgb, var(--md-primary) 6%, var(--md-surface));
+  box-shadow: var(--md-elev-1);
+}
 
 .groupCount {
   background: var(--md-primary-container);
   color: var(--md-on-primary-container);
   font-size: 0.6875rem;
   font-weight: 700;
-  padding: 1px 6px;
+  padding: 1px 7px;
   border-radius: var(--md-radius-full);
+  transition: background var(--md-duration-short) var(--md-motion-standard),
+              color     var(--md-duration-short) var(--md-motion-standard);
+}
+.groupBadge:hover .groupCount {
+  background: var(--md-primary);
+  color: var(--md-on-primary);
 }

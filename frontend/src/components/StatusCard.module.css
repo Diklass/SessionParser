@@ -4,41 +4,47 @@
   gap: 16px;
   padding: 20px;
   border-radius: var(--md-radius-lg);
-  animation: slideIn var(--md-duration-medium) var(--md-motion-emphasized);
+  animation: springIn var(--md-duration-medium) var(--spring-bounce);
+  transition: background var(--md-duration-medium) var(--md-motion-standard);
 }
 
-@keyframes slideIn {
-  from { opacity: 0; transform: translateY(8px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-/* colour variants */
 .primary { background: var(--md-primary-container); }
 .success { background: var(--md-success-container); }
-.error   { background: var(--md-error-container); }
-.info    { background: var(--md-surface-variant); }
+.error   { background: var(--md-error-container);   }
+.info    { background: var(--md-surface-variant);   }
 
+/* ── Icon wrap ── */
 .iconWrap {
   flex-shrink: 0;
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.35);
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: transform var(--md-duration-medium) var(--spring-bounce);
+}
+
+[data-theme="dark"] .iconWrap {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.card:hover .iconWrap {
+  transform: scale(1.1) rotate(-5deg);
 }
 
 .primary .iconWrap .material-symbols-rounded { color: var(--md-primary); }
 .success .iconWrap .material-symbols-rounded { color: var(--md-success); }
-.error   .iconWrap .material-symbols-rounded { color: var(--md-error); }
+.error   .iconWrap .material-symbols-rounded { color: var(--md-error);   }
 .info    .iconWrap .material-symbols-rounded { color: var(--md-on-surface-variant); }
 
+/* Spinning loader icon */
 .spin { animation: spin 1.2s linear infinite; }
 
 @keyframes spin { to { transform: rotate(360deg); } }
 
-/* reuse .info as the content column name — no conflict with colour class */
+/* ── Content ── */
 .info {
   flex: 1;
   min-width: 0;
@@ -49,6 +55,7 @@
   font-weight: 700;
   font-size: 0.9375rem;
   color: var(--md-on-surface);
+  transition: color var(--md-duration-medium) var(--md-motion-standard);
 }
 
 .filename {
@@ -58,14 +65,20 @@
   overflow: hidden;
   text-overflow: ellipsis;
   margin-top: 2px;
+  transition: color var(--md-duration-medium) var(--md-motion-standard);
 }
 
+/* ── Progress bar ── */
 .progressBar {
   height: 4px;
   background: rgba(0, 0, 0, 0.12);
   border-radius: var(--md-radius-full);
   overflow: hidden;
-  margin-top: 10px;
+  margin-top: 12px;
+}
+
+[data-theme="dark"] .progressBar {
+  background: rgba(255, 255, 255, 0.12);
 }
 
 .progressIndeterminate {
